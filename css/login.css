@@ -7,3 +7,66 @@ body {
     background-position: center;
     font-family: sans-serif;
 }
+
+.loginbox {
+    border: white solid 3px;
+    width: 50%;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    padding: 10px;
+}
+
+.loginbox h1 {
+    display: flex;
+    justify-content: center;
+    color: aquamarine;
+}
+
+.loginbox form {
+    position: relative
+}
+
+.loginbox p {
+    color: aquamarine;
+    font-weight: bold;
+}   
+
+.loginbox input[type="text"], input[type="password"] {
+    height: 40px;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #fff;
+    background: transparent;
+    outline: none;
+    font-size: 16px;
+    color: white;
+}
+
+.loginbox input[type="submit"] {
+    width: 100%;
+    border: none;
+    outline: none;
+    height: 40px;
+    background: aqua;
+    font-size: 18px;
+    border-radius: 20px;
+}
+
+.loginbox input[type="submit"]:hover {
+    cursor: pointer;
+    background: aquamarine;
+    color: #000;
+}
+
+.loginbox a {
+    text-decoration: none;
+    line-height: 20px;
+    color: darkgray;
+}
+
+.loginbox a:hover {
+    color: #fff;
+
+}
