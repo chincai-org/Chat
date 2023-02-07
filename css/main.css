@@ -1,0 +1,75 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    /* background: url(a.jpg); */
+    background-color: rgb(50, 50, 50);
+    background-size: cover;
+    background-position: center;
+}
+
+h5 {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+section {
+    width: 70%;
+    max-height: 85vh;
+    padding: 100px;
+    margin-left: auto;
+    overflow-y: scroll;
+    display: block;
+    padding: 10px;
+}
+
+section input[type="text"] {
+    position: absolute;
+    z-index: 999;
+    height: 40px;
+    width: 68.5%;
+    border: 1px solid #fff;
+    background: transparent;
+    outline: none;
+    font-size: 16px;
+    color: white;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(30, 30, 30);
+    border-radius: 6px;
+
+}
+
+.container {
+    border: 2px solid #dedede;  
+    background-color: rgb(50, 50, 50);
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: 5px;
+    color: white;
+  }
+
+.container::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+.time {
+    float: right;
+    color: #aaa;
+}
+
+.topics section {
+    position: fixed;
+}
