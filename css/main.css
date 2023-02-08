@@ -1,5 +1,5 @@
 * {
-    margin: 0;
+    margin: .5px;
     padding: 0;
     font-family: sans-serif;
     box-sizing: border-box;
@@ -12,32 +12,37 @@ body {
     background-position: center;
 }
 
-h5 {
+.chat h5 {
     font-weight: bold;
     font-size: 20px;
 }
 
-section {
+.chat {
     width: 70%;
-    max-height: 85vh;
-    padding: 100px;
-    margin-left: auto;
+    box-sizing: none;
+    height: calc(91.5vh - 40px);
     overflow-y: scroll;
     display: block;
+    margin-left: auto;
     padding: 10px;
 }
 
-section input[type="text"] {
+.chat input[type="text"] {
     position: absolute;
     z-index: 999;
     height: 40px;
-    width: 68.5%;
+    width: 67.4vw;
     border: 1px solid #fff;
-    background: transparent;
+    background: rgb(50, 50, 50);
     outline: none;
     font-size: 16px;
     color: white;
     border-radius: 10px;
+    bottom: 7.5vh;
+}
+
+.chat input[type="text"]:focus {
+    background-color: rgb(60, 60, 60);
 }
 
 ::-webkit-scrollbar {
@@ -70,6 +75,50 @@ section input[type="text"] {
     color: #aaa;
 }
 
-.topics section {
-    position: fixed;
+.topics {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: transparent;
+    outline: none;
+    width: calc(30% - 1vw);
+}
+
+.topics h2 {
+    font-size: 5vh;
+    color: aquamarine;
+}
+
+.choices {
+    display: grid;
+    margin-top: 10px;
+    grid-template-columns: 1fr 1fr;
+}
+
+.choice {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.topic {
+    margin-top: 10px;
+    display: grid;
+    overflow-y: scroll;
+    border: white solid 1px;
+    height: calc(86.5vh - 60px);
+    
+}
+
+.topic h5 {
+    border-bottom: white solid 1px;
+    font-size: 1rem;
+    color: white;
+}
+
+#choice-1, #choice-2 {
+    background-color: rgb(50, 50, 50);
+}
+
+.clicked {
+    background-color: rgb(30, 30, 30) !important;
 }
