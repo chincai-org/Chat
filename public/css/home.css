@@ -24,17 +24,20 @@ h2 {
 
 .top-grid {
     display: grid;
-    grid-template-columns: 100px 100px;   /*fr  share space with other unit*/
+    grid-template-columns: 100px 100px; /*fr  share space with other unit*/
     grid-template-rows: 30px;
     text-align: center;
     color: aquamarine;
-    
 }
 
-.about:hover {
-    color: white;
+a {
+    text-decoration: none;
 }
 
-.login:hover {
+.about, .login {
+    color: aquamarine;
+}
+
+.about:hover, .login:hover {
     color: white;
 }
