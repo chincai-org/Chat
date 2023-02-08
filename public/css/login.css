@@ -14,7 +14,7 @@ body {
     top: 50%;
     left: 50%;
     position: absolute;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     padding: 10px;
 }
 
@@ -25,15 +25,16 @@ body {
 }
 
 .loginbox form {
-    position: relative
+    position: relative;
 }
 
 .loginbox p {
     color: aquamarine;
     font-weight: bold;
-}   
+}
 
-.loginbox input[type="text"], input[type="password"] {
+.loginbox input[type="text"],
+input[type="password"] {
     height: 40px;
     width: 100%;
     border: none;
@@ -68,5 +69,4 @@ body {
 
 .loginbox a:hover {
     color: #fff;
-
 }
