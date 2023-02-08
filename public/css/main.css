@@ -130,12 +130,16 @@ body {
     display: grid;
     position: absolute;
     bottom: 0;
-    grid-template-columns: 18vw 10vw;
+    grid-template-columns: 16vw 7.5vw;
     padding: .5vh;
     font-size: 3vh;
     color: white;
     width: calc(100vw - 0.3vh);
     background-color: rgb(30, 30, 30);
+}
+
+.bottom p:hover {
+    background-color: rgb(50,50,50);
 }
 
 #choice-1,
