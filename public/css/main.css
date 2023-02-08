@@ -1,5 +1,5 @@
 * {
-    margin: 0.5px;
+    margin: 0.1vh;
     padding: 0;
     font-family: sans-serif;
     box-sizing: border-box;
@@ -14,7 +14,7 @@ body {
 
 .chat h5 {
     font-weight: bold;
-    font-size: 3vh;
+    font-size: 2.5vh;
 }
 
 .chat p,
@@ -25,24 +25,24 @@ body {
 .chat {
     width: 70%;
     box-sizing: none;
-    height: calc(91.5vh - 40px);
+    height: 85vh;
     overflow-y: scroll;
     display: block;
     margin-left: auto;
-    padding: 10px;
+    padding: 1.5vh;
 }
 
 .chat input[type="text"] {
     position: absolute;
     z-index: 999;
-    height: 40px;
+    height: 6vh;
     width: 67.4vw;
-    border: 1px solid #fff;
+    border: .1vh solid #fff;
     background: rgb(50, 50, 50);
     outline: none;
     font-size: 2.5vh;
     color: white;
-    border-radius: 10px;
+    border-radius: 2vh;
     bottom: 7.5vh;
 }
 
@@ -51,7 +51,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-    width: 12px;
+    width: 2vh;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -60,12 +60,15 @@ body {
 }
 
 .container {
-    border: 2px solid #dedede;
-    background-color: rgb(50, 50, 50);
+    background-color: rgb(60, 60, 60);
     border-radius: 5px;
-    padding: 5px;
-    margin-top: 5px;
+    padding: 1vh;
+    margin-top: 1vh;
     color: white;
+}
+
+.container:hover {
+    background-color: rgb(70, 70, 70);
 }
 
 .container::after {
@@ -81,22 +84,22 @@ body {
 
 .topics {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: .5vh;
+    left: .5vh;
     background: transparent;
     outline: none;
-    width: calc(30% - 1vw);
+    width: 30vw;
 }
 
 .topics h2 {
-    font-size: 5vh;
+    font-size: 4.5vh;
     color: aquamarine;
     text-align: center;
 }
 
 .choices {
     display: grid;
-    margin-top: 10px;
+    margin-top: 2vh;
     grid-template-columns: 1fr 1fr;
     text-align: center;
 }
@@ -104,32 +107,34 @@ body {
 .choice {
     color: white;
     font-size: 4vh;
+    border-radius: 1vh 1vh 0 0;
 }
 
 .topic {
-    margin-top: 10px;
     display: grid;
     overflow-y: scroll;
-    border: white solid 1px;
-    height: calc(86.5vh - 60px);
+    height: 79vh;
+    background-color: rgb(40,40,40);
 }
 
 .topic h5 {
-    border-bottom: white solid 1px;
-    font-size: 1rem;
+    font-size: 3vh;
     color: white;
+}
+
+.topic h5:hover {
+    background-color: rgb(30, 30, 30);
 }
 
 .bottom {
     display: grid;
     position: absolute;
     bottom: 0;
-    grid-template-columns: 18.5vw 10vw;
-    column-gap: 10px;
-    padding: 5px;
+    grid-template-columns: 18vw 10vw;
+    padding: .5vh;
     font-size: 3vh;
     color: white;
-    width: calc(100% - 1.5px);
+    width: calc(100vw - 0.3vh);
     background-color: rgb(30, 30, 30);
 }
 
