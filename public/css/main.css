@@ -76,9 +76,6 @@ body {
     padding: 1vh;
     margin-top: 1vh;
     color: white;
-    display: -webkit-box;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
 }
 
 .container:hover {
