@@ -28,11 +28,11 @@ app.route("/chat")
     .get((req, res) => {
         res.render("main.ejs");
     })
-    .post((req, res) => {
+    .post(async (req, res) => {
         let { username, password, cpassword } = req.body;
 
         if (cpassword) {
-            utils.createUser(username, password);
+            await utils.createUser(username, password);
         }
 
         res.cookie("username", username);
