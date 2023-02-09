@@ -13,8 +13,12 @@
         <h1>Sign Up</h1>
         <form action="/chat" method="POST">
             <p>Username</p>
+            <%= username %>
             <input type="text" maxlength="15" name="username" placeholder="Enter username" required>
             <p>Password</p>
+
+
+            <%= password %>
             <input type="password" maxlength="20" name="password" placeholder="Enter password" required>
             <p>Confirm Password</p>
             <input type="password" maxlength="20" name="cpassword" placeholder="Enter password" required>
