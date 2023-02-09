@@ -9,15 +9,15 @@
     <script src="/js/start.js" defer></script>
 </head>
 <body>
-    <div class = "loginbox">
+    <div class="loginbox">
         <h1>Sign Up</h1>
-        <form>
+        <form action="/chat" method="POST">
             <p>Username</p>
-            <input type="text" maxlength="15" name="" placeholder="Enter username" required>
+            <input type="text" maxlength="15" name="username" placeholder="Enter username" required>
             <p>Password</p>
-            <input type="password" maxlength="20" name="" placeholder="Enter password" required>
+            <input type="password" maxlength="20" name="password" placeholder="Enter password" required>
             <p>Confirm Password</p>
-            <input type="password" maxlength="20" name="" placeholder="Enter password" required>
+            <input type="password" maxlength="20" name="cpassword" placeholder="Enter password" required>
             <br><br>
             <input type="submit" name="" id="loginbtn" value="Log in">
             <p>Have an account? <a href="/login">Login</a></p>
