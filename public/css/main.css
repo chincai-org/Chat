@@ -1,3 +1,7 @@
+html {
+    font-size: 62.5%;
+}
+
 * {
     margin: 0.1vh;
     padding: 0;
@@ -35,7 +39,7 @@ body {
 #text {
     position: absolute;
     z-index: 999;
-    height: 6vh;
+    height: 5vh;
     width: 67.4vw;
     border: .1vh solid #fff;
     background: rgb(50, 50, 50);
@@ -50,7 +54,6 @@ body {
 
 #text::placeholder {
     position: absolute;
-    top: 1.5vh;
 }
 
 #text:focus {
@@ -72,9 +75,6 @@ body {
     padding: 1vh;
     margin-top: 1vh;
     color: white;
-    display: -webkit-box;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
 }
 
 .container:hover {
