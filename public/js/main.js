@@ -1,6 +1,5 @@
 const choice1 = document.getElementById("choice-1");
 const choice2 = document.getElementById("choice-2");
-const screenHeight = screen.height;
 
 choice1.onclick = () => {
     choice1.classList.add("clicked");
@@ -28,10 +27,12 @@ $("#text")
     .on("input", function () {
         this.style.height = "auto";
         if (this.scrollHeight > window.innerHeight / 2) {
-            this.style.height = "50vh";
+            this.style.height = "48.844375963020035vh";
+            $(".chat").css("height","43.29738058551618vh");
         } else {
             this.style.height =
                 (this.scrollHeight / window.innerHeight) * 100 + "vh";
+            $(".chat").css("height",(((window.innerHeight - this.scrollHeight) / window.innerHeight * 100) - 53 / window.innerHeight * 100 + "vh"));
+            console.log(((window.innerHeight - this.scrollHeight) / window.innerHeight * 100) - 53 / window.innerHeight * 100 + "vh");
         }
     });
-
