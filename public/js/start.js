@@ -1,4 +1,7 @@
-const navigation = document.querySelector(".navigation")
+const navigation = document.querySelector(".navigation");
 const navigationHeight = navigation.offsetHeight;
 
-document.documentElement.style.setProperty("--scroll-padding", navigationHeight + "px")
+document.documentElement.style.setProperty(
+    "--scroll-padding",
+    navigationHeight + "px"
+);
