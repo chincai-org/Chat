@@ -10,8 +10,9 @@ const client = new MongoClient(uri);
  * @param {string} displayName - Display name of user, can be duplicated, no rules
  * @param {string} username - Username of user, can't be duplicated, only limited to alphanumeric characters
  * @param {string} password - Can be anything
+ * @param {string} cookieID - The cookieId of the user
  */
-export async function createUser(displayName, username, password) {
+export async function createUser(displayName, username, password, cookieID) {
     try {
         const users = client.db("db").collection("users");
 
@@ -19,6 +20,7 @@ export async function createUser(displayName, username, password) {
             displayName: displayName,
             username: username,
             password: password,
+            cookieID: cookieID,
             rooms: {},
             pins: []
         });
