@@ -48,7 +48,7 @@ input[type="password"] {
 .loginbox input[type="submit"] {
     width: 100%;
     border: none;
-    outline: none;
+    outline-color: transparent;
     height: 40px;
     background: aqua;
     font-size: 18px;
