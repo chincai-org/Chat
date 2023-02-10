@@ -11,17 +11,21 @@
 <body>
     <div class="loginbox">
         <h1>Sign Up</h1>
-        <form action="/chat" method="POST">
+        <form action="/doingthings" method="POST">
+            <p>Name</p>
+            
+            <%= name %>
+            <input type="text" maxlength="15" name="name" placeholder="Enter name" required>
             <p>Username</p>
             <%= username %>
             <input type="text" maxlength="15" name="username" placeholder="Enter username" required>
             <p>Password</p>
-
-
             <%= password %>
             <input type="password" maxlength="20" name="password" placeholder="Enter password" required>
             <p>Confirm Password</p>
-            <input type="password" maxlength="20" name="cpassword" placeholder="Enter password" required>
+            
+            <%= confirmpassword %>
+            <input type="password" maxlength="20" name="confirmpassword" placeholder="Enter password" required>
             <br><br>
             <input type="submit" name="" id="loginbtn" value="Log in">
             <p>Have an account? <a href="/login">Login</a></p>
