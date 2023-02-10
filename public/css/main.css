@@ -27,9 +27,9 @@ body {
 }
 
 .chat {
-    width: 70%;
-    box-sizing: none;
-    height: 85vh;
+    width: 69.7%;
+    box-sizing: none; /*75.5 */
+    height: 84.3vh;
     overflow-y: scroll;
     display: block;
     margin-left: auto;
@@ -39,21 +39,17 @@ body {
 #text {
     position: absolute;
     z-index: 999;
-    height: 5vh;
+    height: fit-content;
     width: 67.4vw;
-    border: .1vh solid #fff;
+    border: 0.1vh solid #fff;
     background: rgb(50, 50, 50);
-    outline: none;
+    outline-color: transparent;
     font-size: 2.5vh;
     color: white;
     border-radius: 2vh;
     bottom: 7.5vh;
     resize: none;
-    padding-left: 1vh;
-}
-
-#text::placeholder {
-    position: absolute;
+    padding: 1vh;
 }
 
 #text:focus {
@@ -94,10 +90,10 @@ body {
 
 .topics {
     position: absolute;
-    top: .5vh;
-    left: .5vh;
+    top: 0.5vh;
+    left: 0.5vh;
     background: transparent;
-    outline: none;
+    outline-color: transparent;
     width: 30vw;
 }
 
@@ -124,7 +120,7 @@ body {
     display: grid;
     overflow-y: scroll;
     height: 79vh;
-    background-color: rgb(40,40,40);
+    background-color: rgb(40, 40, 40);
 }
 
 .topic h5 {
@@ -134,6 +130,7 @@ body {
 
 .topic h5:hover {
     background-color: rgb(30, 30, 30);
+    cursor: pointer;
 }
 
 .bottom {
@@ -141,7 +138,7 @@ body {
     position: absolute;
     bottom: 0;
     grid-template-columns: 16vw 7.5vw;
-    padding: .5vh;
+    padding: 0.5vh;
     font-size: 3vh;
     color: white;
     width: calc(100vw - 0.3vh);
@@ -149,12 +146,52 @@ body {
 }
 
 .bottom p:hover {
-    background-color: rgb(50,50,50);
+    background-color: rgb(50, 50, 50);
+    cursor: pointer;
+}
+
+.topic form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: center;
 }
 
 #choice-1,
 #choice-2 {
     background-color: rgb(50, 50, 50);
+}
+
+#choice-1:hover,
+#choice-2:hover {
+    cursor: pointer;
+    background-color: rgb(40, 40, 40);
+}
+
+#search-bar {
+    height: fit-content;
+    width: 26vw;
+    border: 0.1vh solid #fff;
+    background: rgb(50, 50, 50);
+    outline-color: transparent;
+    font-size: 2.5vh;
+    color: white;
+    border-radius: 2vh;
+    resize: none;
+    padding: 1vh;
+}
+
+#search-bar:focus {
+    background-color: rgb(60, 60, 60);
+}
+
+#create-new {
+    font-size: 3vh;
+}
+
+#create-new:hover {
+    font-size: 3vh;
+    background-color: rgb(60, 60, 60);
+    cursor: pointer;
 }
 
 .clicked {
