@@ -1,4 +1,5 @@
-body {
+body, html {
+    font-size: 62.5%;
     margin: 0;
     padding: 0;
     /* background: url(a.jpg); */
@@ -6,40 +7,74 @@ body {
     background-size: cover;
     background-position: center;
     font-family: sans-serif;
+    scroll-behavior: smooth;
+    scroll-padding: 
+        var(--scroll-padding, 5rem);
+}
+
+header {
+    text-align: center;
 }
 
 h1 {
-    display: flex;
-    justify-content: center;
+    font-size: 3rem;
     color: aquamarine;
 }
 
 h2 {
-    display: flex;
-    justify-content: center;
-    font-size: 20px;
+    font-size: 2rem;
     font-style: italic;
     color: aquamarine;
 }
 
-.top-grid {
-    display: grid;
-    grid-template-columns: 100px 100px; /*fr  share space with other unit*/
-    grid-template-rows: 30px;
+p {
+    font-size: 1.7rem;
+    color: aquamarine;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
     text-align: center;
     color: aquamarine;
+    background-color: rgba(80, 128, 8, 0.8);
+    width: 98.8vw;
+}
+
+ul li {
+    float: left;
+    text-decoration: none;
+    padding: 1rem;
+    list-style: none;
 }
 
 a {
     text-decoration: none;
-}
-
-.about,
-.login {
+    font-size: 2rem;
     color: aquamarine;
 }
 
-.about:hover,
-.login:hover {
+a:hover {
     color: white;
+}
+
+section, div {
+    height: 100vh;
+}
+
+nav {
+    position: fixed;
+}
+
+.login, ul li {
+    color: aquamarine;
+}
+
+.login:hover, ul li:hover {
+    color: white;
+}
+
+.login{
+    margin-top: 2.5vh;
+    margin-right: 4vh;
 }
