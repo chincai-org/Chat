@@ -28,10 +28,17 @@ $("#text")
         this.style.height = "auto";
         if (this.scrollHeight > window.innerHeight / 2) {
             this.style.height = "48.844375963020035vh";
-            $(".chat").css("height","43.29738058551618vh");
+            $(".chat").css("height", "43.29738058551618vh");
         } else {
             this.style.height =
                 (this.scrollHeight / window.innerHeight) * 100 + "vh";
-            $(".chat").css("height",(((window.innerHeight - this.scrollHeight) / window.innerHeight * 100) - 53 / window.innerHeight * 100 + "vh"));
+            $(".chat").css(
+                "height",
+                ((window.innerHeight - this.scrollHeight) /
+                    window.innerHeight) *
+                    100 -
+                    (53 / window.innerHeight) * 100 +
+                    "vh"
+            );
         }
     });
