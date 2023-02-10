@@ -59,27 +59,30 @@ app.post("/doingthings", async (req, res) => {
                                     const charactersLength = characters.length;
                                     let counter = 0;
                                     while (counter < 20) {
-                                        id = characters.charAt(Math.floor(Math.random() * charactersLength));
+                                        id += characters.charAt(Math.floor(Math.random() * charactersLength));
                                         counter += 1;
                                     } 
-                                    if (utils.IdExists(id)) {
+                                    if (!(await utils.findUserByCookie(id))) {
                                         id = id
+
                                     } else {
                                         id = "id"
                                     }
                                   
                                 }
-                                if (await utils.createUser(name, username, password, id)) {
-                                    res.cookie("id", id);
-                                    res.redirect("/chat");
-                                }
+                                await utils.createUser(name, username, password, id)
+                                res.cookie("id", id); 
+                                res.redirect("/chat");
+                                
                             } else {
                                 res.cookie("e", "7")
                                 res.redirect("/signup")
+                                console.log("e10")
                             }
                         } else {
                             res.cookie("e", "6")
                             res.redirect("/signup")
+                            console.log("e9")
                         } 
                     } else {
                         res.cookie("e", "5")
@@ -102,30 +105,30 @@ app.post("/doingthings", async (req, res) => {
         res.redirect("/signup")
     }
 })
-app.post("/doinganotherthings", (req, res) => {
+app.post("/doinganotherthings", async (req, res) => {
+
     let { username, password } = req.body;
+    var user = await utils.findUser(username) 
     if (!username) {
         res.cookie("e", "1")
+        res.redirect("/login")
     } else if (!password) {
         res.cookie("e", "2")
-    } else if (!(user = utils.findUser(username))) {
+        res.redirect("/login")
+    } else if (!user) {
         res.cookie("e", "3")
+        res.redirect("/login")
     } else if (!(user.password == password)) {
         res.cookie("e", "3")
+        res.redirect("/login")
     } else {
         res.cookie("id", user.cookieID)
         res.redirect("/chat")
     }
-    res.redirect("/login")
 })
 
 app.get("/login", (req, res) => {
     res.cookie("e", "")
-    
-    
-    //nonono
-    //nonono
-    //nonono
     if (req.cookies.e == "1" ) {
         res.render("login.ejs", {username: "Please don't make this field empty. "})
     } else if (req.cookies.e == "2") {
