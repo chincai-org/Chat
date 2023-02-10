@@ -58,6 +58,14 @@ export async function findUser(username) {
     }
 }
 
+export async function findUserByCookie(cookieID) {
+    try {
+        const users = client.db("db").collection("users");
+        return await users.findOne({ cookieID: cookieID });
+    } finally {
+    }
+}
+
 export async function findRoom(roomId) {
     try {
         const rooms = client.db("db").collection("rooms");
