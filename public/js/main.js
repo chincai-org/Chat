@@ -33,6 +33,5 @@ $("#text")
             this.style.height =
                 (this.scrollHeight / window.innerHeight) * 100 + "vh";
             $(".chat").css("height",(((window.innerHeight - this.scrollHeight) / window.innerHeight * 100) - 53 / window.innerHeight * 100 + "vh"));
-            console.log(((window.innerHeight - this.scrollHeight) / window.innerHeight * 100) - 53 / window.innerHeight * 100 + "vh");
         }
     });
