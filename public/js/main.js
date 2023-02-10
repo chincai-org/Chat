@@ -27,10 +27,11 @@ $("#text")
     })
     .on("input", function () {
         this.style.height = "auto";
-        if (this.scrollHeight > window.innerHeight / 6) {
-            this.style.height = "16.6vh";
+        if (this.scrollHeight > window.innerHeight / 2) {
+            this.style.height = "50vh";
         } else {
             this.style.height =
                 (this.scrollHeight / window.innerHeight) * 100 + "vh";
         }
     });
+
