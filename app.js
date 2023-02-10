@@ -44,14 +44,14 @@ app.route("/chat")
         let { username, password, cpassword } = req.body;
         
     });
-app.post("/doingthings", (req, res) => {
+app.post("/doingthings", async (req, res) => {
     let { name, username, password, confirmpassword } = req.body;
     if (name) {
         if (username) {
             if (password) {
                 if (confirmpassword) {
                     if (!username.match[/[^A-z0-9]/g]) {
-                        if (utils.UsernameExists(username)) {
+                        if (!(await utils.findUser(username))) {
                             if (password == confirmpassword) {
                                 let id = "id"
                                 while (id == "id") {
@@ -69,7 +69,7 @@ app.post("/doingthings", (req, res) => {
                                     }
                                   
                                 }
-                                if (utils.CreateAccount(username, password, id)) {
+                                if (await utils.createUser(name, username, password, id)) {
                                     res.cookie("id", id);
                                     res.redirect("/chat");
                                 }
@@ -104,10 +104,38 @@ app.post("/doingthings", (req, res) => {
 })
 app.post("/doinganotherthings", (req, res) => {
     let { username, password } = req.body;
+    if (!username) {
+        res.cookie("e", "1")
+    } else if (!password) {
+        res.cookie("e", "2")
+    } else if (!(user = utils.findUser(username))) {
+        res.cookie("e", "3")
+    } else if (!(user.password == password)) {
+        res.cookie("e", "3")
+    } else {
+        res.cookie("id", user.cookieID)
+        res.redirect("/chat")
+    }
+    res.redirect("/login")
 })
 
 app.get("/login", (req, res) => {
-    res.render("login.ejs", {username: "", password: ""});
+    res.cookie("e", "")
+    
+    
+    //nonono
+    //nonono
+    //nonono
+    if (req.cookies.e == "1" ) {
+        res.render("login.ejs", {username: "Please don't make this field empty. "})
+    } else if (req.cookies.e == "2") {
+        
+        res.render("login.ejs", {username: "", password: "Please don't make this field empty. "})
+    } else if (req.cookies.e == "3") {
+        res.render("login.ejs", {username: "Username or password is not correct. ", password: ""})
+    } else {
+        res.render("login.ejs", {username: "", password: ""});
+    }
 });
 
 app.get("/signup", (req, res) => {
