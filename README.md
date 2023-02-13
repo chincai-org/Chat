@@ -52,9 +52,7 @@ Rooms:
             "createdAt": "Thu Feb 09 2023 23:00:54 GMT+0800 (Malaysia Time)"
         }
     ],
-    "members": [],
-    "admins": [],
-    "co-admins": []
+    "members": []
 }
 ```
 
@@ -75,8 +73,6 @@ Rooms:
             "createdAt": "Thu Feb 09 2023 23:06:03 GMT+0800 (Malaysia Time)"
         }
     ],
-    "members": ["lkdgu7dlfukjasdj"],
-    "admins": ["090df0sd0f28391023"],
-    "co-admins": []
+    "members": ["lkdgu7dlfukjasdj", "090df0sd0f28391023"]
 }
 ```
