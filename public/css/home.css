@@ -65,6 +65,7 @@ div {
 
 nav {
     position: fixed;
+    top: 0vh;
 }
 
 .login,
@@ -80,4 +81,8 @@ ul li:hover {
 .login {
     margin-top: 2.5vh;
     margin-right: 4vh;
+}
+
+.first {
+    margin-top: 8vh;
 }
