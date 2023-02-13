@@ -5,7 +5,8 @@ const textbox = document.getElementById("text");
 textbox.addEventListener("keydown", e => {
     if (e.keyCode === 13 && !e.shiftKey) {
         e.preventDefault();
-        sendMessage();
+        message = textbox.value;
+        sendMessage(message);
     }
 });
 
