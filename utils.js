@@ -30,7 +30,7 @@ export async function createUser(displayName, username, password, cookieID) {
 
 /**
  * @constructor
- * @param {string} name - Topic name
+ * @param {string} name - Room name
  * @param {string} visibility - "public" | "private"
  * @param {string} creater: Username of creater
  */
@@ -74,4 +74,64 @@ export async function findRoom(roomId) {
     }
 }
 
-// TODO: Insert msg, pin topic, change role
+export async function insertMessage(roomId, authorId, content, time) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+
+        rooms.updateOne(
+            {
+                _id: ObjectId(roomId)
+            },
+            {
+                $push: {
+                    messages: {
+                        author: authorId,
+                        content: content,
+                        createdAt: time
+                    }
+                }
+            }
+        );
+    } finally {
+    }
+}
+
+export async function pinRoom(userId, roomId) {
+    try {
+        const users = client.db("db").collection("users");
+
+        let change = "pins." + (await findRoom(roomId)).visibility;
+
+        users.updateOne(
+            {
+                id: ObjectId(userId)
+            },
+            {
+                $push: {
+                    ["pins." + change]: roomId
+                }
+            }
+        );
+    } finally {
+    }
+}
+
+export async function unpinRoom(userId, roomId) {
+    try {
+        const users = client.db("db").collection("users");
+
+        let change = "pins." + (await findRoom(roomId)).visibility;
+
+        users.updateOne(
+            {
+                id: ObjectId(userId)
+            },
+            {
+                $pull: {
+                    ["pins." + change]: roomId
+                }
+            }
+        );
+    } finally {
+    }
+}
