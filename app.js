@@ -119,7 +119,7 @@ app.post("/login_validator", async (req, res) => {
         res.cookie("e", "3");
         res.redirect("/login");
     } else {
-        res.cookie("id", user.cookieID);
+        res.cookie("id", user.cookieId);
         res.redirect("/chat");
     }
 });
@@ -177,6 +177,31 @@ app.post("/get_user_by_id", async (req, res) => {
     let { id } = req.body;
     console.log(id);
     return res.json(await utils.findUserByCookie(id));
+});
+
+io.on("connection", socket => {
+    console.log("A socket connected");
+
+    socket.on("msg", async (cookieId, roomId, msg, time) => {
+        let user = await utils.findUserByCookie(cookieId);
+        let room = await utils.findRoom(roomId);
+
+        console.log(user);
+
+        if (
+            room.visibility == "private" &&
+            room.members.includes(user.cookieId)
+        ) {
+            // TODO user not at room
+        }
+
+        if (user) {
+            console.log(`${user.displayName}: ${msg}`);
+            io.emit("msg", user.name, msg, time);
+        } else {
+            // TODO handle user simply change cookie
+        }
+    });
 });
 
 server.listen(port, () => {

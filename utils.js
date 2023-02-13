@@ -10,9 +10,9 @@ const client = new MongoClient(uri);
  * @param {string} displayName - Display name of user, can be duplicated, no rules
  * @param {string} username - Username of user, can't be duplicated, only limited to alphanumeric characters
  * @param {string} password - Can be anything
- * @param {string} cookieID - The cookieId of the user
+ * @param {string} cookieId - The cookieId of the user
  */
-export async function createUser(displayName, username, password, cookieID) {
+export async function createUser(displayName, username, password, cookieId) {
     try {
         const users = client.db("db").collection("users");
 
@@ -20,7 +20,7 @@ export async function createUser(displayName, username, password, cookieID) {
             displayName: displayName,
             username: username,
             password: password,
-            cookieID: cookieID,
+            cookieId: cookieId,
             rooms: {},
             pins: []
         });
@@ -42,9 +42,7 @@ export async function createRoom(name, visibility, creater) {
             name: name,
             visibility: visibility,
             messages: [],
-            admin: creater,
-            coAdmins: [],
-            members: []
+            members: [creater]
         });
     } finally {
     }
@@ -58,10 +56,10 @@ export async function findUser(username) {
     }
 }
 
-export async function findUserByCookie(cookieID) {
+export async function findUserByCookie(cookieId) {
     try {
         const users = client.db("db").collection("users");
-        return await users.findOne({ cookieID: cookieID });
+        return await users.findOne({ cookieId: cookieId });
     } finally {
     }
 }
@@ -69,7 +67,7 @@ export async function findUserByCookie(cookieID) {
 export async function findRoom(roomId) {
     try {
         const rooms = client.db("db").collection("rooms");
-        return await rooms.findOne({ _id: ObjectId(roomId) });
+        return await rooms.findOne({ _id: new ObjectId(roomId) });
     } finally {
     }
 }
@@ -80,7 +78,7 @@ export async function insertMessage(roomId, authorId, content, time) {
 
         rooms.updateOne(
             {
-                _id: ObjectId(roomId)
+                _id: new ObjectId(roomId)
             },
             {
                 $push: {
@@ -104,7 +102,7 @@ export async function pinRoom(userId, roomId) {
 
         users.updateOne(
             {
-                id: ObjectId(userId)
+                id: new ObjectId(userId)
             },
             {
                 $push: {
@@ -124,7 +122,7 @@ export async function unpinRoom(userId, roomId) {
 
         users.updateOne(
             {
-                id: ObjectId(userId)
+                id: new ObjectId(userId)
             },
             {
                 $pull: {
