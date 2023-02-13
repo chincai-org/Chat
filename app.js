@@ -173,6 +173,12 @@ app.post("/signup_validator", async (req, res) => {
     }
 });
 
+app.post("/get_user_by_id", async (req, res) => {
+    let { id } = req.body;
+    console.log(id);
+    return res.json(await utils.findUserByCookie(id));
+});
+
 server.listen(port, () => {
     console.log(`Running server at http://localhost:${port}`);
 });
