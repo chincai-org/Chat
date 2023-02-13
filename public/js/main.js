@@ -2,6 +2,24 @@ const choice1 = document.getElementById("choice-1");
 const choice2 = document.getElementById("choice-2");
 const textbox = document.getElementById("text");
 
+let room = "63ea5075135330ee451c922e"; // id for test
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == " ") {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
 textbox.addEventListener("keydown", e => {
     if (e.keyCode === 13 && !e.shiftKey) {
         e.preventDefault();
@@ -12,7 +30,8 @@ textbox.addEventListener("keydown", e => {
 
 function sendMessage(msg) {
     textbox.value = "";
-    //TODO return msg
+
+    socket.emit("msg", getCookie("id"), room, msg, Date.now());
 }
 
 choice1.onclick = () => {
