@@ -11,6 +11,7 @@ textbox.addEventListener("keydown", e => {
 });
 
 function sendMessage(msg) {
+    textbox.value = "";
     //TODO return msg
 }
 
