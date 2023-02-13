@@ -5,12 +5,12 @@ const textbox = document.getElementById("text");
 textbox.addEventListener("keydown", e => {
     if (e.keyCode === 13 && !e.shiftKey) {
         e.preventDefault();
-        sendMessage("<insert message as string here>");
+        sendMessage(message);
     }
 });
 
 function sendMessage(msg) {
-    //TODO send message
+    return msg
 }
 
 choice1.onclick = () => {
