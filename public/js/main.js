@@ -1,5 +1,16 @@
 const choice1 = document.getElementById("choice-1");
 const choice2 = document.getElementById("choice-2");
+const textbox = document.getElementById("text");
+
+textbox.addEventListener("keydown", e => {
+    if (e.keyCode === 13 && !e.shiftKey) {
+        sendMessage("<insert message as string here>");
+    }
+});
+
+function sendMessage(msg) {
+    //TODO send message
+}
 
 choice1.onclick = () => {
     choice1.classList.add("clicked");

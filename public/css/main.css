@@ -34,7 +34,6 @@ body {
     display: block;
     margin-left: auto;
     padding: 1.5vh;
-    border: #fff solid 0.1vh;
 }
 
 #text {
@@ -118,7 +117,6 @@ body {
 }
 
 .topic {
-    display: grid;
     overflow-y: scroll;
     height: 79vh;
     background-color: rgb(40, 40, 40);
