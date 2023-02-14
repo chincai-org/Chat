@@ -24,9 +24,18 @@ app.get("/about", (req, res) => {
     res.render("about.ejs");
 });
 
-app.get("/chat", (req, res) => {
-    res.render("main.ejs");
-});
+app.get(
+    "/chat",
+    async (req, res, next) => {
+        if (!(await utils.findUserByCookie(req.cookies.id))) {
+            return res.redirect("/login");
+        }
+        next();
+    },
+    (req, res) => {
+        res.render("main.ejs");
+    }
+);
 
 app.get("/login", (req, res) => {
     res.cookie("e", "");
