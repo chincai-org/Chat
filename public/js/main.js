@@ -1,24 +1,9 @@
 const public = document.getElementById("choice-1");
 const private = document.getElementById("choice-2");
 const textbox = document.getElementById("text");
+const roomsElement = document.getElementById("rooms");
 
-let room = "63ea5075135330ee451c922e"; // id for test
-
-function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(";");
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) == " ") {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
+let currentRoom = "63ea5075135330ee451c922e"; // id for test
 
 textbox.addEventListener("keydown", e => {
     if (e.keyCode === 13 && !e.shiftKey) {
@@ -30,32 +15,40 @@ textbox.addEventListener("keydown", e => {
 
 function sendMessage(msg) {
     textbox.value = "";
-
-    socket.emit("msg", getCookie("id"), room, msg, Date.now());
+    socket.emit("msg", cookieId, currentRoom, msg, Date.now());
 }
 
 public.onclick = () => {
     public.classList.add("clicked");
     if (private.classList.contains("clicked")) {
         private.classList.remove("clicked");
-        switchTo()
     }
+    switchTo("public");
 };
 
 private.onclick = () => {
     private.classList.add("clicked");
     if (public.classList.contains("clicked")) {
         public.classList.remove("clicked");
-        switchTo()
     }
+    switchTo("private");
 };
 
-function switchTo(choice) {
-    //TODO get private or public room from choice
+function switchTo(visibility) {
+    clearRoom();
+    socket.emit("rooms", cookieId, visibility);
+}
+
+function clearRoom() {
+    let remove = [];
+    for (let room of roomsElement.children) {
+        if (room.tagName != "FORM") remove.push(room);
+    }
+    remove.forEach(e => roomsElement.removeChild(e));
 }
 
 $("#text")
-    .each(function () {
+    .each(() => {
         this.setAttribute(
             "style",
             "height:" +
@@ -63,7 +56,7 @@ $("#text")
                 "vh;overflow-y:scroll;"
         );
     })
-    .on("input", function () {
+    .on("input", () => {
         this.style.height = "auto";
         if (this.scrollHeight > window.innerHeight / 2) {
             this.style.height = "48.844375963020035vh";

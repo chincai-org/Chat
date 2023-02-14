@@ -173,7 +173,7 @@ app.post("/signup_validator", async (req, res) => {
     }
 });
 
-app.post("/get_user_by_id", async (req, res) => {
+app.post("/get_user_by_cookie_id", async (req, res) => {
     let { id } = req.body;
     console.log(id);
     return res.json(await utils.findUserByCookie(id));
@@ -186,8 +186,6 @@ io.on("connection", socket => {
         let user = await utils.findUserByCookie(cookieId);
         let room = await utils.findRoom(roomId);
 
-        console.log(user);
-
         if (
             room.visibility == "private" &&
             room.members.includes(user.cookieId)
@@ -197,7 +195,26 @@ io.on("connection", socket => {
 
         if (user) {
             console.log(`${user.displayName}: ${msg}`);
+            utils.insertMessage(room._id, user.username, msg, time);
             io.emit("msg", user.name, msg, time);
+        } else {
+            // TODO handle user simply change cookie
+        }
+    });
+
+    socket.on("rooms", async (cookieId, visibility) => {
+        let user = await utils.findUserByCookie(cookieId);
+
+        console.log(user);
+
+        if (user) {
+            let rooms = await (
+                await utils.findRoomWithUser(user.username, visibility)
+            ).toArray();
+
+            let pins = user.pins[visibility];
+
+            socket.emit("rooms", rooms, pins);
         } else {
             // TODO handle user simply change cookie
         }

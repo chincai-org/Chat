@@ -22,7 +22,10 @@ export async function createUser(displayName, username, password, cookieId) {
             password: password,
             cookieId: cookieId,
             rooms: {},
-            pins: []
+            pins: {
+                public: [],
+                private: []
+            }
         });
     } finally {
     }
@@ -72,7 +75,28 @@ export async function findRoom(roomId) {
     }
 }
 
-export async function insertMessage(roomId, authorId, content, time) {
+export async function findRoomWithUser(username, visibility) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+        return await rooms.find(
+            {
+                members: {
+                    $all: [username]
+                },
+                visibility: visibility
+            },
+            {
+                projection: {
+                    _id: 1,
+                    name: 1
+                }
+            }
+        );
+    } finally {
+    }
+}
+
+export async function insertMessage(roomId, username, content, time) {
     try {
         const rooms = client.db("db").collection("rooms");
 
@@ -83,7 +107,7 @@ export async function insertMessage(roomId, authorId, content, time) {
             {
                 $push: {
                     messages: {
-                        author: authorId,
+                        author: username,
                         content: content,
                         createdAt: time
                     }

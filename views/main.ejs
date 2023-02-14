@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/main.css">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/cookie.js" defer></script>
     <script src="/js/main.js" defer></script>
     <script src="/js/socket.js"></script>
 </head>
@@ -31,7 +32,7 @@
             <h5 class="choice" id="choice-1" title="Public topic">Public</h5>
             <h5 class="choice" id="choice-2" title="Private topic">Private</h5>
         </div>
-        <div class="topic">
+        <div class="topic" id="rooms">
             <form><input id="search-bar" name="" placeholder="Search"><p id="create-new" title="Create new topic">➕</p></form>
             <div>
                 <h5 title="Right click for more info">Detective Conan</h5>
@@ -42,7 +43,7 @@
         </div>
     </div>
     <div class="bottom">
-        <p title="Right click for more info">Username1234567</p>
+        <p title="Right click for more info" id="username">Username1234567</p>
         <p title="Invite request">Inv request</p>
     </div>
 </body>
