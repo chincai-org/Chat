@@ -47,15 +47,16 @@ function clearRoom() {
     remove.forEach(e => roomsElement.removeChild(e));
 }
 
-$("#text").each(() => {
-    $(this).attr(
-        "style",
-        "height:" +
-            (this.scrollHeight / window.innerHeight) * 100 +
-            "vh;overflow-y:scroll;"
-    );
-})
-    .on("input", () => {
+$("#text")
+    .each(function () {
+        this.setAttribute(
+            "style",
+            "height:" +
+                (this.scrollHeight / window.innerHeight) * 100 +
+                "vh;overflow-y:scroll;"
+        );
+    })
+    .on("input", function () {
         this.style.height = "auto";
         if (this.scrollHeight > window.innerHeight / 2) {
             this.style.height = "48.844375963020035vh";
