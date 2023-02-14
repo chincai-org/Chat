@@ -1,5 +1,5 @@
-const choice1 = document.getElementById("choice-1");
-const choice2 = document.getElementById("choice-2");
+const public = document.getElementById("choice-1");
+const private = document.getElementById("choice-2");
 const textbox = document.getElementById("text");
 
 let room = "63ea5075135330ee451c922e"; // id for test
@@ -34,19 +34,25 @@ function sendMessage(msg) {
     socket.emit("msg", getCookie("id"), room, msg, Date.now());
 }
 
-choice1.onclick = () => {
-    choice1.classList.add("clicked");
-    if (choice2.classList.contains("clicked")) {
-        choice2.classList.remove("clicked");
+public.onclick = () => {
+    public.classList.add("clicked");
+    if (private.classList.contains("clicked")) {
+        private.classList.remove("clicked");
+        switchTo()
     }
 };
 
-choice2.onclick = () => {
-    choice2.classList.add("clicked");
-    if (choice1.classList.contains("clicked")) {
-        choice1.classList.remove("clicked");
+private.onclick = () => {
+    private.classList.add("clicked");
+    if (public.classList.contains("clicked")) {
+        public.classList.remove("clicked");
+        switchTo()
     }
 };
+
+function switchTo(choice) {
+    //TODO get private or public room from choice
+}
 
 $("#text")
     .each(function () {
