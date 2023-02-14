@@ -42,12 +42,12 @@ Rooms:
     "visibility": "public",
     "messages": [
         {
-            "author": "lkdgu7dlfukjasdj",
+            "author": "Ran",
             "content": "yo",
             "createdAt": "Thu Feb 09 2023 23:01:47 GMT+0800 (Malaysia Time)"
         },
         {
-            "author": "090df0sd0f28391023",
+            "author": "Shinichi",
             "content": "wutsup",
             "createdAt": "Thu Feb 09 2023 23:00:54 GMT+0800 (Malaysia Time)"
         }
@@ -63,16 +63,16 @@ Rooms:
     "visibility": "private",
     "messages": [
         {
-            "author": "lkdgu7dlfukjasdj",
+            "author": "Alice",
             "content": "hi",
             "createdAt": "Thu Feb 09 2023 23:08:01 GMT+0800 (Malaysia Time)"
         },
         {
-            "author": "090df0sd0f28391023",
+            "author": "Bob",
             "content": "hello",
             "createdAt": "Thu Feb 09 2023 23:06:03 GMT+0800 (Malaysia Time)"
         }
     ],
-    "members": ["lkdgu7dlfukjasdj", "090df0sd0f28391023"]
+    "members": ["Alice", "Bob"]
 }
 ```
