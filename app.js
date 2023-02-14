@@ -196,7 +196,7 @@ io.on("connection", socket => {
         if (user) {
             console.log(`${user.displayName}: ${msg}`);
             utils.insertMessage(room._id, user.username, msg, time);
-            io.emit("msg", user.name, msg, time);
+            io.emit("msg", user.displayName, roomId, msg, time);
         } else {
             // TODO handle user simply change cookie
         }
