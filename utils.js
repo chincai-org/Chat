@@ -78,27 +78,29 @@ export async function findRoom(roomId) {
 export async function findRoomWithUser(username, visibility) {
     try {
         const rooms = client.db("db").collection("rooms");
-        return await rooms.find(
-            {
-                $or: [
-                    {
-                        visibility: "public"
-                    },
-                    {
-                        members: {
-                            $all: [username]
+        return await rooms
+            .find(
+                {
+                    $or: [
+                        {
+                            visibility: "public"
+                        },
+                        {
+                            members: {
+                                $all: [username]
+                            }
                         }
+                    ],
+                    visibility: visibility
+                },
+                {
+                    projection: {
+                        _id: 1,
+                        name: 1
                     }
-                ],
-                visibility: visibility
-            },
-            {
-                projection: {
-                    _id: 1,
-                    name: 1
                 }
-            }
-        );
+            )
+            .toArray();
     } finally {
     }
 }
