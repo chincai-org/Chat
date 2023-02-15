@@ -217,12 +217,8 @@ io.on("connection", socket => {
         console.log(user);
 
         if (user) {
-            let rooms = await (
-                await utils.findRoomWithUser(user.username, visibility)
-            ).toArray();
-
+            let rooms = await utils.findRoomWithUser(user.username, visibility);
             let pins = user.pins[visibility];
-
             socket.emit("rooms", rooms, pins);
         } else {
             // TODO handle user simply change cookie
