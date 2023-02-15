@@ -198,3 +198,9 @@ body {
 .clicked {
     background-color: rgb(30, 30, 30) !important;
 }
+
+.text-pin {
+    font-size: 2vh;
+    color: white;
+    border-bottom: #aaa solid 0.1vh;
+}
