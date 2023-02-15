@@ -45,7 +45,7 @@ export async function createRoom(name, visibility, creater) {
             name: name,
             visibility: visibility,
             messages: [],
-            members: [creater]
+            members: visibility == "public" ? [] : [creater]
         });
     } finally {
     }
@@ -80,9 +80,16 @@ export async function findRoomWithUser(username, visibility) {
         const rooms = client.db("db").collection("rooms");
         return await rooms.find(
             {
-                members: {
-                    $all: [username]
-                },
+                $or: [
+                    {
+                        visibility: "public"
+                    },
+                    {
+                        members: {
+                            $all: [username]
+                        }
+                    }
+                ],
                 visibility: visibility
             },
             {
