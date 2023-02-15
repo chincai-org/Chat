@@ -1,9 +1,9 @@
 const socket = io();
 
 socket.on("msg", (authorName, roomId, content, time) => {
-    const chat = document.getElementById("chatting")
+    const chat = document.getElementById("chatting");
     if (currentRoom === roomId) {
-        console.log(authorName,content,time)
+        console.log(authorName, content, time);
         let container = document.createElement("div");
         container.className = "container";
         let name = document.createElement("h5");
@@ -27,46 +27,44 @@ socket.on("rooms", (rooms, pins) => {
     console.table(rooms);
     console.table(pins);
 
-    const topics = document.getElementById("rooms")
+    const topics = document.getElementById("rooms");
     let pinList = [];
 
-    if (!(pins.length === 0)) {
-
+    if (pins.length) {
         let textPin = document.createElement("p");
         textPin.className = "text-pin";
         textPin.innerText = "pin";
         topics.appendChild(textPin);
 
-        for (let pin = 0; pin < pins.length; pins++) {
-
+        for (let pin of pins) {
             let topic = document.createElement("div");
-            topic.id = pins[pin]['_id'];
+            topic.id = pin._id;
 
             let topicName = document.createElement("h5");
             topicName.title = "Right click for more info";
-            topicName.innerText = pins[pin]['name'];
+            topicName.innerText = pin.name;
 
             topic.appendChild(topicName);
             topics.appendChild(topic);
-            pinList.push(pins[pin]['name']);
-        };
-        textPin.innerText = "";
-        topics.appendChild(textPin);
-    };
-    for (let room = 0; room < rooms.length - pins.length; room++) {
+            pinList.push(pin.name);
+        }
 
-        if (!(rooms[room]['name'] in pinList)) {
+        let textPin2 = document.createElement("p");
+        textPin2.className = "text-pin";
+        topics.appendChild(textPin2);
+    }
 
+    for (let room of rooms) {
+        if (!pinList.includes(room.name)) {
             let topic = document.createElement("div");
-            topic.id = rooms[room]['_id']
+            topic.id = room._id;
 
             let topicName = document.createElement("h5");
             topicName.title = "Right click for more info";
-            topicName.innerText = rooms[room]['name'];
-            
+            topicName.innerText = room.name;
+
             topic.appendChild(topicName);
             topics.appendChild(topic);
         }
-
     }
 });
