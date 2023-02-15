@@ -17,7 +17,7 @@ Users:
 ```json
 {
     "_id": "090df0sd0f28391023",
-    "name": "Bob",
+    "displayName": "Bob",
     "username": "Bob",
     "cookieID": "idasdno8hdoAksdj",
     "password": "password123",
