@@ -16,7 +16,7 @@ export async function createUser(displayName, username, password, cookieId) {
     try {
         const users = client.db("db").collection("users");
 
-        users.insertOne({
+        await users.insertOne({
             displayName: displayName,
             username: username,
             password: password,
@@ -41,12 +41,35 @@ export async function createRoom(name, visibility, creater) {
     try {
         const rooms = client.db("db").collection("rooms");
 
-        rooms.insertOne({
+        let result = await rooms.insertOne({
             name: name,
             visibility: visibility,
             messages: [],
             members: visibility == "public" ? [] : [creater]
         });
+
+        if (visibility == "private") {
+            await assignRole(creater, result.insertedId, "admin");
+        }
+    } finally {
+    }
+}
+
+export async function assignRole(username, roomId, role) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+        const users = client.db("db").collection("users");
+
+        await users.updateOne(
+            {
+                username: username
+            },
+            {
+                $set: {
+                    ["rooms." + roomId]: role
+                }
+            }
+        );
     } finally {
     }
 }
@@ -101,6 +124,33 @@ export async function findRoomWithUser(username, visibility) {
                 }
             )
             .toArray();
+    } finally {
+    }
+}
+
+/**
+ * Warning, the room can only be private
+ * @param {string} userId
+ * @param {string} roomId
+ */
+export async function joinRoom(userId, roomId) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+
+        let user = await findUser(userId);
+
+        await rooms.updateOne(
+            {
+                _id: roomId
+            },
+            {
+                $push: {
+                    members: user.username
+                }
+            }
+        );
+
+        await assignRole(user.username, roomId, "member");
     } finally {
     }
 }
