@@ -107,7 +107,7 @@ export async function insertMessage(roomId, username, content, time) {
     try {
         const rooms = client.db("db").collection("rooms");
 
-        rooms.updateOne(
+        await rooms.updateOne(
             {
                 _id: new ObjectId(roomId)
             },
@@ -129,15 +129,18 @@ export async function pinRoom(userId, roomId) {
     try {
         const users = client.db("db").collection("users");
 
-        let change = "pins." + (await findRoom(roomId)).visibility;
+        let room = await findRoom(roomId);
 
-        users.updateOne(
+        await users.updateOne(
             {
-                id: new ObjectId(userId)
+                _id: new ObjectId(userId)
             },
             {
                 $push: {
-                    ["pins." + change]: roomId
+                    ["pins." + room.visibility]: {
+                        _id: roomId,
+                        name: room.name
+                    }
                 }
             }
         );
@@ -149,15 +152,17 @@ export async function unpinRoom(userId, roomId) {
     try {
         const users = client.db("db").collection("users");
 
-        let change = "pins." + (await findRoom(roomId)).visibility;
+        let room = await findRoom(roomId);
 
-        users.updateOne(
+        await users.updateOne(
             {
-                id: new ObjectId(userId)
+                _id: new ObjectId(userId)
             },
             {
                 $pull: {
-                    ["pins." + change]: roomId
+                    ["pins." + room.visibility]: {
+                        _id: roomId
+                    }
                 }
             }
         );
