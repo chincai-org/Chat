@@ -227,6 +227,26 @@ export async function insertMessage(roomId, username, content, time) {
     }
 }
 
+export async function deleteMessage(roomId, msgId) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+
+        await rooms.updateOne(
+            {
+                _id: new ObjectId(roomId)
+            },
+            {
+                $pull: {
+                    messages: {
+                        id: msgId
+                    }
+                }
+            }
+        );
+    } finally {
+    }
+}
+
 export async function assignRole(username, roomId, role) {
     try {
         const users = client.db("db").collection("users");

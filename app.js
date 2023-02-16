@@ -246,6 +246,7 @@ io.on("connection", socket => {
             for (let msg of room.messages) {
                 socket.emit(
                     "msg",
+                    msg.id,
                     msg.author,
                     room._id,
                     msg.content,
