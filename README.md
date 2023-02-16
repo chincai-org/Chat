@@ -21,15 +21,28 @@ Users:
     "_id": "090df0sd0f28391023",
     "displayName": "Bob",
     "username": "Bob",
-    "cookieID": "idasdno8hdoAksdj",
     "password": "password123",
+    "cookieId": "idasdno8hdoAksdj",
     "rooms": {
         "9hfm09asfsd": "admin",
         "sd9uf87fsduf": "co-admin",
         "osjd78godifjd": "member"
     },
     "pins": {
-        "public": ["ksdf8g7dfo", "54n89tgjfd", "mk1nj322j2"],
+        "public": [
+            {
+                "_id": "ksdf8g7dfo",
+                "name": "Detective Conan"
+            },
+            {
+                "_id": "54n89tgjfd",
+                "name": "OneTruthPrevails"
+            },
+            {
+                "_id": "mk1nj322j2",
+                "name": "css bad"
+            }
+        ],
         "private": []
     }
 }
@@ -44,17 +57,20 @@ Rooms:
     "visibility": "public",
     "messages": [
         {
+            "id": "ksdf8g7dfo1",
             "author": "Ran",
             "content": "yo",
-            "createdAt": "Thu Feb 09 2023 23:01:47 GMT+0800 (Malaysia Time)"
+            "createdAt": 1676539238720
         },
         {
+            "id": "ksdf8g7dfo2",
             "author": "Shinichi",
             "content": "wutsup",
-            "createdAt": "Thu Feb 09 2023 23:00:54 GMT+0800 (Malaysia Time)"
+            "createdAt": 1676539238720
         }
     ],
-    "members": []
+    "members": [],
+    "msgId": 2
 }
 ```
 
@@ -65,16 +81,19 @@ Rooms:
     "visibility": "private",
     "messages": [
         {
+            "id": "9hfm09asfsd1",
             "author": "Alice",
             "content": "hi",
-            "createdAt": "Thu Feb 09 2023 23:08:01 GMT+0800 (Malaysia Time)"
+            "createdAt": 1676539238720
         },
         {
+            "id": "9hfm09asfsd2",
             "author": "Bob",
             "content": "hello",
-            "createdAt": "Thu Feb 09 2023 23:06:03 GMT+0800 (Malaysia Time)"
+            "createdAt": 1676542330844
         }
     ],
-    "members": ["Alice", "Bob"]
+    "members": ["Alice", "Bob"],
+    "msgId": 2
 }
 ```
