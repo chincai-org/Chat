@@ -1,6 +1,7 @@
 const public = document.getElementById("choice-1");
 const private = document.getElementById("choice-2");
 const textbox = document.getElementById("text");
+const outerWrap = document.getElementById("outer-wrap")
 const roomsElement = document.getElementById("rooms");
 
 let currentRoom = "";
@@ -15,6 +16,7 @@ textbox.addEventListener("keydown", e => {
 
 public.onclick = () => {
     public.classList.add("clicked");
+
     if (private.classList.contains("clicked")) {
         private.classList.remove("clicked");
     }
@@ -76,7 +78,7 @@ function clearRoom() {
 }
 
 function clearMessage() {
-    // TODO clear all msg so can switch channel
+    outerWrap.innerHTML = "";
 }
 
 function createMsg(authorName, content, time) {
@@ -108,6 +110,5 @@ function createMsg(authorName, content, time) {
     container.appendChild(msg);
     container.appendChild(clock);
 
-    const outerWrap = document.getElementById("outer-wrap")
     outerWrap.appendChild(container);
 }

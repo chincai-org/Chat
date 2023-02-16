@@ -23,9 +23,12 @@ socket.on("rooms", (rooms, pins) => {
 
             topic.onclick = () => {
                 clearMessage();
+                textbox.classList.remove("hide");
                 currentRoom = pin._id;
                 socket.emit("fetchmsg", cookieId, pin._id);
             };
+
+
 
             let topicName = document.createElement("h5");
             topicName.title = "Right click for more info";
@@ -48,6 +51,7 @@ socket.on("rooms", (rooms, pins) => {
 
             topic.onclick = () => {
                 clearMessage();
+                textbox.classList.remove("hide");
                 currentRoom = room._id;
                 socket.emit("fetchmsg", cookieId, room._id);
             };
