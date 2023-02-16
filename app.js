@@ -197,6 +197,8 @@ io.on("connection", socket => {
 
         if (!user) {
             // TODO handle user simply change cookie
+        } else if (!room) {
+            // TODO handle user simply change room id
         } else if (
             room.visibility == "private" &&
             !room.members.includes(user.cookieId)
@@ -227,6 +229,8 @@ io.on("connection", socket => {
 
         if (!user) {
             // TODO handle user simply change cookie
+        } else if (!room) {
+            // TODO handle user simply change room id
         } else if (
             room.visibility == "private" &&
             !room.members.includes(user.cookieId)
