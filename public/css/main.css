@@ -32,8 +32,9 @@ body {
     width: 69.7%;
     box-sizing: none; /*75.5 */
     height: 84.3vh;
-    overflow-y: scroll;
-    display: block;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse;
     margin-left: auto;
     padding: 1.5vh;
 }
