@@ -265,7 +265,7 @@ export async function deleteLastMessages(roomId, amount) {
             }
         );
 
-        return messages.slice(messages.length - 3, messages.length);
+        return messages.slice(messages.length - amount, messages.length);
     } finally {
     }
 }
