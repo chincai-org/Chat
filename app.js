@@ -195,26 +195,22 @@ io.on("connection", socket => {
         let user = await utils.findUserByCookie(cookieId);
         let room = await utils.findRoom(roomId);
 
-        if (
+        if (!user) {
+            // TODO handle user simply change cookie
+        } else if (
             room.visibility == "private" &&
-            room.members.includes(user.cookieId)
+            !room.members.includes(user.cookieId)
         ) {
             // TODO user not at room
-        }
-
-        if (user) {
+        } else {
             console.log(`${user.displayName}: ${msg}`);
             utils.insertMessage(room._id, user.username, msg, time);
             io.emit("msg", user.displayName, roomId, msg, time);
-        } else {
-            // TODO handle user simply change cookie
         }
     });
 
     socket.on("rooms", async (cookieId, visibility) => {
         let user = await utils.findUserByCookie(cookieId);
-
-        console.log(user);
 
         if (user) {
             let rooms = await utils.findRoomWithUser(user.username, visibility);
@@ -222,6 +218,30 @@ io.on("connection", socket => {
             socket.emit("rooms", rooms, pins);
         } else {
             // TODO handle user simply change cookie
+        }
+    });
+
+    socket.on("fetchmsg", async (cookieId, roomId) => {
+        let user = await utils.findUserByCookie(cookieId);
+        let room = await utils.findRoom(roomId);
+
+        if (!user) {
+            // TODO handle user simply change cookie
+        } else if (
+            room.visibility == "private" &&
+            !room.members.includes(user.cookieId)
+        ) {
+            // TODO user not at room
+        } else {
+            for (let msg of room.messages) {
+                socket.emit(
+                    "msg",
+                    msg.author,
+                    room._id,
+                    msg.content,
+                    msg.createdAt
+                );
+            }
         }
     });
 });

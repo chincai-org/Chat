@@ -57,7 +57,6 @@ export async function createRoom(name, visibility, creater) {
 
 export async function assignRole(username, roomId, role) {
     try {
-        const rooms = client.db("db").collection("rooms");
         const users = client.db("db").collection("users");
 
         await users.updateOne(

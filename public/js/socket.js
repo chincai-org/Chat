@@ -1,30 +1,7 @@
 const socket = io();
 
 socket.on("msg", (authorName, roomId, content, time) => {
-    const chat = document.getElementById("chatting");
-    if (currentRoom === roomId) {
-        let date = new Date(time);
-        let container = document.createElement("div");
-        container.className = "container";
-        let name = document.createElement("h5");
-        name.innerText = authorName;
-        let msg = document.createElement("p");   
-        msg.innerHTML = content;
-        let clock = document.createElement("span");
-        clock.className = "time";
-        clock.innerText = String(date.getDate()) + "/" + String(date.getMonth() + 1) + "/" + String(date.getFullYear()) + " " + date.toLocaleTimeString().slice(0, -6) + ((date.getHours() > 11) ? " PM" : " AM");
-        container.appendChild(name);
-        container.appendChild(msg);
-        container.appendChild(clock);
-        chat.appendChild(container);
-    }
-    //        <div class="container">
-    //<h5>Joe</h5>
-    //<p>Hello</p>
-    //<span class="time">31/12/2022 11:01</span>
-    //</div>
-    // TODO append msg to html
-    // time is unix timestamp convert urself ;)
+    if (currentRoom === roomId) createMsg(authorName, content, time);
 });
 
 socket.on("rooms", (rooms, pins) => {
@@ -42,7 +19,13 @@ socket.on("rooms", (rooms, pins) => {
 
         for (let pin of pins) {
             let topic = document.createElement("div");
-            topic.id = pin._id;
+            // topic.id = pin._id;
+
+            topic.onclick = () => {
+                clearMessage();
+                currentRoom = pin._id;
+                socket.emit("fetchmsg", cookieId, pin._id);
+            };
 
             let topicName = document.createElement("h5");
             topicName.title = "Right click for more info";
@@ -61,7 +44,13 @@ socket.on("rooms", (rooms, pins) => {
     for (let room of rooms) {
         if (!pinList.includes(room.name)) {
             let topic = document.createElement("div");
-            topic.id = room._id;
+            // topic.id = room._id;
+
+            topic.onclick = () => {
+                clearMessage();
+                currentRoom = room._id;
+                socket.emit("fetchmsg", cookieId, room._id);
+            };
 
             let topicName = document.createElement("h5");
             topicName.title = "Right click for more info";
