@@ -200,6 +200,10 @@ body {
     background-color: rgb(30, 30, 30) !important;
 }
 
+.hide {
+    visibility: hidden !important;
+}
+
 .text-pin {
     font-size: 2vh;
     color: white;
