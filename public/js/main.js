@@ -80,7 +80,6 @@ function clearMessage() {
 }
 
 function createMsg(authorName, content, time) {
-    const chat = document.getElementById("chatting");
 
     let date = new Date(time);
 
@@ -109,5 +108,6 @@ function createMsg(authorName, content, time) {
     container.appendChild(msg);
     container.appendChild(clock);
 
-    chat.appendChild(container);
+    const outerWrap = document.getElementById("outer-wrap")
+    outerWrap.appendChild(container);
 }
