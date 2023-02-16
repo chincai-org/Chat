@@ -148,7 +148,8 @@ app.post("/signup_validator", async (req, res) => {
     } else if (!confirmpassword) {
         res.cookie("e", "4");
         res.redirect("/signup");
-    } else if (username.match[/[^A-z0-9]/g]) {
+    } else if (username.match(/[^A-z0-9_]/g)) {
+        console.log("else if")
         res.cookie("e", "5");
         res.redirect("/signup");
     } else if (await utils.findUserByUsername(username)) {
