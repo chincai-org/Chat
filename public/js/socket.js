@@ -1,7 +1,7 @@
 const socket = io();
 
-socket.on("msg", (authorName, roomId, content, time) => {
-    if (currentRoom === roomId) createMsg(authorName, content, time);
+socket.on("msg", (id, authorName, roomId, content, time) => {
+    if (currentRoom === roomId) createMsg(id, authorName, content, time);
 });
 
 socket.on("rooms", (rooms, pins) => {
@@ -27,8 +27,6 @@ socket.on("rooms", (rooms, pins) => {
                 currentRoom = pin._id;
                 socket.emit("fetchmsg", cookieId, pin._id);
             };
-
-
 
             let topicName = document.createElement("h5");
             topicName.title = "Right click for more info";

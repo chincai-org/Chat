@@ -1,7 +1,7 @@
 const public = document.getElementById("choice-1");
 const private = document.getElementById("choice-2");
 const textbox = document.getElementById("text");
-const outerWrap = document.getElementById("outer-wrap")
+const outerWrap = document.getElementById("outer-wrap");
 const roomsElement = document.getElementById("rooms");
 
 let currentRoom = "";
@@ -81,8 +81,7 @@ function clearMessage() {
     outerWrap.innerHTML = "";
 }
 
-function createMsg(authorName, content, time) {
-
+function createMsg(id, authorName, content, time) {
     let date = new Date(time);
 
     let container = document.createElement("div");
