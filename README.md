@@ -1,3 +1,5 @@
+![Panda sitting on a mat at the porch](/public/assets/logo.jpg "Panda sitting on a mat at the porch")
+
 # Run website on localhost:
 
 ```ps1
