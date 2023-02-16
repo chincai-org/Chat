@@ -283,3 +283,21 @@ export async function unpinRoom(userId, roomId) {
     } finally {
     }
 }
+
+export async function changeRoomName(roomId, newName) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+
+        await rooms.updateOne(
+            {
+                _id: new ObjectId(roomId)
+            },
+            {
+                $set: {
+                    name: newName
+                }
+            }
+        );
+    } finally {
+    }
+}
