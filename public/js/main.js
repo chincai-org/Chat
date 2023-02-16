@@ -92,7 +92,7 @@ function createMsg(authorName, content, time) {
     name.innerText = authorName;
 
     let msg = document.createElement("p");
-    msg.innerHTML = content;
+    msg.innerText = content;
 
     let clock = document.createElement("span");
     clock.className = "time";
