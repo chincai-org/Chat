@@ -16,7 +16,7 @@ export async function createUser(displayName, username, password, cookieId) {
     try {
         const users = client.db("db").collection("users");
 
-        await users.insertOne({
+        return await users.insertOne({
             displayName: displayName,
             username: username,
             password: password,
@@ -51,6 +51,8 @@ export async function createRoom(name, visibility, creater) {
         if (visibility == "private") {
             await assignRole(creater, result.insertedId, "admin");
         }
+
+        return result;
     } finally {
     }
 }
@@ -73,7 +75,17 @@ export async function assignRole(username, roomId, role) {
     }
 }
 
-export async function findUser(username) {
+export async function findUserById(userId) {
+    try {
+        const users = client.db("db").collection("users");
+        return await users.findOne({ _id: new ObjectId(userId) });
+    } catch (e) {
+        return null;
+    } finally {
+    }
+}
+
+export async function findUserByUsername(username) {
     try {
         const users = client.db("db").collection("users");
         return await users.findOne({ username: username });
@@ -138,11 +150,12 @@ export async function joinRoom(userId, roomId) {
     try {
         const rooms = client.db("db").collection("rooms");
 
-        let user = await findUser(userId);
+        let user = await findUserById(userId);
+        console.log(user);
 
         await rooms.updateOne(
             {
-                _id: roomId
+                _id: new ObjectId(roomId)
             },
             {
                 $push: {
@@ -152,6 +165,8 @@ export async function joinRoom(userId, roomId) {
         );
 
         await assignRole(user.username, roomId, "member");
+    } catch (e) {
+        return null;
     } finally {
     }
 }
@@ -174,6 +189,8 @@ export async function insertMessage(roomId, username, content, time) {
                 }
             }
         );
+    } catch (e) {
+        return null;
     } finally {
     }
 }
@@ -197,6 +214,8 @@ export async function pinRoom(userId, roomId) {
                 }
             }
         );
+    } catch (e) {
+        return null;
     } finally {
     }
 }
@@ -219,6 +238,48 @@ export async function unpinRoom(userId, roomId) {
                 }
             }
         );
+    } catch (e) {
+        return null;
+    } finally {
+    }
+}
+
+export async function kickUser(userId, roomId) {
+    try {
+        const users = client.db("db").collection("users");
+        const rooms = client.db("db").collection("rooms");
+
+        let user = await findUserById(userId);
+        let room = await findRoom(roomId);
+
+        await rooms.updateOne(
+            {
+                _id: new ObjectId(roomId)
+            },
+            {
+                $pull: {
+                    members: {
+                        $eq: user.username
+                    }
+                }
+            }
+        );
+
+        await users.updateOne(
+            {
+                _id: new ObjectId(userId)
+            },
+            {
+                $pull: {
+                    ["pins." + room.visibility]: roomId
+                },
+                $unset: {
+                    ["rooms." + roomId]: ""
+                }
+            }
+        );
+    } catch (e) {
+        return null;
     } finally {
     }
 }
