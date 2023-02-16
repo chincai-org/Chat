@@ -3,6 +3,7 @@ import http from "http";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
 import * as utils from "./utils.js";
+import { command } from "./command.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -208,12 +209,32 @@ io.on("connection", socket => {
         } else {
             console.log(`${user.displayName}: ${msg}`);
             let id = await utils.insertMessage(
-                room._id,
+                roomId,
                 user.username,
                 msg,
                 time
             );
             io.emit("msg", id, user.displayName, roomId, msg, time);
+
+            let response = await command.parse(
+                io,
+                roomId,
+                msg,
+                user.rooms[roomId]
+            );
+
+            console.log(response);
+
+            if (response) {
+                let time = Date.now();
+                let id = await utils.insertMessage(
+                    roomId,
+                    "System",
+                    response,
+                    time
+                );
+                io.emit("msg", id, "System", roomId, response, time);
+            }
         }
     });
 

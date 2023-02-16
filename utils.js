@@ -231,7 +231,7 @@ export async function deleteMessage(roomId, msgId) {
     try {
         const rooms = client.db("db").collection("rooms");
 
-        await rooms.updateOne(
+        return await rooms.updateOne(
             {
                 _id: new ObjectId(roomId)
             },
@@ -243,6 +243,29 @@ export async function deleteMessage(roomId, msgId) {
                 }
             }
         );
+    } finally {
+    }
+}
+
+export async function deleteLastMessages(roomId, amount) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+
+        let room = await findRoom(roomId);
+        let messages = room.messages;
+
+        await rooms.updateOne(
+            {
+                _id: new ObjectId(roomId)
+            },
+            {
+                $set: {
+                    messages: messages.slice(0, messages.length - amount)
+                }
+            }
+        );
+
+        return messages.slice(messages.length - 3, messages.length);
     } finally {
     }
 }
