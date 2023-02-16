@@ -57,24 +57,6 @@ export async function createRoom(name, visibility, creater) {
     }
 }
 
-export async function assignRole(username, roomId, role) {
-    try {
-        const users = client.db("db").collection("users");
-
-        await users.updateOne(
-            {
-                username: username
-            },
-            {
-                $set: {
-                    ["rooms." + roomId]: role
-                }
-            }
-        );
-    } finally {
-    }
-}
-
 export async function findUserById(userId) {
     try {
         const users = client.db("db").collection("users");
@@ -146,7 +128,7 @@ export async function findRoomWithUser(username, visibility) {
  * @param {string} userId
  * @param {string} roomId
  */
-export async function joinRoom(userId, roomId) {
+export async function addUser(userId, roomId) {
     try {
         const rooms = client.db("db").collection("rooms");
 
@@ -165,6 +147,46 @@ export async function joinRoom(userId, roomId) {
         );
 
         await assignRole(user.username, roomId, "member");
+    } catch (e) {
+        return null;
+    } finally {
+    }
+}
+
+export async function removeUser(userId, roomId) {
+    try {
+        const users = client.db("db").collection("users");
+        const rooms = client.db("db").collection("rooms");
+
+        let user = await findUserById(userId);
+        let room = await findRoom(roomId);
+
+        await rooms.updateOne(
+            {
+                _id: new ObjectId(roomId)
+            },
+            {
+                $pull: {
+                    members: {
+                        $eq: user.username
+                    }
+                }
+            }
+        );
+
+        await users.updateOne(
+            {
+                _id: new ObjectId(userId)
+            },
+            {
+                $pull: {
+                    ["pins." + room.visibility]: roomId
+                },
+                $unset: {
+                    ["rooms." + roomId]: ""
+                }
+            }
+        );
     } catch (e) {
         return null;
     } finally {
@@ -191,6 +213,24 @@ export async function insertMessage(roomId, username, content, time) {
         );
     } catch (e) {
         return null;
+    } finally {
+    }
+}
+
+export async function assignRole(username, roomId, role) {
+    try {
+        const users = client.db("db").collection("users");
+
+        await users.updateOne(
+            {
+                username: username
+            },
+            {
+                $set: {
+                    ["rooms." + roomId]: role
+                }
+            }
+        );
     } finally {
     }
 }
@@ -235,46 +275,6 @@ export async function unpinRoom(userId, roomId) {
                     ["pins." + room.visibility]: {
                         _id: roomId
                     }
-                }
-            }
-        );
-    } catch (e) {
-        return null;
-    } finally {
-    }
-}
-
-export async function kickUser(userId, roomId) {
-    try {
-        const users = client.db("db").collection("users");
-        const rooms = client.db("db").collection("rooms");
-
-        let user = await findUserById(userId);
-        let room = await findRoom(roomId);
-
-        await rooms.updateOne(
-            {
-                _id: new ObjectId(roomId)
-            },
-            {
-                $pull: {
-                    members: {
-                        $eq: user.username
-                    }
-                }
-            }
-        );
-
-        await users.updateOne(
-            {
-                _id: new ObjectId(userId)
-            },
-            {
-                $pull: {
-                    ["pins." + room.visibility]: roomId
-                },
-                $unset: {
-                    ["rooms." + roomId]: ""
                 }
             }
         );
