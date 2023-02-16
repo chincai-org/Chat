@@ -75,11 +75,11 @@ app.get("/signup", (req, res) => {
     const usernameError = [
         "",
         "",
-        "<p> Please don't leave this empty. ",
+        "Please don't leave this empty. ",
         "",
         "",
-        "<p> Please use character between A to Z and 0 to 9 only. </p>",
-        "<p> This username cannot be used. </p>",
+        "Please use character between A to Z and 0 to 9 only. ",
+        "This username cannot be used. ",
         ""
     ];
 
@@ -87,7 +87,7 @@ app.get("/signup", (req, res) => {
         "",
         "",
         "",
-        "<p> Please don't leave this empty. </p>",
+        "Please don't leave this empty. ",
         "",
         "",
         "",
@@ -99,10 +99,10 @@ app.get("/signup", (req, res) => {
         "",
         "",
         "",
-        "<p> Please don't leave this empty. </p>",
+        "Please don't leave this empty. ",
         "",
         "",
-        "<p> This is not the same with password. </p>"
+        "This is not the same with password. "
     ];
 
     res.render("signup.ejs", {
