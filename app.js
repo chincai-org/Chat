@@ -114,7 +114,7 @@ app.get("/signup", (req, res) => {
 
 app.post("/login_validator", async (req, res) => {
     let { username, password } = req.body;
-    var user = await utils.findUser(username);
+    var user = await utils.findUserByUsername(username);
     if (!username) {
         res.cookie("e", "1");
         res.redirect("/login");
@@ -151,7 +151,7 @@ app.post("/signup_validator", async (req, res) => {
     } else if (username.match[/[^A-z0-9]/g]) {
         res.cookie("e", "5");
         res.redirect("/signup");
-    } else if (await utils.findUser(username)) {
+    } else if (await utils.findUserByUsername(username)) {
         res.cookie("e", "6");
         res.redirect("/signup");
         console.log("e9");
