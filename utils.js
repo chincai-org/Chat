@@ -93,6 +93,8 @@ export async function findRoom(roomId) {
     try {
         const rooms = client.db("db").collection("rooms");
         return await rooms.findOne({ _id: new ObjectId(roomId) });
+    } catch (e) {
+        return null;
     } finally {
     }
 }
