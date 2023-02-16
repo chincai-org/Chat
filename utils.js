@@ -44,6 +44,7 @@ export async function createRoom(name, visibility, creater) {
         let result = await rooms.insertOne({
             name: name,
             visibility: visibility,
+            msgId: 0,
             messages: [],
             members: visibility == "public" ? [] : [creater]
         });
@@ -197,6 +198,9 @@ export async function insertMessage(roomId, username, content, time) {
     try {
         const rooms = client.db("db").collection("rooms");
 
+        let room = await findRoom(roomId);
+        let id = room._id.toString() + (room.msgId + 1);
+
         await rooms.updateOne(
             {
                 _id: new ObjectId(roomId)
@@ -204,13 +208,19 @@ export async function insertMessage(roomId, username, content, time) {
             {
                 $push: {
                     messages: {
+                        id: id,
                         author: username,
                         content: content,
                         createdAt: time
                     }
+                },
+                $inc: {
+                    msgId: 1
                 }
             }
         );
+
+        return id;
     } catch (e) {
         return null;
     } finally {

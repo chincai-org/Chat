@@ -149,7 +149,7 @@ app.post("/signup_validator", async (req, res) => {
         res.cookie("e", "4");
         res.redirect("/signup");
     } else if (username.match(/[^A-z0-9_]/g)) {
-        console.log("else if")
+        console.log("else if");
         res.cookie("e", "5");
         res.redirect("/signup");
     } else if (await utils.findUserByUsername(username)) {
@@ -207,8 +207,13 @@ io.on("connection", socket => {
             // TODO user not at room
         } else {
             console.log(`${user.displayName}: ${msg}`);
-            utils.insertMessage(room._id, user.username, msg, time);
-            io.emit("msg", user.displayName, roomId, msg, time);
+            let id = await utils.insertMessage(
+                room._id,
+                user.username,
+                msg,
+                time
+            );
+            io.emit("msg", id, user.displayName, roomId, msg, time);
         }
     });
 
