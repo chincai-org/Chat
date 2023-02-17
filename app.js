@@ -216,12 +216,7 @@ io.on("connection", socket => {
             );
             io.emit("msg", id, user.displayName, roomId, msg, time);
 
-            let response = await command.parse(
-                io,
-                roomId,
-                msg,
-                user.rooms[roomId]
-            );
+            let response = await command.parse(io, user, room, msg);
 
             console.log(response);
 
