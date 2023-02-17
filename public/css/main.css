@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
 html {
     font-size: 62.5%;
@@ -208,4 +208,8 @@ body {
     font-size: 2vh;
     color: white;
     border-bottom: #aaa solid 0.1vh;
+}
+
+.system-colour {
+    color: royalblue;
 }

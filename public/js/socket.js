@@ -66,5 +66,6 @@ socket.on("rooms", (rooms, pins) => {
 
 socket.on("delete", msgId => {
     console.log(msgId);
+    outerWrap.removeChild(document.getElementById(msgId))
     // TODO delete msg with the id of msgId
 });
