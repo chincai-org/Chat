@@ -8,6 +8,9 @@ let currentRoom = "";
 
 textbox.addEventListener("keydown", e => {
     if (e.keyCode === 13 && !e.shiftKey) {
+        if (/^\s*/.test(textbox.value)) {
+            return
+        };
         e.preventDefault();
         message = textbox.value;
         sendMessage(message);
