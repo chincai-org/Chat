@@ -10,7 +10,7 @@ html {
 
 body {
     background-color: rgb(50, 50, 50);
-    background-image: url('/Image/home.jpg');
+    background-image: url('/assets/home.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
