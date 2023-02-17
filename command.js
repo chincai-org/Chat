@@ -59,7 +59,7 @@ command.on("purge", async (io, user, room, amt) => {
     if (role == "member") return `You don't have the permission!`;
 
     if (amt && (!amt.match(/[^0-9]/g) || amt.toLowerCase() == "all")) {
-        if (amt.toLowerCase() == "all") amt = room.messages.length;
+        if (amt.toLowerCase() == "all") amt = room.messages.length + 1;
 
         let deletedMessages = await utils.deleteLastMessages(room._id, amt);
 
