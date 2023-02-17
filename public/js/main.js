@@ -8,7 +8,7 @@ let currentRoom = "";
 
 textbox.addEventListener("keydown", e => {
     if (e.keyCode === 13 && !e.shiftKey) {
-        if (/^\s*/.test(textbox.value)) {
+        if (!/\S/.test(textbox.value)) {
             return
         };
         e.preventDefault();
