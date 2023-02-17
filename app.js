@@ -225,16 +225,8 @@ io.on("connection", socket => {
 
             console.log(response);
 
-            if (response) {
-                let time = Date.now();
-                let id = await utils.insertMessage(
-                    roomId,
-                    "System",
-                    response,
-                    time
-                );
-                io.emit("msg", id, "System", roomId, response, time);
-            }
+            if (response)
+                io.emit("msg", "SYSTEM", "System", roomId, response, time);
         }
     });
 
