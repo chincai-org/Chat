@@ -8,6 +8,9 @@ let currentRoom = "";
 
 textbox.addEventListener("keydown", e => {
     if (e.keyCode === 13 && !e.shiftKey) {
+        if (!/\S/.test(textbox.value)) {
+            return;
+        }
         e.preventDefault();
         message = textbox.value;
         sendMessage(message);
@@ -109,7 +112,6 @@ function createMsg(id, authorName, content, time) {
     container.appendChild(msg);
     container.appendChild(clock);
     container.id = id;
-    console.log(container.id)
 
     outerWrap.appendChild(container);
 
@@ -117,7 +119,7 @@ function createMsg(id, authorName, content, time) {
         container.classList.add("system-colour");
         clock.classList.add("system-colour");
         setTimeout(() => {
-            outerWrap.removeChild(container)
+            outerWrap.removeChild(container);
         }, 2000);
     }
 }
