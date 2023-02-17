@@ -158,6 +158,56 @@ body {
     text-align: center;
 }
 
+.wrapper {
+    position: absolute;
+    width: 20vh;
+    background: black;
+    border-radius: 10%;
+    box-shadow: 0 1vh 2vh rgba(0,0,0,0.1);
+    z-index: 999;
+    transform: scale(0);
+    transform-origin: top left;
+}
+
+.active {
+    transform: scale(1);
+    transition: 200ms ease-in-out;
+}
+
+.wrapper .menu {
+    padding: 1vh 2vh;
+}
+
+.menu-content .item {
+    list-style: none;
+    font-size: 2vh;
+    height: 3vh;
+    background-color: black;
+    border-radius: 5%;
+    margin-bottom: 1vh;
+    padding: 0 1vh 0 2vh;
+    cursor: pointer;
+    color: white;
+    width: 100%;
+}
+
+.menu-content .item:hover {
+    background-color: white;
+}
+
+.menu-content .item span {
+    font-size: 2vh;
+    margin-left: 1vh;
+    color: white;
+}
+
+.menu-content .copy-id {
+    margin-top: 1vh;
+    padding: 1vh 2vh;
+    border-top: 0.1vh solid white;
+
+}
+
 #choice-1,
 #choice-2 {
     background-color: rgb(50, 50, 50);
