@@ -108,6 +108,16 @@ function createMsg(id, authorName, content, time) {
     container.appendChild(name);
     container.appendChild(msg);
     container.appendChild(clock);
+    container.id = id;
+    console.log(container.id)
 
     outerWrap.appendChild(container);
+
+    if (id == "SYSTEM") {
+        container.classList.add("system-colour");
+        clock.classList.add("system-colour");
+        setTimeout(() => {
+            outerWrap.removeChild(container)
+        }, 2000);
+    }
 }
