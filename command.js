@@ -43,7 +43,10 @@ command.on("delete", async (io, roomId, role, msgId) => {
 });
 
 command.on("purge", async (io, roomId, role, amt) => {
-    if (amt && !amt.match(/[^0-9]/g)) {
+    if (amt && (!amt.match(/[^0-9]/g) || amt.toLowerCase() == "all")) {
+        if (amt.toLowerCase() == "all")
+            amt = (await utils.findRoom(roomId)).messages.length;
+
         let deletedMessages = await utils.deleteLastMessages(roomId, amt);
 
         for (let deletedMessage of deletedMessages) {
