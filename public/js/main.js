@@ -4,6 +4,7 @@ const textbox = document.getElementById("text");
 const outerWrap = document.getElementById("outer-wrap");
 const roomsElement = document.getElementById("rooms");
 
+let openedContextMenu = null;
 let currentRoom = "";
 
 textbox.addEventListener("keydown", e => {
@@ -32,6 +33,11 @@ private.onclick = () => {
         public.classList.remove("clicked");
     }
     switchTo("private");
+};
+
+document.onclick = () => {
+    openedContextMenu.classList.remove("active");
+    openedContextMenu = null;
 };
 
 $("#text")
@@ -86,7 +92,7 @@ function clearMessage() {
 
 function createTopic(room) {
     let topic = document.createElement("div");
-    let contextMenu = document.getElementById(room._id);
+    let contextMenu = createContextMenu(room);
     topic.id = room._id;
 
     topic.onclick = () => {
@@ -99,21 +105,23 @@ function createTopic(room) {
 
     topic.oncontextmenu = e => {
         e.preventDefault();
+
+        openedContextMenu?.classList.remove("active");
         contextMenu.classList.add("active");
-        evt = evt || window.event;
-        let x = evt.clientX,
-            y = evt.clientY;
-        x =
-            x > window.innerWidth - contextMenu.offsetWidth
-                ? window.innerWidth - contextMenu.offsetWidth
-                : x;
-        y =
-            y > window.innerHeight - contextMenu.offsetHeight
-                ? window.innerHeight - contextMenu.offsetHeight
-                : y;
+
+        openedContextMenu = contextMenu;
+
+        let x = Math.min(
+            e.clientX,
+            window.innerWidth - contextMenu.offsetWidth
+        );
+        let y = Math.min(
+            e.clientY,
+            window.innerHeight - contextMenu.offsetHeight
+        );
+
         contextMenu.style.left = `${(x / window.innerHeight) * 100}vh`;
         contextMenu.style.top = `${(y / window.innerHeight) * 100 - 0.3}vh`;
-        contextMenu.classList.add("active");
     };
 
     let topicName = document.createElement("h5");
@@ -121,8 +129,51 @@ function createTopic(room) {
     topicName.innerText = room.name;
 
     topic.appendChild(topicName);
+    topic.appendChild(contextMenu);
 
     return topic;
+}
+
+function createContextMenu(room) {
+    let wrapper = document.createElement("div");
+    wrapper.className = "wrapper";
+
+    let menuContent = document.createElement("div");
+    menuContent.className = "menu-content";
+
+    let menu = document.createElement("ul");
+    menu.className = "menu";
+
+    let itemTrash = document.createElement("li");
+    itemTrash.className = "item";
+
+    let iTrash = document.createElement("i");
+    iTrash.className = "fa-solid fa-trash";
+    let spanTrash = document.createElement("span");
+    spanTrash.innerText = "Delete";
+
+    let copyId = document.createElement("div");
+    copyId.className = "copy-id";
+
+    let itemCopyId = document.createElement("li");
+    itemCopyId.className = "item";
+
+    let ICopyId = document.createElement("i");
+    ICopyId.className = "fa-solid fa-id-card-clip";
+    let spanCopyId = document.createElement("span");
+    spanCopyId.innerText = "Copy ID";
+
+    itemTrash.appendChild(iTrash);
+    itemTrash.appendChild(spanTrash);
+    menu.appendChild(itemTrash);
+    itemCopyId.appendChild(ICopyId);
+    itemCopyId.appendChild(spanCopyId);
+    copyId.appendChild(itemCopyId);
+    menuContent.appendChild(menu);
+    menuContent.appendChild(copyId);
+    wrapper.appendChild(menuContent);
+
+    return wrapper;
 }
 
 function createMsg(id, authorName, content, time) {
@@ -164,43 +215,3 @@ function createMsg(id, authorName, content, time) {
         }, 2000);
     }
 }
-
-// function createRightClickContextMenu() {
-//     let wrapper = document.createElement("div");
-//     wrapper.className = "wrapper";
-
-//     let menuContent = document.createElement("div");
-//     menuContent.className = "menu-content";
-
-//     let menu = document.createElement("ul");
-//     menu.className = "menu";
-
-//     let itemTrash = document.createElement("li");
-//     itemTrash.className = "item";
-
-//     let iTrash = document.createElement("i");
-//     iTrash.className = "fa-solid fa-trash";
-//     let spanTrash = document.createElement("span");
-//     spanTrash.innerText = "Delete";
-
-//     let copyId = document.createElement("div");
-//     copyId.className = "copy-id";
-
-//     let itemCopyId = document.createElement("li");
-//     itemCopyId.className = "item";
-
-//     let ICopyId = document.createElement("i");
-//     ICopyId.className = "fa-solid fa-id-card-clip";
-//     let spanCopyId = document.createElement("span");
-//     spanCopyId.innerText = "Copy ID";
-
-//     itemTrash.appendChild(iTrash);
-//     itemTrash.appendChild(spanTrash);
-//     menu.appendChild(itemTrash);
-//     itemCopyId.appendChild(ICopyId);
-//     itemCopyId.appendChild(spanCopyId);
-//     copyId.appendChild(itemCopyId);
-//     menuContent.appendChild(menu);
-//     menuContent.appendChild(copyId);
-//     wrapper.appendChild(menuContent);
-// }
