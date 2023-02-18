@@ -53,9 +53,10 @@ socket.on("rooms", (rooms, pins) => {
             topic.appendChild(topicName);
             topic.appendChild(wrapper);
             topics.appendChild(topic);
+            topics.appendChild(createTopic(pin));
             pinList.push(pin.name);
         }
-        
+
         let textPin2 = document.createElement("p");
         textPin2.className = "text-pin";
         topics.appendChild(textPin2);
@@ -96,6 +97,7 @@ socket.on("rooms", (rooms, pins) => {
             topic.appendChild(wrapper);
             topic.appendChild(topicName);
             topics.appendChild(topic);
+            topics.appendChild(createTopic(room));
         }
     }
 });
