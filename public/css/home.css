@@ -10,10 +10,10 @@ html {
 
 body {
     background-color: rgb(50, 50, 50);
-    background-image: url('/assets/home.jpg'), url('/assets/home2.jpg');
+    background-image: url("/assets/home.jpg"), url("/assets/home2.jpg");
     background-position: top, bottom;
     background-repeat: no-repeat, no-repeat;
-    background-size: 100vw 104vh ;
+    background-size: 100vw 104vh;
 }
 
 header {
@@ -85,7 +85,6 @@ nav {
     background: rgb(30, 30, 30);
     border-radius: 6px;
 }
-
 
 ::-webkit-scrollbar-track {
     background-color: rgb(80, 80, 80);

@@ -172,7 +172,7 @@ body {
     width: 20vh;
     background: black;
     border-radius: 10%;
-    box-shadow: 0 1vh 2vh rgba(0,0,0,0.1);
+    box-shadow: 0 1vh 2vh rgba(0, 0, 0, 0.1);
     z-index: 999;
     transform: scale(0);
     transform-origin: top left;
@@ -214,7 +214,6 @@ body {
     margin-top: 1vh;
     padding: 1vh 2vh;
     border-top: 0.1vh solid white;
-
 }
 
 #choice-1,
