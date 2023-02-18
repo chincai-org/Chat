@@ -116,6 +116,12 @@ function createTopic(room) {
         contextMenu.classList.add("active");
     };
 
+    let topicName = document.createElement("h5");
+    topicName.title = "Right click for more info";
+    topicName.innerText = room.name;
+
+    topic.appendChild(topicName);
+
     return topic;
 }
 
