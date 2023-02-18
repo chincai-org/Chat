@@ -1,10 +1,11 @@
 body {
     margin: 0;
     padding: 0;
-    /* background: url(a.jpg); */
+    background: url('/assets/login.jpg');
     background-color: rgb(50, 50, 50);
-    background-size: cover;
-    background-position: center;
+    background-size: 100vw 100vh;
+    background-position: top;
+    background-repeat: no-repeat;
     font-family: sans-serif;
 }
 
@@ -45,6 +46,11 @@ input[type="password"] {
     color: white;
 }
 
+.loginbox input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+    color: wheat;
+}
+
 .loginbox input[type="submit"] {
     width: 100%;
     border: none;
@@ -64,7 +70,7 @@ input[type="password"] {
 .loginbox a {
     text-decoration: none;
     line-height: 20px;
-    color: darkgray;
+    color: wheat;
 }
 
 .loginbox a:hover {
