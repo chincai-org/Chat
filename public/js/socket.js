@@ -48,45 +48,7 @@ socket.on("rooms", (rooms, pins) => {
             topicName.title = "Right click for more info";
             topicName.innerText = pin.name;
 
-            
-            let wrapper = document.createElement("div");
-            wrapper.className = "wrapper";
-            
-            let menuContent = document.createElement("div");
-            menuContent.className = "menu-content";
-            
-            let menu = document.createElement("ul");
-            menu.className = "menu";
-            
-            
-            let itemTrash = document.createElement("li");
-            itemTrash.className = "item";
-            
-            let iTrash = document.createElement("i");
-            iTrash.className = "fa-solid fa-trash";
-            let spanTrash = document.createElement("span");
-            spanTrash.innerText = "Delete";
-            
-            let copyId = document.createElement("div");
-            copyId.className = "copy-id";
-            
-            let itemCopyId = document.createElement("li");
-            itemCopyId.className = "item";
-            
-            let ICopyId = document.createElement("i");
-            ICopyId.className = "fa-solid fa-id-card-clip";
-            let spanCopyId = document.createElement("span");
-            spanCopyId.innerText = "Copy ID"
-            
-            itemTrash.appendChild(iTrash);
-            itemTrash.appendChild(spanTrash);
-            menu.appendChild(itemTrash);
-            itemCopyId.appendChild(ICopyId);
-            itemCopyId.appendChild(spanCopyId);
-            copyId.appendChild(itemCopyId);
-            menuContent.appendChild(menu);
-            menuContent.appendChild(copyId);
-            wrapper.appendChild(menuContent);
+            createRightClickContextMenu();
 
             topic.appendChild(topicName);
             topic.appendChild(wrapper);
@@ -129,45 +91,7 @@ socket.on("rooms", (rooms, pins) => {
             topicName.title = "Right click for more info";
             topicName.innerText = room.name;
 
-            
-            let wrapper = document.createElement("div");
-            wrapper.className = "wrapper";
-            
-            let menuContent = document.createElement("div");
-            menuContent.className = "menu-content";
-            
-            let menu = document.createElement("ul");
-            menu.className = "menu";
-            
-
-            let itemTrash = document.createElement("li");
-            itemTrash.className = "item";
-            
-            let iTrash = document.createElement("i");
-            iTrash.className = "fa-solid fa-trash";
-            let spanTrash = document.createElement("span");
-            spanTrash.innerText = "Delete";
-            
-            let copyId = document.createElement("div");
-            copyId.className = "copy-id";
-            
-            let itemCopyId = document.createElement("li");
-            itemCopyId.className = "item";
-
-            let ICopyId = document.createElement("i");
-            ICopyId.className = "fa-solid fa-id-card-clip";
-            let spanCopyId = document.createElement("span");
-            spanCopyId.innerText = "Copy ID"
-            
-            itemTrash.appendChild(iTrash);
-            itemTrash.appendChild(spanTrash);
-            menu.appendChild(itemTrash);
-            itemCopyId.appendChild(ICopyId);
-            itemCopyId.appendChild(spanCopyId);
-            copyId.appendChild(itemCopyId);
-            menuContent.appendChild(menu);
-            menuContent.appendChild(copyId);
-            wrapper.appendChild(menuContent);
+            createRightClickContextMenu()
 
             topic.appendChild(wrapper);
             topic.appendChild(topicName);
