@@ -10,10 +10,10 @@ html {
 
 body {
     background-color: rgb(50, 50, 50);
-    background-image: url('/assets/home.jpg');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-image: url('/assets/home.jpg'), url('/assets/home2.jpg');
+    background-position: top, bottom;
+    background-repeat: no-repeat, no-repeat;
+    background-size: 100vw 104vh ;
 }
 
 header {
@@ -70,6 +70,25 @@ div {
 nav {
     position: fixed;
     top: 0vh;
+}
+
+::-webkit-scrollbar {
+    width: 2vh;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(40, 40, 40);
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(30, 30, 30);
+    border-radius: 6px;
+}
+
+
+::-webkit-scrollbar-track {
+    background-color: rgb(80, 80, 80);
 }
 
 .login,
