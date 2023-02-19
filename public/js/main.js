@@ -120,8 +120,8 @@ function createTopic(room) {
             window.innerHeight - contextMenu.offsetHeight
         );
 
-        contextMenu.style.left = `${(x / window.innerHeight) * 100}vh`;
-        contextMenu.style.top = `${(y / window.innerHeight) * 100 - 0.3}vh`;
+        contextMenu.style.left = `${(x / window.innerWidth) * 100}vw`;
+        contextMenu.style.top = `${(y / window.innerHeight) * 100}vh`;
     };
 
     let topicName = document.createElement("h5");
@@ -186,6 +186,9 @@ function createMsg(id, authorName, content, time) {
     name.innerText = authorName;
 
     let msg = document.createElement("p");
+    // if (content.contains(`@${authorName}`)) {
+    //     content.style.color = 'blue';
+    // }
     msg.innerText = content;
 
     let clock = document.createElement("span");
