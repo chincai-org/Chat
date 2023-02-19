@@ -168,7 +168,7 @@ body {
 }
 
 .wrapper {
-    position: absolute;
+    position: fixed;
     width: 20vh;
     background: black;
     border-radius: 10%;
