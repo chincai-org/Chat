@@ -186,12 +186,8 @@ function createMsg(id, authorName, content, time) {
     name.innerText = authorName;
 
     let msg = document.createElement("p");
-    let mention = document.createElement("span");
-    mention.className = "mention";
     msg.innerText = content;
-    mention.innerText = `@${authorName}`
-    msg.innerText.replace(`@${authorName}`,`${mention}`)
-    console.log(msg.innerText)
+    msg.innerHTML = msg.innerHTML.replace(`@${Username}`,`<span class="mention">@${Username}</span>`);
 
     let clock = document.createElement("span");
     clock.className = "time";
