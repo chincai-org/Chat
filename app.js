@@ -17,6 +17,10 @@ app.use(cookieParser());
 
 app.set("view engine", "ejs");
 
+app.get("/", (req, res) => {
+    res.redirect("/home");
+});
+
 app.get("/home", (req, res) => {
     res.render("home.ejs");
 });
@@ -188,6 +192,10 @@ app.post("/get_user_by_cookie_id", async (req, res) => {
     let { id } = req.body;
     console.log(id);
     return res.json(await utils.findUserByCookie(id));
+});
+
+app.get("*", (req, res) => {
+    res.status(404).render("error.ejs", { error: 404 });
 });
 
 io.on("connection", socket => {
