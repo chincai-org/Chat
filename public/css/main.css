@@ -271,3 +271,7 @@ body {
 .system-colour {
     color: royalblue;
 }
+
+.mention {
+    color: rgb(13, 122, 168);
+}
