@@ -225,6 +225,7 @@ io.on("connection", socket => {
         ) {
             // TODO user not at room
         } else {
+            msg = msg.trim();
             console.log(`${user.displayName}: ${msg}`);
             let id = await utils.insertMessage(
                 roomId,
