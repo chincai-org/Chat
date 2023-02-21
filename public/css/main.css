@@ -282,7 +282,6 @@ body {
 }
 
 .image {
-    display: grid;
     width: 6vh;
     height: 6vh;
 }

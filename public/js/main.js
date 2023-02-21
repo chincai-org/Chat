@@ -242,6 +242,7 @@ async function createMsg(id, authorName, content, time) {
 
     let image = document.createElement("img");
     image.alt = "default";
+    image.src = "/assets/default_green.png";
     image.className = "image";
 
     containers.appendChild(image);
