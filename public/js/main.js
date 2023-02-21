@@ -3,6 +3,7 @@ const private = document.getElementById("choice-2");
 const textbox = document.getElementById("text");
 const outerWrap = document.getElementById("outer-wrap");
 const roomsElement = document.getElementById("rooms");
+const searchBar = document.getElementById("search-bar");
 
 let openedContextMenu = null;
 let currentRoom = "";
