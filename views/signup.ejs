@@ -15,17 +15,17 @@
         <form action="/signup_validator" method="POST">
             <p>Name</p>
             
-            <%= name %>
+            <p class="warning"><%= name %></p>
             <input type="text" maxlength="15" name="name" placeholder="Enter name" required>
             <p>Username</p>
-            <%= username %>
+            <p class="warning"><%= username %></p>
             <input type="text" maxlength="15" name="username" placeholder="Enter username" required>
             <p>Password</p>
-            <%= password %>
+            <p class="warning"><%= password %></p>
             <input type="password" maxlength="20" name="password" placeholder="Enter password" required>
             <p>Confirm Password</p>
             
-            <%= confirmpassword %>
+            <p class="warning"><%= confirmpassword %></p>
             <input type="password" maxlength="20" name="confirmpassword" placeholder="Enter password" required>
             <br><br>
             <input type="submit" name="" id="loginbtn" value="Sign Up">

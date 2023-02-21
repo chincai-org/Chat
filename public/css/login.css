@@ -76,3 +76,7 @@ input[type="password"]::placeholder {
 .loginbox a:hover {
     color: #fff;
 }
+
+.warning {
+    color: red !important;
+}
