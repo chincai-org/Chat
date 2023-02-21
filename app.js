@@ -194,6 +194,16 @@ app.post("/get_user_by_cookie_id", async (req, res) => {
     return res.json(await utils.findUserByCookie(id));
 });
 
+app.post("/is_username_valid", async (req, res) => {
+    let { username } = req.body;
+
+    if (await utils.findUserByUsername(username)) {
+        return res.json({ res: true });
+    }
+
+    res.json({ res: false });
+});
+
 app.get("*", (req, res) => {
     res.status(404).render("error.ejs", { error: 404 });
 });

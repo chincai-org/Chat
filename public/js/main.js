@@ -36,7 +36,7 @@ private.onclick = () => {
 };
 
 document.onclick = () => {
-    openedContextMenu.classList.remove("active");
+    openedContextMenu?.classList.remove("active");
     openedContextMenu = null;
 };
 
@@ -67,6 +67,27 @@ $("#text")
             );
         }
     });
+
+async function postData(url, method, data) {
+    return await fetch(url, {
+        method: method,
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        redirect: "follow",
+        referrerPolicy: "no-referrer",
+        body: JSON.stringify(data)
+    });
+}
+
+async function isValid(username) {
+    return (
+        await postData("/is_username_valid", "POST", { username: username })
+    ).json();
+}
 
 function sendMessage(msg) {
     textbox.value = "";
@@ -176,7 +197,7 @@ function createContextMenu(room) {
     return wrapper;
 }
 
-function createMsg(id, authorName, content, time) {
+async function createMsg(id, authorName, content, time) {
     let date = new Date(time);
 
     let container = document.createElement("div");
@@ -187,7 +208,16 @@ function createMsg(id, authorName, content, time) {
 
     let msg = document.createElement("p");
     msg.innerText = content;
-    msg.innerHTML = msg.innerHTML.replace(`@${Username}`,`<span class="mention">@${Username}</span>`);
+
+    for (let username of content.match(/(?<=@)[A-Za-z\d_]+/g) || []) {
+        let valid = await isValid(username);
+        if (valid.res) {
+            msg.innerHTML = msg.innerHTML.replace(
+                `@${username}`,
+                `<span class="mention">@${username}</span>`
+            );
+        }
+    }
 
     let clock = document.createElement("span");
     clock.className = "time";
