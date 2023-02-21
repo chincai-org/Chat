@@ -21,6 +21,7 @@ Users:
     "_id": "090df0sd0f28391023",
     "displayName": "Bob",
     "username": "Bob",
+    "avatar": "/assets/default_red.png",
     "password": "password123",
     "cookieId": "idasdno8hdoAksdj",
     "rooms": {
