@@ -179,15 +179,19 @@ function createContextMenu(room) {
 function createMsg(id, authorName, content, time) {
     let date = new Date(time);
 
-    let container = document.createElement("div");
-    container.className = "container";
+    let containers = document.createElement("div");
+    containers.className = "container";
+
+    let textContainer = document.createElement("div");
+    textContainer.className = "text-container";
 
     let name = document.createElement("h5");
     name.innerText = authorName;
 
     let msg = document.createElement("p");
     msg.innerText = content;
-    msg.innerHTML = msg.innerHTML.replace(`@${Username}`,`<span class="mention">@${Username}</span>`);
+    msg.className = "msg"
+    // msg.innerHTML = msg.innerHTML.replace(`@${Username}`,`<span class="mention">@${Username}</span>`);
 
     let clock = document.createElement("span");
     clock.className = "time";
@@ -201,18 +205,25 @@ function createMsg(id, authorName, content, time) {
         date.toLocaleTimeString().slice(0, -6) +
         (date.getHours() > 11 ? " PM" : " AM");
 
-    container.appendChild(name);
-    container.appendChild(msg);
-    container.appendChild(clock);
-    container.id = id;
+    let image = document.createElement("img");
+    image.src = "/assets/logo.png";
+    image.alt = "default";
+    image.className = "image";
 
-    outerWrap.appendChild(container);
+    containers.appendChild(image);
+    textContainer.appendChild(name);
+    textContainer.appendChild(msg);
+    textContainer.appendChild(clock)
+    containers.appendChild(textContainer);
+    containers.id = id;
+
+    outerWrap.appendChild(containers);
 
     if (id == "SYSTEM") {
-        container.classList.add("system-colour");
+        containers.classList.add("system-colour");
         clock.classList.add("system-colour");
         setTimeout(() => {
-            outerWrap.removeChild(container);
+            outerWrap.removeChild(containers);
         }, 2000);
     }
 }
