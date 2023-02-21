@@ -68,6 +68,10 @@ $("#text")
         }
     });
 
+function randint(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
 function sendMessage(msg) {
     textbox.value = "";
     socket.emit("msg", cookieId, currentRoom, msg, Date.now());
@@ -206,7 +210,6 @@ function createMsg(id, authorName, content, time) {
         (date.getHours() > 11 ? " PM" : " AM");
 
     let image = document.createElement("img");
-    image.src = "/assets/logo.png";
     image.alt = "default";
     image.className = "image";
 
