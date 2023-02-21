@@ -24,7 +24,10 @@ export async function createUser(displayName, username, password, cookieId) {
         return await users.insertOne({
             displayName: displayName,
             username: username,
-            avatar: "default_" + colors[randint(1, colors.length - 1)],
+            avatar:
+                "assets/default_" +
+                colors[randint(1, colors.length - 1)] +
+                ".png",
             password: password,
             cookieId: cookieId,
             rooms: {},
