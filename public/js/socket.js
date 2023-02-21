@@ -1,7 +1,7 @@
 const socket = io();
 
-socket.on("msg", (id, authorName, roomId, content, time) => {
-    if (currentRoom === roomId) createMsg(id, authorName, content, time);
+socket.on("msg", async (id, authorName, roomId, content, time) => {
+    if (currentRoom === roomId) await createMsg(id, authorName, content, time);
 });
 
 socket.on("rooms", (rooms, pins) => {
