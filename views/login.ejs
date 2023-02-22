@@ -14,10 +14,10 @@
         <h1>Log In</h1>
         <form action="/login_validator" method="POST">
             <p>Username</p>
-            <%= username %>
+            <p class="warning"><%= username %></p>
             <input type="text" maxlength="15" name="username" placeholder="Enter username" required>
             <p>Password</p>
-            <%= password %>
+            <p class="warning"><%= password %></p>
             <input type="password" maxlength="20" name="password" placeholder="Enter password" required>
             <br><br>
             <input type="submit" id="loginbtn" value="Log in">

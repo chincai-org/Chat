@@ -1,4 +1,4 @@
-![Panda sitting on a mat at the porch](/public/assets/logo.jpg "Panda sitting on a mat at the porch")
+![Panda sitting on a mat at the porch](/public/assets/home2.jpg "Panda sitting on a mat at the porch")
 
 # Run website on localhost:
 
@@ -21,6 +21,7 @@ Users:
     "_id": "090df0sd0f28391023",
     "displayName": "Bob",
     "username": "Bob",
+    "avatar": "/assets/default_red.png",
     "password": "password123",
     "cookieId": "idasdno8hdoAksdj",
     "rooms": {

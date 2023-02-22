@@ -4,6 +4,11 @@ import { config } from "dotenv";
 config();
 const uri = process.env.uri;
 const client = new MongoClient(uri);
+const colors = ["blue", "green", "purple", "red", "yellow"];
+
+function randint(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 /**
  * @constructor
@@ -19,6 +24,10 @@ export async function createUser(displayName, username, password, cookieId) {
         return await users.insertOne({
             displayName: displayName,
             username: username,
+            avatar:
+                "assets/default_" +
+                colors[randint(1, colors.length - 1)] +
+                ".png",
             password: password,
             cookieId: cookieId,
             rooms: {},
