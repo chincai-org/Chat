@@ -80,6 +80,10 @@ body {
     border-radius: 6px;
 }
 
+#text::-webkit-scrollbar {
+    width: 1.5vh;
+}
+
 .container {
     background-color: rgb(60, 60, 60);
     border-radius: 5px;
@@ -136,6 +140,10 @@ body {
     overflow-y: scroll;
     height: 79vh;
     background-color: rgb(40, 40, 40);
+}
+
+.topic::-webkit-scrollbar {
+    width: 1.5vh;
 }
 
 .topic h5 {
