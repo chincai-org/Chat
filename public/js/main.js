@@ -41,6 +41,18 @@ document.onclick = () => {
     openedContextMenu = null;
 };
 
+searchBar.oninput = () => {
+    if (searchBar.value == "") {
+        console.log("empty");
+        clearRoom();
+        socket.emit("rooms", cookieId, visibility);
+    } else {
+        console.log("no");
+        clearRoom();
+        socket.emit("findrooms", cookieId, visibility, searchBar.value);
+    }
+}
+
 $("#text")
     .each(function () {
         this.setAttribute(
@@ -68,6 +80,7 @@ $("#text")
             );
         }
     });
+
 
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
