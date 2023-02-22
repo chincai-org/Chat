@@ -4,8 +4,10 @@ const textbox = document.getElementById("text");
 const outerWrap = document.getElementById("outer-wrap");
 const roomsElement = document.getElementById("rooms");
 const searchBar = document.getElementById("search-bar");
+const chat = document.querySelector(".chat");
 
 let openedContextMenu = null;
+let activeRoom = null;
 let currentRoom = "";
 
 textbox.addEventListener("keydown", e => {
@@ -18,6 +20,17 @@ textbox.addEventListener("keydown", e => {
         sendMessage(message);
     }
 });
+
+textbox.setAttribute(
+    "style",
+    `height:${
+        (textbox.scrollHeight / window.innerHeight) * 100
+    }vh;overflow-y:scroll;`
+);
+
+textbox.oninput = () => {
+    requestAnimationFrame(updateHeight);
+};
 
 public.onclick = () => {
     public.classList.add("clicked");
@@ -53,42 +66,6 @@ searchBar.oninput = () => {
     }
 };
 
-const text = document.querySelector("#text");
-const chat = document.querySelector(".chat");
-
-const updateHeight = () => {
-    text.style.height = "auto";
-
-    const windowHeight = window.innerHeight;
-    const textHeight = text.scrollHeight;
-    const textHeightPercentage = (textHeight / windowHeight) * 100;
-    const chatHeightPercentage =
-        ((windowHeight - textHeight) / windowHeight) * 100 -
-        (53 / windowHeight) * 100;
-    if (textHeightPercentage > 50) {
-        text.style.height = "50vh";
-        chat.style.height = "43.29738058551618vh";
-        text.style.overflowY = "scroll";
-    } else {
-        text.style.height = `${textHeightPercentage}vh`;
-        chat.style.height = `${chatHeightPercentage}vh`;
-        text.style.overflowY = "hidden";
-    }
-};
-
-text.setAttribute(
-    "style",
-    `height:${
-        (text.scrollHeight / window.innerHeight) * 100
-    }vh;overflow-y:scroll;`
-);
-
-updateHeight();
-
-text.oninput = () => {
-    requestAnimationFrame(updateHeight);
-};
-
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -112,6 +89,26 @@ async function isValid(username) {
     return (
         await postData("/is_username_valid", "POST", { username: username })
     ).json();
+}
+
+function updateHeight() {
+    textbox.style.height = "auto";
+
+    const windowHeight = window.innerHeight;
+    const textHeight = textbox.scrollHeight;
+    const textHeightPercentage = (textHeight / windowHeight) * 100;
+    const chatHeightPercentage =
+        ((windowHeight - textHeight) / windowHeight) * 100 -
+        (53 / windowHeight) * 100;
+    if (textHeightPercentage > 50) {
+        textbox.style.height = "50vh";
+        chat.style.height = "43.29738058551618vh";
+        textbox.style.overflowY = "scroll";
+    } else {
+        textbox.style.height = `${textHeightPercentage}vh`;
+        chat.style.height = `${chatHeightPercentage}vh`;
+        textbox.style.overflowY = "hidden";
+    }
 }
 
 function sendMessage(msg) {
@@ -144,11 +141,15 @@ function createTopic(room) {
 
     topic.onclick = () => {
         clearMessage();
-        topic.classList.add("topic-bg-colour");
-        textbox.classList.remove("hide");
         currentRoom = room._id;
-        socket.emit("fetchmsg", cookieId, room._id);
+
+        activeRoom?.classList.remove("topic-bg-colour");
+        topic.classList.add("topic-bg-colour");
+        activeRoom = topic;
+
+        textbox.classList.remove("hide");
         contextMenu.classList.remove("active");
+        socket.emit("fetchmsg", cookieId, room._id);
     };
 
     topic.oncontextmenu = e => {
