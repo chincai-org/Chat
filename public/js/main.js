@@ -225,7 +225,14 @@ function createContextMenu(room) {
     return wrapper;
 }
 
-async function createMsg(id, authorName, content, time) {
+async function createMsg(
+    id,
+    authorName,
+    authorUsername,
+    avatar,
+    content,
+    time
+) {
     let date = new Date(time);
 
     let containers = document.createElement("div");
@@ -238,7 +245,7 @@ async function createMsg(id, authorName, content, time) {
     name.innerText = authorName;
 
     let username = document.createElement("span");
-    username.innerText = `@${authorName}`;
+    username.innerText = `@${authorUsername}`;
     username.className = "username";
 
     let msg = document.createElement("p");
@@ -269,7 +276,7 @@ async function createMsg(id, authorName, content, time) {
 
     let image = document.createElement("img");
     image.alt = "default";
-    image.src = "/assets/default_green.png";
+    image.src = avatar;
     image.className = "image";
 
     name.appendChild(username);

@@ -233,7 +233,16 @@ io.on("connection", socket => {
                 msg,
                 time
             );
-            io.emit("msg", id, user.displayName, roomId, msg, time);
+            io.emit(
+                "msg",
+                id,
+                user.displayName,
+                user.username,
+                user.avatar,
+                roomId,
+                msg,
+                time
+            );
 
             let response = await command.parse(io, user, room, msg);
 
@@ -271,10 +280,13 @@ io.on("connection", socket => {
             // TODO user not at room
         } else {
             for (let msg of room.messages) {
+                let user = await utils.findUserByUsername(msg.author);
                 socket.emit(
                     "msg",
                     msg.id,
-                    msg.author,
+                    user.displayName,
+                    user.username,
+                    user.avatar,
                     room._id,
                     msg.content,
                     msg.createdAt
