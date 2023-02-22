@@ -15,7 +15,7 @@ textbox.addEventListener("keydown", e => {
         }
         e.preventDefault();
         message = textbox.value;
-        sendMessage(message);
+        sendMessage(message);   
     }
 });
 
@@ -53,33 +53,38 @@ searchBar.oninput = () => {
     }
 }
 
-$("#text")
-    .each(function () {
-        this.setAttribute(
-            "style",
-            "height:" +
-                (this.scrollHeight / window.innerHeight) * 100 +
-                "vh;overflow-y:scroll;"
-        );
-    })
-    .on("input", function () {
-        this.style.height = "auto";
-        if (this.scrollHeight > window.innerHeight / 2) {
-            this.style.height = "48.844375963020035vh";
-            $(".chat").css("height", "43.29738058551618vh");
-        } else {
-            this.style.height =
-                (this.scrollHeight / window.innerHeight) * 100 + "vh";
-            $(".chat").css(
-                "height",
-                ((window.innerHeight - this.scrollHeight) /
-                    window.innerHeight) *
-                    100 -
-                    (53 / window.innerHeight) * 100 +
-                    "vh"
-            );
-        }
-    });
+const text = document.querySelector("#text");
+const chat = document.querySelector(".chat");
+
+const updateHeight = () => {
+    text.style.height = "auto";
+  
+    const windowHeight = window.innerHeight;
+    const textHeight = text.scrollHeight;
+    const textHeightPercentage = (textHeight / windowHeight) * 100;
+    const chatHeightPercentage =
+      ((windowHeight - textHeight) / windowHeight) * 100 - (53 / windowHeight) * 100;
+    if (textHeightPercentage > 50) {
+      text.style.height = "50vh";
+      chat.style.height = "43.29738058551618vh";
+      text.style.overflowY = "scroll";
+    } else {
+      text.style.height = `${textHeightPercentage}vh`;
+      chat.style.height = `${chatHeightPercentage}vh`;
+      text.style.overflowY = "hidden";
+    }
+  };
+
+text.setAttribute(
+  "style",
+  `height:${(text.scrollHeight / window.innerHeight) * 100}vh;overflow-y:scroll;`
+);
+
+updateHeight();
+
+text.oninput = () => {
+  requestAnimationFrame(updateHeight);
+};
 
 
 function randint(min, max) {
@@ -108,8 +113,9 @@ async function isValid(username) {
 }
 
 function sendMessage(msg) {
-    textbox.value = "";
+    textbox.value = ""
     socket.emit("msg", cookieId, currentRoom, msg, Date.now());
+    updateHeight();
 }
 
 function switchTo(visibility) {

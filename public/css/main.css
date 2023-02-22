@@ -37,6 +37,8 @@ body {
     flex-direction: column-reverse;
     margin-left: auto;
     padding: 1.5vh;
+    scroll-behavior: smooth;
+    scroll-padding: calc(100vh - 10vh);
 }
 
 #text {
