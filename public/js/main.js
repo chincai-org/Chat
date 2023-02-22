@@ -15,7 +15,7 @@ textbox.addEventListener("keydown", e => {
         }
         e.preventDefault();
         message = textbox.value;
-        sendMessage(message);   
+        sendMessage(message);
     }
 });
 
@@ -51,41 +51,43 @@ searchBar.oninput = () => {
         clearRoom();
         socket.emit("findrooms", cookieId, visibility, searchBar.value);
     }
-}
+};
 
 const text = document.querySelector("#text");
 const chat = document.querySelector(".chat");
 
 const updateHeight = () => {
     text.style.height = "auto";
-  
+
     const windowHeight = window.innerHeight;
     const textHeight = text.scrollHeight;
     const textHeightPercentage = (textHeight / windowHeight) * 100;
     const chatHeightPercentage =
-      ((windowHeight - textHeight) / windowHeight) * 100 - (53 / windowHeight) * 100;
+        ((windowHeight - textHeight) / windowHeight) * 100 -
+        (53 / windowHeight) * 100;
     if (textHeightPercentage > 50) {
-      text.style.height = "50vh";
-      chat.style.height = "43.29738058551618vh";
-      text.style.overflowY = "scroll";
+        text.style.height = "50vh";
+        chat.style.height = "43.29738058551618vh";
+        text.style.overflowY = "scroll";
     } else {
-      text.style.height = `${textHeightPercentage}vh`;
-      chat.style.height = `${chatHeightPercentage}vh`;
-      text.style.overflowY = "hidden";
+        text.style.height = `${textHeightPercentage}vh`;
+        chat.style.height = `${chatHeightPercentage}vh`;
+        text.style.overflowY = "hidden";
     }
-  };
+};
 
 text.setAttribute(
-  "style",
-  `height:${(text.scrollHeight / window.innerHeight) * 100}vh;overflow-y:scroll;`
+    "style",
+    `height:${
+        (text.scrollHeight / window.innerHeight) * 100
+    }vh;overflow-y:scroll;`
 );
 
 updateHeight();
 
 text.oninput = () => {
-  requestAnimationFrame(updateHeight);
+    requestAnimationFrame(updateHeight);
 };
-
 
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -113,7 +115,7 @@ async function isValid(username) {
 }
 
 function sendMessage(msg) {
-    textbox.value = ""
+    textbox.value = "";
     socket.emit("msg", cookieId, currentRoom, msg, Date.now());
     updateHeight();
 }
@@ -142,6 +144,7 @@ function createTopic(room) {
 
     topic.onclick = () => {
         clearMessage();
+        topic.classList.add("topic-bg-colour");
         textbox.classList.remove("hide");
         currentRoom = room._id;
         socket.emit("fetchmsg", cookieId, room._id);
@@ -233,6 +236,10 @@ async function createMsg(id, authorName, content, time) {
     let name = document.createElement("h5");
     name.innerText = authorName;
 
+    let username = document.createElement("span");
+    username.innerText = `@${authorName}`;
+    username.className = "username";
+
     let msg = document.createElement("p");
     msg.innerText = content;
     msg.className = "msg";
@@ -264,6 +271,7 @@ async function createMsg(id, authorName, content, time) {
     image.src = "/assets/default_green.png";
     image.className = "image";
 
+    name.appendChild(username);
     containers.appendChild(image);
     textContainer.appendChild(name);
     textContainer.appendChild(msg);
