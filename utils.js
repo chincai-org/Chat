@@ -10,6 +10,19 @@ function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+export async function findPings(msg) {
+    let pings = [];
+
+    for (let username of new Set(msg.match(/(?<=@)[A-Za-z\d_]+/g) || [])) {
+        console.log(username);
+        if (await findUserByUsername(username)) {
+            pings.push(username);
+        }
+    }
+
+    return pings;
+}
+
 /**
  * @constructor
  * @param {string} displayName - Display name of user, can be duplicated, no rules

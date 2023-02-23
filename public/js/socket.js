@@ -2,7 +2,16 @@ const socket = io();
 
 socket.on(
     "msg",
-    async (id, authorName, authorUsername, avatar, roomId, content, time) => {
+    async (
+        id,
+        authorName,
+        authorUsername,
+        avatar,
+        roomId,
+        content,
+        time,
+        pings
+    ) => {
         if (currentRoom === roomId)
             await createMsg(
                 id,
@@ -10,7 +19,8 @@ socket.on(
                 authorUsername,
                 avatar,
                 content,
-                time
+                time,
+                pings
             );
     }
 );
