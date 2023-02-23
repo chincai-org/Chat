@@ -157,17 +157,15 @@ body {
 }
 
 .bottom {
-    display: grid;
+    display: flex;
     position: absolute;
     bottom: 0;
-    grid-template-columns: 16vw 7.5vw;
     padding: 0.5vh;
     font-size: 3vh;
     color: white;
     width: calc(100vw - 0.3vh);
     background-color: rgb(30, 30, 30);
 }
-
 .bottom p:hover {
     background-color: rgb(50, 50, 50);
     cursor: pointer;
@@ -178,7 +176,6 @@ body {
     grid-template-columns: 1fr 1fr;
     text-align: center;
 }
-
 .wrapper {
     position: fixed;
     width: 20vh;
@@ -304,6 +301,14 @@ body {
     color: #aaa;
     padding-left: 1vh;
     font-weight: lighter;
+}
+
+.font-size-2_5vh {
+    font-size: 2.5vh;    
+}
+
+.font-size-2vh {
+    font-size: 2vh;    
 }
 
 .topic-bg-colour {
