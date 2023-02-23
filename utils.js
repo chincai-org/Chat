@@ -237,7 +237,9 @@ export async function removeUser(userId, roomId) {
             },
             {
                 $pull: {
-                    ["pins." + room.visibility]: roomId
+                    ["pins." + room.visibility]: {
+                        _id: roomId
+                    }
                 },
                 $unset: {
                     ["rooms." + roomId]: ""
