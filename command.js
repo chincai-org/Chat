@@ -2,6 +2,7 @@ import * as utils from "./utils.js";
 
 const prefix = ">";
 const superUsers = ["Bob", "Mortis_666", "ddddddddrrdd3"];
+const roleValue = ["member", "co-admin", "admin"];
 
 class Command {
     constructor() {
@@ -27,9 +28,7 @@ class Command {
 }
 
 function getRole(user, room) {
-    if (superUsers.includes(user.username)) {
-        return "admin";
-    }
+    if (superUsers.includes(user.username)) return "admin";
     return room.visibility == "public" ? "member" : user.rooms[room._id];
 }
 
@@ -74,5 +73,22 @@ command.on("purge", async (io, user, room, amt) => {
         return `Deleted ${amt} messages`;
     } else {
         return `Syntax: ${prefix}purge <amount>`;
+    }
+});
+
+command.on("kick", async (io, user, room, username) => {
+    if (!username) return `Syntax: ${prefix}kick <username>`;
+    let target = await utils.findUserByUsername(username);
+    let kickerRole = getRole(user, room);
+    let targetRole = getRole(target, room);
+
+    if (room.visibility == "public") {
+        return "You can't kick anyone out of a public room!";
+    } else if (roleValue.indexOf(kickerRole) < roleValue.indexOf(targetRole)) {
+        return "You don't have the permission!";
+    } else {
+        await utils.removeUser(target._id, room._id.toString());
+        console.log(room._id);
+        return `Kicked user ${username}`;
     }
 });
