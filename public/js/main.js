@@ -231,8 +231,10 @@ async function createMsg(
     authorUsername,
     avatar,
     content,
-    time
+    time,
+    pings
 ) {
+    console.time(id);
     let date = new Date(time);
 
     let containers = document.createElement("div");
@@ -252,14 +254,11 @@ async function createMsg(
     msg.innerText = content;
     msg.className = "msg";
 
-    for (let username of content.match(/(?<=@)[A-Za-z\d_]+/g) || []) {
-        let valid = await isValid(username);
-        if (valid.res) {
-            msg.innerHTML = msg.innerHTML.replace(
-                `@${username}`,
-                `<span class="mention">@${username}</span>`
-            );
-        }
+    for (let ping of pings) {
+        msg.innerHTML = msg.innerHTML.replaceAll(
+            `@${ping}`,
+            `<span class="mention">@${ping}</span>`
+        );
     }
 
     let clock = document.createElement("span");
@@ -296,4 +295,5 @@ async function createMsg(
             outerWrap.removeChild(containers);
         }, 2000);
     }
+    console.timeEnd(id);
 }

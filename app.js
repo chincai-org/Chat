@@ -233,6 +233,7 @@ io.on("connection", socket => {
                 msg,
                 time
             );
+
             io.emit(
                 "msg",
                 id,
@@ -241,7 +242,8 @@ io.on("connection", socket => {
                 user.avatar,
                 roomId,
                 msg,
-                time
+                time,
+                await utils.findPings(msg)
             );
 
             let response = await command.parse(io, user, room, msg);
@@ -257,7 +259,8 @@ io.on("connection", socket => {
                     "/assets/system.png",
                     roomId,
                     response,
-                    time
+                    time,
+                    []
                 );
         }
     });
@@ -298,7 +301,8 @@ io.on("connection", socket => {
                     user.avatar,
                     room._id,
                     msg.content,
-                    msg.createdAt
+                    msg.createdAt,
+                    await utils.findPings(msg.content)
                 );
             }
         }
