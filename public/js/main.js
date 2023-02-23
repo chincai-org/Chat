@@ -8,6 +8,7 @@ const chat = document.querySelector(".chat");
 
 let openedContextMenu = null;
 let activeRoom = null;
+let visible = null
 let currentRoom = "";
 
 textbox.addEventListener("keydown", e => {
@@ -117,7 +118,6 @@ function sendMessage(msg) {
 
 function switchTo(visibility) {
     clearRoom();
-    let visible;
     visible = visibility;
     socket.emit("rooms", cookieId, visible);
 }
