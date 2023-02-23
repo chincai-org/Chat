@@ -249,7 +249,16 @@ io.on("connection", socket => {
             console.log(response);
 
             if (response)
-                io.emit("msg", "SYSTEM", "System", roomId, response, time);
+                io.emit(
+                    "msg",
+                    "SYSTEM",
+                    "System",
+                    "system",
+                    "/assets/system.png",
+                    roomId,
+                    response,
+                    time
+                );
         }
     });
 
