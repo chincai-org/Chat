@@ -56,11 +56,9 @@ document.onclick = () => {
 
 searchBar.oninput = () => {
     if (searchBar.value == "") {
-        console.log("empty");
         clearRoom();
         socket.emit("rooms", cookieId, visibility);
     } else {
-        console.log("no");
         clearRoom();
         socket.emit("findrooms", cookieId, visibility, searchBar.value);
     }
@@ -119,7 +117,7 @@ function sendMessage(msg) {
 
 function switchTo(visibility) {
     clearRoom();
-    let visible = visibility
+    visible = visibility;
     socket.emit("rooms", cookieId, visible);
 }
 
