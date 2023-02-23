@@ -23,7 +23,7 @@ $.ajax({
         id: cookieId
     },
     success: response => {
-        document.getElementById("username").innerText = response.displayName;
+        // document.getElementById("username").innerText = response.displayName;
     },
     error: (xhr, status, error) => {
         console.log("Error: " + error);
