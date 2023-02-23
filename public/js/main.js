@@ -8,7 +8,7 @@ const chat = document.querySelector(".chat");
 
 let openedContextMenu = null;
 let activeRoom = null;
-let visible = null
+let visible = null;
 let currentRoom = "";
 
 textbox.addEventListener("keydown", e => {
@@ -58,10 +58,10 @@ document.onclick = () => {
 searchBar.oninput = () => {
     if (searchBar.value == "") {
         clearRoom();
-        socket.emit("rooms", cookieId, visibility);
+        socket.emit("rooms", cookieId, visible);
     } else {
         clearRoom();
-        socket.emit("findrooms", cookieId, visibility, searchBar.value);
+        socket.emit("findrooms", cookieId, visible, searchBar.value);
     }
 };
 
