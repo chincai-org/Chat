@@ -146,6 +146,40 @@ export async function findRoomWithUser(username, visibility) {
     }
 }
 
+export async function findRoomWithUserAndQuery(username, visibility, query) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+        return await rooms
+            .find(
+                {
+                    $or: [
+                        {
+                            visibility: "public"
+                        },
+                        {
+                            members: {
+                                $all: [username]
+                            }
+                        }
+                    ],
+                    name: {
+                        $regex: query,
+                        $options: "i"
+                    },
+                    visibility: visibility
+                },
+                {
+                    projection: {
+                        _id: 1,
+                        name: 1
+                    }
+                }
+            )
+            .toArray();
+    } finally {
+    }
+}
+
 /**
  * Warning, the room can only be private
  * @param {string} userId

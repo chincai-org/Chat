@@ -265,18 +265,6 @@ io.on("connection", socket => {
         }
     });
 
-    socket.on("rooms", async (cookieId, visibility) => {
-        let user = await utils.findUserByCookie(cookieId);
-
-        if (user) {
-            let rooms = await utils.findRoomWithUser(user.username, visibility);
-            let pins = user.pins[visibility];
-            socket.emit("rooms", rooms, pins);
-        } else {
-            // TODO handle user simply change cookie
-        }
-    });
-
     socket.on("fetchmsg", async (cookieId, roomId) => {
         let user = await utils.findUserByCookie(cookieId);
         let room = await utils.findRoom(roomId);
@@ -305,6 +293,36 @@ io.on("connection", socket => {
                     await utils.findPings(msg.content)
                 );
             }
+        }
+    });
+
+    socket.on("rooms", async (cookieId, visibility) => {
+        let user = await utils.findUserByCookie(cookieId);
+
+        if (user) {
+            let rooms = await utils.findRoomWithUser(user.username, visibility);
+            let pins = user.pins[visibility];
+            socket.emit("rooms", rooms, pins);
+        } else {
+            // TODO handle user simply change cookie
+        }
+    });
+
+    socket.on("findrooms", async (cookieId, visibility, query) => {
+        let user = await utils.findUserByCookie(cookieId);
+
+        if (user) {
+            let rooms = await utils.findRoomWithUserAndQuery(
+                user.username,
+                visibility,
+                query
+            );
+            let pins = user.pins[visibility].filter(e =>
+                e.name.toLowerCase().contains(query.toLowerCase())
+            );
+            socket.emit("rooms", rooms, pins);
+        } else {
+            // TODO handle user simply change cookie
         }
     });
 });
