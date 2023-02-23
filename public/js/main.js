@@ -117,6 +117,7 @@ function sendMessage(msg) {
 
 function switchTo(visibility) {
     clearRoom();
+    let visible;
     visible = visibility;
     socket.emit("rooms", cookieId, visible);
 }
