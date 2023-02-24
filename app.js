@@ -194,30 +194,34 @@ app.post("/get_user_by_cookie_id", async (req, res) => {
 });
 
 app.post("/get_message", async (req, res) => {
-    let {cookieId, roomId} = req.body;
+    let { cookieId, roomId } = req.body;
     let user = await utils.findUserByCookie(cookieId);
     let room = await utils.findRoom(roomId);
 
     if (!user) {
-
     } else if (!room) {
-        
-    } else if (room.visibility == "private" && !room.members.includes(user.username)) {
-        
+    } else if (
+        room.visibility == "private" &&
+        !room.members.includes(user.username)
+    ) {
     } else {
         let jsonmessage = [];
-        for (let msg of   room.messages) {
-            
+        for (let msg of room.messages) {
             let username = await utils.findUserByUsername(msg.author);
-            
-            jsonmessage.push({"id": msg.id, "authorName": username.displayName, "authorUsername": username.username, "avatar": username.avatar, "content": msg.content, "time": msg.createdAt, "pings": await utils.findPings(msg.content)});
 
-            
-
+            jsonmessage.push({
+                id: msg.id,
+                authorName: username.displayName,
+                authorUsername: username.username,
+                avatar: username.avatar,
+                content: msg.content,
+                time: msg.createdAt,
+                pings: await utils.findPings(msg.content)
+            });
         }
         return res.json(jsonmessage);
     }
-})
+});
 
 app.post("/is_username_valid", async (req, res) => {
     let { username } = req.body;
@@ -271,25 +275,36 @@ io.on("connection", socket => {
                 await utils.findPings(msg)
             );
 
-            let response = await command.parse(io, user, room, msg);
+            let [del, response] = await command.parse(io, user, room, msg);
 
             console.log(response);
 
-            if (response)
+            if (response) {
+                let now = Date.now();
+                let systemMsgId = "SYSTEM" + del + "$";
+                if (!del)
+                    systemMsgId = await utils.insertMessage(
+                        roomId,
+                        "system",
+                        response,
+                        now,
+                        systemMsgId
+                    );
                 io.emit(
                     "msg",
-                    "SYSTEM",
+                    systemMsgId,
                     "System",
                     "system",
                     "/assets/system.png",
                     roomId,
                     response,
-                    time,
+                    now,
                     []
                 );
+            }
         }
     });
-    
+
     socket.on("rooms", async (cookieId, visibility) => {
         let user = await utils.findUserByCookie(cookieId);
 

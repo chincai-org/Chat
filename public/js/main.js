@@ -133,7 +133,7 @@ function clearRoom() {
 function fetchmsg(cookieId, roomId) {
     $.ajax({
         url: "/get_message",
-        
+
         type: "POST",
         data: {
             cookieId: cookieId,
@@ -141,12 +141,20 @@ function fetchmsg(cookieId, roomId) {
         },
         success: response => {
             console.log(response);
-            
-            for (let msg of response)  {
-                createMsg(msg.id, msg.authorName, msg.authorUsername, msg.avatar, msg.content, msg.time, msg.pings);
+
+            for (let msg of response) {
+                createMsg(
+                    msg.id,
+                    msg.authorName,
+                    msg.authorUsername,
+                    msg.avatar,
+                    msg.content,
+                    msg.time,
+                    msg.pings
+                );
             }
         },
-        error: (xhr, status, error) =>  {
+        error: (xhr, status, error) => {
             console.log("Error: " + error);
         }
     });
@@ -311,12 +319,16 @@ async function createMsg(
 
     outerWrap.appendChild(containers);
 
-    if (id == "SYSTEM") {
+    if (id.startsWith("SYSTEM")) {
         containers.classList.add("system-colour");
         clock.classList.add("system-colour");
-        setTimeout(() => {
-            outerWrap.removeChild(containers);
-        }, 2000);
+
+        let deleteAfter = +id.split("$")[0].slice(6, id.length);
+
+        if (deleteAfter)
+            setTimeout(() => {
+                outerWrap.removeChild(containers);
+            }, deleteAfter);
     }
     console.timeEnd(id);
 }
