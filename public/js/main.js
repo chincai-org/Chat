@@ -137,7 +137,9 @@ function fetchmsg(cookieId, roomId) {
         type: "POST",
         data: {
             cookieId: cookieId,
-            roomId: roomId
+            roomId: roomId,
+            from: "20-newest",
+            to: "newest"
         },
         success: response => {
             console.log(response);
