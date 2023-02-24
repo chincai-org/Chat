@@ -29,18 +29,17 @@ app.get("/about", (req, res) => {
     res.render("about.ejs");
 });
 
-app.get(
-    "/chat",
-    async (req, res, next) => {
-        if (!(await utils.findUserByCookie(req.cookies.id))) {
-            return res.redirect("/login");
-        }
-        next();
-    },
-    (req, res) => {
-        res.render("main.ejs");
+app.get("/chat", async (req, res) => {
+    let user = await utils.findUserByCookie(req.cookies.id);
+    if (user) {
+        res.render("main.ejs", {
+            displayName: user.displayName,
+            username: user.username
+        });
+    } else {
+        res.redirect("/login");
     }
-);
+});
 
 app.get("/login", (req, res) => {
     res.cookie("e", "");
