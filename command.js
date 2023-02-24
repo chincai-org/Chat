@@ -92,3 +92,12 @@ command.on("kick", async (io, user, room, username) => {
         return `Kicked user ${username}`;
     }
 });
+
+command.on("help-cmd", async (io, user, room, username) => {
+    return "List of cmd: \n >purge <amount> Desc: delete an amount of message \n >delete <message id> Desc: delete a specific message \n >kick <username> Desc: kick users out of topic \n >mute <username> Desc: mute users"
+});
+
+command.on(">tic-tac-toe", async (io, user, room, username) => {
+    return `\n[] [] []\n[] [] []\n[] [] []`;
+    //how do i get user msg
+})
