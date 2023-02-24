@@ -109,8 +109,12 @@ command.on("kick", async (io, user, room, username) => {
 
 command.on("help-cmd", async (io, user, room) => {
     return [
-        2000,
-        "List of cmd: \n >purge <amount> Desc: delete an amount of message \n >delete <message id> Desc: delete a specific message \n >kick <username> Desc: kick users out of topic \n >mute <username> Desc: mute users"
+        0,
+        `List of cmd: \n 
+        ${prefix}purge <amount> Desc: delete an amount of message \n 
+        ${prefix}delete <message id> Desc: delete a specific message \n 
+        ${prefix}kick <username> Desc: kick users out of topic \n 
+        ${prefix}mute <username> Desc: mute users`
     ];
 });
 
@@ -124,6 +128,7 @@ command.on(">chess", async (io, user, room) => {
 });
 
 command.on("showcase", (io, user, room, arg1, arg2, arg3) => {
+    return arg1
     // >showcase; => arg1 = undefined; arg2 = undefined; arg3 = undefined
     // >showcase hello; => arg1 = "hello"; arg2 = undefined; arg3 = undefined
     // >showcase 1 2 3; => arg1 = "1"; arg2 = "2"; arg3 = "3"
@@ -132,7 +137,7 @@ command.on("showcase", (io, user, room, arg1, arg2, arg3) => {
     //            The second one is the message that will be
     //            sent to the topic
     //            vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-    return [2000, `arg1=${arg1}; arg2=${arg2}; arg3=${arg3}`];
+    // return [2000, `arg1=${arg1}; arg2=${arg2}; arg3=${arg3}`];
     //      ^^^^
     //      Delete message after this ms
     //      Put `0` to never delete this message
