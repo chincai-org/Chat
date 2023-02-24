@@ -22,6 +22,17 @@ class Command {
         }
     }
 
+    /**
+     * @callback callback
+     * @param {import("socket.io").Server} io - io to emit messages to the frontend
+     * @param {import("mongodb").WithId<import("mongodb").Document>} user - user object
+     * @param {import("mongodb").WithId<import("mongodb").Document>} room - room object
+     * @param {...String} args - arguments in the message
+     */
+    /**
+     * @param {String} command - The command name
+     * @param {callback} callbackFn
+     */
     on(command, callbackFn) {
         this.prefixes.push([command, callbackFn]);
     }
@@ -93,15 +104,22 @@ command.on("kick", async (io, user, room, username) => {
     }
 });
 
-command.on("help-cmd", async (io, user, room, username) => {
-    return "List of cmd: \n >purge <amount> Desc: delete an amount of message \n >delete <message id> Desc: delete a specific message \n >kick <username> Desc: kick users out of topic \n >mute <username> Desc: mute users"
+command.on("help-cmd", async (io, user, room) => {
+    return "List of cmd: \n >purge <amount> Desc: delete an amount of message \n >delete <message id> Desc: delete a specific message \n >kick <username> Desc: kick users out of topic \n >mute <username> Desc: mute users";
 });
 
-command.on(">tic-tac-toe", async (io, user, room, username) => {
+command.on(">tic-tac-toe", async (io, user, room) => {
     return `\n[] [] []\n[] [] []\n[] [] []`;
     //how do i get user msg
-})
+});
 
-command.on(">chess", async (io, user, room, username) => {
+command.on(">chess", async (io, user, room) => {
     return `qxf7 checkmate gg good game`;
-})
+});
+
+command.on("showcase", (io, user, room, arg1, arg2, arg3) => {
+    // >showcase; => arg1 = undefined; arg2 = undefined; arg3 = undefined
+    // >showcase hello; => arg1 = "hello"; arg2 = undefined; arg3 = undefined
+    // >showcase 1 2 3; => arg1 = "1"; arg2 = "2"; arg3 = "3"
+    // >showcase 1 2 3 4; => arg1 = "1"; arg2 = "2"; arg3 = "3"
+});
