@@ -130,6 +130,28 @@ function clearRoom() {
     remove.forEach(e => roomsElement.removeChild(e));
 }
 
+function fetchmsg(cookieId, roomId) {
+    $.ajax({
+        url: "/get_message",
+        
+        type: "POST",
+        data: {
+            cookieId: cookieId,
+            roomId: roomId
+        },
+        success: response => {
+            console.log(response);
+            
+            for (let msg of response)  {
+                createMsg(msg.id, msg.authorName, msg.authorUsername, msg.avatar, msg.content, msg.time, msg.pings);
+            }
+        },
+        error: (xhr, status, error) =>  {
+            console.log("Error: " + error);
+        }
+    });
+}
+
 function clearMessage() {
     outerWrap.innerHTML = "";
 }
@@ -150,6 +172,7 @@ function createTopic(room) {
         textbox.classList.remove("hide");
         contextMenu.classList.remove("active");
         socket.emit("fetchmsg", cookieId, room._id);
+        fetchmsg(cookieId, room._id);
     };
 
     topic.oncontextmenu = e => {
