@@ -128,7 +128,6 @@ command.on(">chess", async (io, user, room) => {
 });
 
 command.on("showcase", (io, user, room, arg1, arg2, arg3) => {
-    return arg1
     // >showcase; => arg1 = undefined; arg2 = undefined; arg3 = undefined
     // >showcase hello; => arg1 = "hello"; arg2 = undefined; arg3 = undefined
     // >showcase 1 2 3; => arg1 = "1"; arg2 = "2"; arg3 = "3"
@@ -137,7 +136,7 @@ command.on("showcase", (io, user, room, arg1, arg2, arg3) => {
     //            The second one is the message that will be
     //            sent to the topic
     //            vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-    // return [2000, `arg1=${arg1}; arg2=${arg2}; arg3=${arg3}`];
+    return [2000, `arg1=${arg1}; arg2=${arg2}; arg3=${arg3}`];
     //      ^^^^
     //      Delete message after this ms
     //      Put `0` to never delete this message
