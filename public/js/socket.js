@@ -1,30 +1,5 @@
 const socket = io();
 
-socket.on(
-    "msg",
-    async (
-        id,
-        authorName,
-        authorUsername,
-        avatar,
-        roomId,
-        content,
-        time,
-        pings
-    ) => {
-        if (currentRoom === roomId)
-            await createMsg(
-                id,
-                authorName,
-                authorUsername,
-                avatar,
-                content,
-                time,
-                pings
-            );
-    }
-);
-
 socket.on("rooms", (rooms, pins) => {
     console.table(rooms);
     console.table(pins);
