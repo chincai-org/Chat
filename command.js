@@ -101,3 +101,7 @@ command.on(">tic-tac-toe", async (io, user, room, username) => {
     return `\n[] [] []\n[] [] []\n[] [] []`;
     //how do i get user msg
 })
+
+command.on(">chess", async (io, user, room, username) => {
+    return `qxf7 checkmate gg good game`;
+})
