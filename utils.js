@@ -252,12 +252,12 @@ export async function removeUser(userId, roomId) {
     }
 }
 
-export async function insertMessage(roomId, username, content, time) {
+export async function insertMessage(roomId, username, content, time, id = "") {
     try {
         const rooms = client.db("db").collection("rooms");
 
         let room = await findRoom(roomId);
-        let id = room._id.toString() + (room.msgId + 1);
+        id += room._id.toString() + (room.msgId + 1);
 
         await rooms.updateOne(
             {

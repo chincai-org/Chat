@@ -20,6 +20,8 @@ class Command {
                 );
             }
         }
+
+        return [0, null];
     }
 
     /**
@@ -28,6 +30,7 @@ class Command {
      * @param {import("mongodb").WithId<import("mongodb").Document>} user - user object
      * @param {import("mongodb").WithId<import("mongodb").Document>} room - room object
      * @param {...String} args - arguments in the message
+     * @returns {Promise<[int, String]>}
      */
     /**
      * @param {String} command - The command name
@@ -55,22 +58,22 @@ command.on("delete", async (io, user, room, msgId) => {
         }
 
         if (!message) {
-            return `Message id ${msgId} doesn't exist`;
+            return [2000, `Message id ${msgId} doesn't exist`];
         } else if (role == "member" && message.author != user.username) {
-            return `You don't have the permission!`;
+            return [2000, "You don't have the permission!"];
         } else {
             await utils.deleteMessage(room._id, msgId);
             io.emit("delete", msgId);
-            return `Deleted message ${msgId}`;
+            return [2000, `Deleted message ${msgId}`];
         }
     } else {
-        return `Syntax: ${prefix}delete <message_id>`;
+        return [2000, `Syntax: ${prefix}delete <message_id>`];
     }
 });
 
 command.on("purge", async (io, user, room, amt) => {
     let role = getRole(user, room);
-    if (role == "member") return `You don't have the permission!`;
+    if (role == "member") return [2000, "You don't have the permission!"];
 
     if (amt && (!amt.match(/[^0-9]/g) || amt.toLowerCase() == "all")) {
         if (amt.toLowerCase() == "all") amt = room.messages.length + 1;
@@ -81,40 +84,43 @@ command.on("purge", async (io, user, room, amt) => {
             io.emit("delete", deletedMessage.id);
         }
 
-        return `Deleted ${amt} messages`;
+        return [2000, `Deleted ${amt} messages`];
     } else {
-        return `Syntax: ${prefix}purge <amount>`;
+        return [2000, `Syntax: ${prefix}purge <amount>`];
     }
 });
 
 command.on("kick", async (io, user, room, username) => {
-    if (!username) return `Syntax: ${prefix}kick <username>`;
+    if (!username) return [2000, `Syntax: ${prefix}kick <username>`];
     let target = await utils.findUserByUsername(username);
     let kickerRole = getRole(user, room);
     let targetRole = getRole(target, room);
 
     if (room.visibility == "public") {
-        return "You can't kick anyone out of a public room!";
+        return [2000, "You can't kick anyone out of a public room!"];
     } else if (roleValue.indexOf(kickerRole) < roleValue.indexOf(targetRole)) {
-        return "You don't have the permission!";
+        return [2000, "You don't have the permission!"];
     } else {
         await utils.removeUser(target._id, room._id.toString());
         console.log(room._id);
-        return `Kicked user ${username}`;
+        return [2000, `Kicked user ${username}`];
     }
 });
 
 command.on("help-cmd", async (io, user, room) => {
-    return "List of cmd: \n >purge <amount> Desc: delete an amount of message \n >delete <message id> Desc: delete a specific message \n >kick <username> Desc: kick users out of topic \n >mute <username> Desc: mute users";
+    return [
+        2000,
+        "List of cmd: \n >purge <amount> Desc: delete an amount of message \n >delete <message id> Desc: delete a specific message \n >kick <username> Desc: kick users out of topic \n >mute <username> Desc: mute users"
+    ];
 });
 
 command.on(">tic-tac-toe", async (io, user, room) => {
-    return `\n[] [] []\n[] [] []\n[] [] []`;
+    return [2000, `\n[] [] []\n[] [] []\n[] [] []`];
     //how do i get user msg
 });
 
 command.on(">chess", async (io, user, room) => {
-    return `qxf7 checkmate gg good game`;
+    return [2000, `qxf7 checkmate gg good game`];
 });
 
 command.on("showcase", (io, user, room, arg1, arg2, arg3) => {
@@ -122,4 +128,12 @@ command.on("showcase", (io, user, room, arg1, arg2, arg3) => {
     // >showcase hello; => arg1 = "hello"; arg2 = undefined; arg3 = undefined
     // >showcase 1 2 3; => arg1 = "1"; arg2 = "2"; arg3 = "3"
     // >showcase 1 2 3 4; => arg1 = "1"; arg2 = "2"; arg3 = "3"
+
+    //            The second one is the message that will be
+    //            sent to the topic
+    //            vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+    return [2000, `arg1=${arg1}; arg2=${arg2}; arg3=${arg3}`];
+    //      ^^^^
+    //      Delete message after this ms
+    //      Put `0` to never delete this message
 });
