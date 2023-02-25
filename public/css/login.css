@@ -78,5 +78,5 @@ input[type="password"]::placeholder {
 }
 
 .warning {
-    color: red !important;
+    color: red;
 }

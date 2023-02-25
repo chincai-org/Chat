@@ -67,7 +67,7 @@ app.get("/signup", (req, res) => {
 
     const nameError = [
         "",
-        "<p> Please don't leave this empty. ",
+        "Please don't leave this empty. ",
         "",
         "",
         "",
