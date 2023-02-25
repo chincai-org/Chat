@@ -1,0 +1,49 @@
+(function (linkifyjs) {
+	'use strict';
+
+	// Create a new token that class that the parser emits when it finds a hashtag
+	const HashtagToken = linkifyjs.createTokenClass('hashtag', {
+	  isLink: true
+	});
+
+	/**
+	 * @type {import('linkifyjs').Plugin}
+	 */
+	function hashtag(_ref) {
+	  let {
+	    scanner,
+	    parser
+	  } = _ref;
+	  // Various tokens that may compose a hashtag
+	  const {
+	    POUND,
+	    UNDERSCORE
+	  } = scanner.tokens;
+	  const {
+	    alpha,
+	    numeric,
+	    alphanumeric,
+	    emoji
+	  } = scanner.tokens.groups;
+
+	  // Take or create a transition from start to the '#' sign (non-accepting)
+	  // Take transition from '#' to any text token to yield valid hashtag state
+	  // Account for leading underscore (non-accepting unless followed by alpha)
+	  const Hash = parser.start.tt(POUND);
+	  const HashPrefix = Hash.tt(UNDERSCORE);
+	  const Hashtag = new linkifyjs.State(HashtagToken);
+	  Hash.ta(numeric, HashPrefix);
+	  Hash.ta(alpha, Hashtag);
+	  Hash.ta(emoji, Hashtag);
+	  HashPrefix.ta(alpha, Hashtag);
+	  HashPrefix.ta(emoji, Hashtag);
+	  HashPrefix.ta(numeric, HashPrefix);
+	  HashPrefix.tt(UNDERSCORE, HashPrefix);
+	  Hashtag.ta(alphanumeric, Hashtag);
+	  Hashtag.ta(emoji, Hashtag);
+	  Hashtag.tt(UNDERSCORE, Hashtag); // Trailing underscore is okay
+	}
+
+	linkifyjs.registerPlugin('hashtag', hashtag);
+
+})(linkify);
