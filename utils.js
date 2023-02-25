@@ -412,3 +412,39 @@ export async function changeRoomName(roomId, newName) {
     } finally {
     }
 }
+
+export async function mute(roomId, username) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+
+        await rooms.updateOne(
+            {
+                _id: new ObjectId(roomId)
+            },
+            {
+                $push: {
+                    muted: username
+                }
+            }
+        );
+    } finally {
+    }
+}
+
+export async function unmute(roomId, username) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+
+        await rooms.updateOne(
+            {
+                _id: new ObjectId(roomId)
+            },
+            {
+                $pull: {
+                    muted: username
+                }
+            }
+        );
+    } finally {
+    }
+}

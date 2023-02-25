@@ -195,7 +195,7 @@ app.post("/get_user_by_cookie_id", async (req, res) => {
 });
 
 app.post("/get_message", async (req, res) => {
-    let { cookieId, roomId, from, to } = req.body; 
+    let { cookieId, roomId, from, to } = req.body;
     let user = await utils.findUserByCookie(cookieId);
     let room = await utils.findRoom(roomId);
 
@@ -207,13 +207,13 @@ app.post("/get_message", async (req, res) => {
     ) {
     } else {
         if (from != "20-newest") {
-            var id = room.messages.findIndex(e => e.id == from );
-            if (id > 0) { 
+            var id = room.messages.findIndex(e => e.id == from);
+            if (id > 0) {
                 var i = id - 20;
-                var j = id; 
+                var j = id;
             } else {
                 var i = room.messages.length - 20;
-                var j = room.messages.length; 
+                var j = room.messages.length;
             }
         } else {
             var i = room.messages.length - 20;
@@ -221,10 +221,8 @@ app.post("/get_message", async (req, res) => {
         }
 
         let jsonmessage = [];
-        for (i; i < j  ;  i = i + 1) {
+        for (i; i < j; i = i + 1) {
             var msg = room.messages[i];
-
-
 
             let username = await utils.findUserByUsername(msg.author);
 
@@ -272,6 +270,9 @@ io.on("connection", socket => {
             !room.members.includes(user.username)
         ) {
             // TODO user not at room
+        } else if (room.muted.includes(user.username)) {
+            // TODO handle user muted
+            console.log("muted");
         } else {
             msg = msg.trim();
             console.log(`${user.displayName}: ${msg}`);
