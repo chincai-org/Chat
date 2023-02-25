@@ -11,16 +11,24 @@ let activeRoom = null;
 let visible = null;
 let currentRoom = "";
 
-textbox.addEventListener("keydown", e => {
+textbox.onkeydown = e => {
     if (e.keyCode === 13 && !e.shiftKey) {
         if (!/\S/.test(textbox.value)) {
             return;
         }
         e.preventDefault();
-        message = textbox.value;
-        sendMessage(message);
+        sendMessage(textbox.value);
     }
-});
+    // for (let username of new Set(textbox.value.match(/(?<=@)[A-Za-z\d_]+/g) || [])) {
+    //     console.log(username)
+    //     if (isValid(username)) {
+    //             textbox.value = textbox.value.replaceAll(
+    //                 `@${username}`,
+    //                 `<span class="mention">@${username}</span>`
+    //             );
+    //     }
+    // }
+};
 
 textbox.setAttribute(
     "style",
