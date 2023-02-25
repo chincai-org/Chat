@@ -71,6 +71,7 @@ Rooms:
         }
     ],
     "members": [],
+    "muted": ["talkativeguy123", "kogoro5563"],
     "msgId": 2
 }
 ```
@@ -95,6 +96,7 @@ Rooms:
         }
     ],
     "members": ["Alice", "Bob"],
+    "muted": [],
     "msgId": 2
 }
 ```
