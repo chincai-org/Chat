@@ -4,6 +4,7 @@ import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
 import * as utils from "./utils.js";
 import { command } from "./command.js";
+import e from "express";
 
 const app = express();
 const server = http.createServer(app);
@@ -194,7 +195,7 @@ app.post("/get_user_by_cookie_id", async (req, res) => {
 });
 
 app.post("/get_message", async (req, res) => {
-    let { cookieId, roomId } = req.body;
+    let { cookieId, roomId, from, to } = req.body; 
     let user = await utils.findUserByCookie(cookieId);
     let room = await utils.findRoom(roomId);
 
@@ -205,8 +206,26 @@ app.post("/get_message", async (req, res) => {
         !room.members.includes(user.username)
     ) {
     } else {
+        if (from != "20-newest") {
+            var id = room.messages.findIndex(e => e.id == from );
+            if (id > 0) { 
+                var i = id - 20;
+                var j = id; 
+            } else {
+                var i = room.messages.length - 20;
+                var j = room.messages.length; 
+            }
+        } else {
+            var i = room.messages.length - 20;
+            var j = room.messages.length;
+        }
+
         let jsonmessage = [];
-        for (let msg of room.messages) {
+        for (i; i < j  ;  i = i + 1) {
+            var msg = room.messages[i];
+
+
+
             let username = await utils.findUserByUsername(msg.author);
 
             jsonmessage.push({
