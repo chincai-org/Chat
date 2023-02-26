@@ -13,8 +13,8 @@
     <script src="/js/cookie.js" defer></script>
     <script src="/js/main.js" defer></script>
     <script src="/js/socket.js" defer></script>
-    <script src="linkify.min.js"></script>
-    <script src="linkify-html.min.js"></script>
+    <script src="/linkifyjs/linkify.min.js"></script>
+    <script src="/linkifyjs/linkify-html.min.js"></script>
 </head>
 <body>
     <section class="chat" id="chatting">
@@ -54,9 +54,9 @@
         <p title="Right click for more info" id="username" class="font-size-2_5vh">
             <%= displayName %>
             <br>
-            <span class="username font-size-2vh">@<%= username %></span>
+            <span class="username-bottom font-size-2vh">@<%= username %></span>
         </p>
-        <p title="Invite request">Inv request</p>
+        <i class="fa-solid fa-user-plus" title="Invite request"></i>
     </div>
 </body>
 </html>
