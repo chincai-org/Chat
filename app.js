@@ -248,6 +248,17 @@ app.post("/is_username_valid", async (req, res) => {
     res.json({ res: false });
 });
 
+app.post("/auto_complete", async (req, res) => {
+    let { roomId, nameQuery } = req.body;
+    let user = await utils.findUserByUsernameQuery(roomId, nameQuery);
+
+    if (user) {
+        return res.json({ res: user.username });
+    } else {
+        return res.json({ res: null });
+    }
+});
+
 app.get("*", (req, res) => {
     res.status(404).render("error.ejs", { error: 404 });
 });
