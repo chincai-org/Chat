@@ -5,6 +5,7 @@ const outerWrap = document.getElementById("outer-wrap");
 const roomsElement = document.getElementById("rooms");
 const searchBar = document.getElementById("search-bar");
 const chat = document.querySelector(".chat");
+const options = { className: "links" };
 
 let openedContextMenu = null;
 let activeRoom = null;
@@ -13,16 +14,16 @@ let currentRoom = "";
 
 textbox.onkeydown = e => {
     if (e.keyCode === 13 && !e.shiftKey) {
-        if (!/\S/.test(textbox.value)) {
+        if (!/\S/.test(textbox.innerText)) {
             return;
         }
         e.preventDefault();
-        sendMessage(textbox.value);
+        sendMessage(textbox.innerText);
     }
-    // for (let username of new Set(textbox.value.match(/(?<=@)[A-Za-z\d_]+/g) || [])) {
+    // for (let username of new Set(textbox.innerHTML.match(/(?<=@)[A-Za-z\d_]+/g) || [])) {
     //     console.log(username)
     //     if (isValid(username)) {
-    //             textbox.value = textbox.value.replaceAll(
+    //             textbox.innerHTML = textbox.innerHTML.replaceAll(
     //                 `@${username}`,
     //                 `<span class="mention">@${username}</span>`
     //             );
@@ -34,7 +35,7 @@ textbox.setAttribute(
     "style",
     `height:${
         (textbox.scrollHeight / window.innerHeight) * 100
-    }vh;overflow-y:scroll;`
+    }vh;overflow-y:hidden;`
 );
 
 textbox.oninput = () => {
@@ -119,7 +120,7 @@ function updateHeight() {
 }
 
 function sendMessage(msg) {
-    textbox.value = "";
+    textbox.innerText = "";
     socket.emit("msg", cookieId, currentRoom, msg, Date.now());
     updateHeight();
 }
@@ -288,7 +289,7 @@ async function createMsg(
     let username = document.createElement("span");
     username.innerText = `@${authorUsername}`;
     username.className = "username";
-    username.onclick = () => {textbox.value += "@" + authorUsername};
+    // username.onclick = () => {textbox.innerHTML += `<span class="mention">@${username}</span>`};
 
     let msg = document.createElement("p");
     msg.innerText = content;
@@ -300,6 +301,8 @@ async function createMsg(
             `<span class="mention">@${ping}</span>`
         );
     }
+
+    msg.innerHTML = linkifyHtml(msg.innerHTML, options);
 
     let clock = document.createElement("span");
     clock.className = "time";
