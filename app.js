@@ -199,14 +199,14 @@ app.post("/get_message", async (req, res) => {
     let room = await utils.findRoom(roomId);
 
     if (!user) {
-        // TODO handle user simply change cookie
+        socket.emit("msg", ...utils.generateWarningMessage(utils.NO_USER));
     } else if (!room) {
-        // TODO handle user simply change room id
+        socket.emit("msg", ...utils.generateWarningMessage(utils.NO_ROOM));
     } else if (
         room.visibility == "private" &&
         !room.members.includes(user.username)
     ) {
-        // TODO user not at room
+        socket.emit("msg", ...utils.generateWarningMessage(utils.NOT_IN_ROOM));
     } else {
         const fetchAmt = 30;
         let end =
@@ -218,7 +218,11 @@ app.post("/get_message", async (req, res) => {
 
         for (let i = Math.max(0, end - fetchAmt); i < end; i++) {
             let msg = room.messages[i];
-            let author = await utils.findUserByUsername(msg.author);
+            let author = (await utils.findUserByUsername(msg.author)) || {
+                displayName: "DELETED_USER",
+                username: "deleted_user",
+                avatar: "/assets/dead.png"
+            };
 
             messages.push({
                 id: msg.id,
@@ -256,17 +260,19 @@ io.on("connection", socket => {
         let room = await utils.findRoom(roomId);
 
         if (!user) {
-            // TODO handle user simply change cookie
+            socket.emit("msg", ...utils.generateWarningMessage(utils.NO_USER));
         } else if (!room) {
-            // TODO handle user simply change room id
+            socket.emit("msg", ...utils.generateWarningMessage(utils.NO_ROOM));
         } else if (
             room.visibility == "private" &&
             !room.members.includes(user.username)
         ) {
-            // TODO user not at room
+            socket.emit(
+                "msg",
+                ...utils.generateWarningMessage(utils.NOT_IN_ROOM)
+            );
         } else if (room.muted.includes(user.username)) {
-            // TODO handle user muted
-            console.log("muted");
+            socket.emit("msg", ...utils.generateWarningMessage(utils.MUTED));
         } else {
             msg = msg.trim();
             console.log(`${user.displayName}: ${msg}`);
@@ -327,7 +333,7 @@ io.on("connection", socket => {
             let pins = user.pins[visibility];
             socket.emit("rooms", rooms, pins);
         } else {
-            // TODO handle user simply change cookie
+            socket.emit("msg", ...utils.generateWarningMessage(utils.NO_USER));
         }
     });
 
@@ -345,7 +351,7 @@ io.on("connection", socket => {
             );
             socket.emit("rooms", rooms, pins);
         } else {
-            // TODO handle user simply change cookie
+            socket.emit("msg", ...utils.generateWarningMessage(utils.NO_USER));
         }
     });
 });
