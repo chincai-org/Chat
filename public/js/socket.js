@@ -12,7 +12,7 @@ socket.on(
         time,
         pings
     ) => {
-        if (currentRoom === roomId)
+        if (currentRoom === roomId || roomId == "$")
             await createMsg(
                 id,
                 authorName,
