@@ -5,7 +5,7 @@ const outerWrap = document.getElementById("outer-wrap");
 const roomsElement = document.getElementById("rooms");
 const searchBar = document.getElementById("search-bar");
 const chat = document.querySelector(".chat");
-const options = {className: "links"};
+const options = { className: "links" };
 
 let openedContextMenu = null;
 let activeRoom = null;

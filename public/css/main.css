@@ -31,7 +31,7 @@ body {
 .chat {
     width: 69.7%;
     box-sizing: none; /*75.5 */
-    height: 84.3vh;
+    height: 87.5vh;
     overflow-y: auto;
     display: flex;
     flex-direction: column-reverse;
@@ -59,7 +59,7 @@ body {
     background-color: rgb(70, 70, 70);
 }
 
-[contentEditable=true]:empty:not(:focus):before {
+[contentEditable="true"]:empty:not(:focus):before {
     content: attr(data-placeholder);
     color: #aaa;
     font-size: 1vw;
@@ -170,7 +170,8 @@ body {
     width: calc(100vw - 0.3vh);
     background-color: rgb(30, 30, 30);
 }
-.bottom p:hover, .bottom i:hover {
+.bottom p:hover,
+.bottom i:hover {
     background-color: rgb(50, 50, 50);
     cursor: pointer;
 }
