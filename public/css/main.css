@@ -13,9 +13,31 @@ html {
 
 body {
     /* background: url(a.jpg); */
-    background-color: rgb(50, 50, 50);
+    background-color: var(--grey-15);
     background-size: cover;
     background-position: center;
+}
+
+:root {
+    --grey-5: hsl(0, 0%, 5%);
+    --grey-10: hsl(0, 0%, 10%);
+    --grey-15: hsl(0, 0%, 15%);
+    --grey-20: hsl(0, 0%, 20%);
+    --grey-25: hsl(0, 0%, 25%);
+    --grey-30: hsl(0, 0%, 30%);
+    --grey-35: hsl(0, 0%, 35%);
+    --grey-40: hsl(0, 0%, 40%);
+    --grey-45: hsl(0, 0%, 45%);
+    --grey-50: hsl(0, 0%, 50%);
+    --grey-55: hsl(0, 0%, 55%);
+    --grey-60: hsl(0, 0%, 60%);
+    --grey-65: hsl(0, 0%, 65%);
+    --grey-70: hsl(0, 0%, 70%);
+    --grey-75: hsl(0, 0%, 75%);
+    --grey-80: hsl(0, 0%, 80%);
+    --grey-85: hsl(0, 0%, 85%);
+    --grey-90: hsl(0, 0%, 90%);
+    --grey-95: hsl(0, 0%, 95%);
 }
 
 .chat h5 {
@@ -31,7 +53,7 @@ body {
 .chat {
     width: 69.7%;
     box-sizing: none; /*75.5 */
-    height: 87.5vh;
+    height: 85vh;
     overflow-y: auto;
     display: flex;
     flex-direction: column-reverse;
@@ -45,24 +67,24 @@ body {
     z-index: 999;
     height: fit-content;
     width: 67.4vw;
-    background: rgb(60, 60, 60);
+    background: var(--grey-20);
     outline: none;
-    font-size: 1vw;
+    font-size: 1.2vw;
     color: white;
     border-radius: 1vh;
     bottom: 7.5vh;
     resize: none;
-    padding: 1vh;
+    padding: 1vw;
 }
 
 #text:focus {
-    background-color: rgb(70, 70, 70);
+    background-color: var(--grey-25);
 }
 
 [contentEditable="true"]:empty:not(:focus):before {
     content: attr(data-placeholder);
     color: #aaa;
-    font-size: 1vw;
+    font-size: 1.2vw;
 }
 
 ::-webkit-scrollbar {
@@ -70,17 +92,17 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgb(40, 40, 40);
+    background: var(--grey-10);
     border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgb(30, 30, 30);
+    background: var(--grey-5);
     border-radius: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background-color: rgb(80, 80, 80);
+    background-color: var(--grey-35);
     border-radius: 6px;
 }
 
@@ -89,7 +111,8 @@ body {
 }
 
 .container {
-    background-color: rgb(60, 60, 60);
+    filter: none;
+    background-color: var(--grey-25);
     border-radius: 5px;
     padding: 1vh;
     margin-top: 1vh;
@@ -98,7 +121,7 @@ body {
 }
 
 .container:hover {
-    background-color: rgb(70, 70, 70);
+    filter: brightness(1.25);
 }
 
 .container::after {
@@ -143,7 +166,7 @@ body {
 .topic {
     overflow-y: scroll;
     height: 79vh;
-    background-color: rgb(40, 40, 40);
+    background-color: var(--grey-15);
 }
 
 .topic::-webkit-scrollbar {
@@ -156,7 +179,7 @@ body {
 }
 
 .topic h5:hover {
-    background-color: rgb(30, 30, 30);
+    background-color: var(--grey-20);
     cursor: pointer;
 }
 
@@ -168,11 +191,11 @@ body {
     font-size: 3vh;
     color: white;
     width: calc(100vw - 0.3vh);
-    background-color: rgb(30, 30, 30);
+    background-color: var(--grey-10);
 }
 .bottom p:hover,
 .bottom i:hover {
-    background-color: rgb(50, 50, 50);
+    background-color: var(--grey-20);
     cursor: pointer;
 }
 
@@ -241,20 +264,20 @@ body {
 
 #choice-1,
 #choice-2 {
-    background-color: rgb(50, 50, 50);
+    background-color: var(--grey-20);
 }
 
 #choice-1:hover,
 #choice-2:hover {
     cursor: pointer;
-    background-color: rgb(40, 40, 40);
+    background-color: var(--grey-15);
 }
 
 #search-bar {
     height: fit-content;
     width: 26vw;
     border: 0.1vh solid #fff;
-    background: rgb(50, 50, 50);
+    background: var(--grey-20);
     outline: none;
     font-size: 2.5vh;
     color: white;
@@ -264,7 +287,7 @@ body {
 }
 
 #search-bar:focus {
-    background-color: rgb(60, 60, 60);
+    background-color: var(--grey-25);
 }
 
 #create-new {
@@ -272,12 +295,12 @@ body {
 }
 
 #create-new:hover {
-    background-color: rgb(60, 60, 60);
+    background-color: var(--grey-25);
     cursor: pointer;
 }
 
 .clicked {
-    background-color: rgb(30, 30, 30) !important;
+    background-color: var(--grey-10) !important;
 }
 
 .hide {
@@ -337,7 +360,7 @@ body {
 }
 
 .topic-bg-colour {
-    background-color: rgb(30, 30, 30);
+    background-color: var(--grey-10);
 }
 
 .links {
@@ -348,3 +371,7 @@ body {
 .links:hover {
     text-decoration: underline;
 }
+
+/* .mention-container {
+    background-color: yellowgreen;
+} */
