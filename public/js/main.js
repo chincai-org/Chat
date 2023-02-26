@@ -300,6 +300,9 @@ async function createMsg(
             `@${ping}`,
             `<span class="mention">@${ping}</span>`
         );
+        if (ping === authorUsername) {
+            containers.classList.add("mention-container")
+        }
     }
 
     msg.innerHTML = linkifyHtml(msg.innerHTML, options);
