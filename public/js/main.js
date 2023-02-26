@@ -5,6 +5,7 @@ const outerWrap = document.getElementById("outer-wrap");
 const roomsElement = document.getElementById("rooms");
 const searchBar = document.getElementById("search-bar");
 const chat = document.querySelector(".chat");
+const options = {className: "links"};
 
 let openedContextMenu = null;
 let activeRoom = null;
@@ -300,6 +301,8 @@ async function createMsg(
             `<span class="mention">@${ping}</span>`
         );
     }
+
+    msg.innerHTML = linkifyHtml(msg.innerHTML, options);
 
     let clock = document.createElement("span");
     clock.className = "time";
