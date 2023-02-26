@@ -4,7 +4,6 @@ import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
 import * as utils from "./utils.js";
 import { command } from "./command.js";
-import e from "express";
 
 const app = express();
 const server = http.createServer(app);
@@ -195,48 +194,43 @@ app.post("/get_user_by_cookie_id", async (req, res) => {
 });
 
 app.post("/get_message", async (req, res) => {
-    let { cookieId, roomId, from, to } = req.body;
+    let { cookieId, roomId, start } = req.body;
     let user = await utils.findUserByCookie(cookieId);
     let room = await utils.findRoom(roomId);
 
     if (!user) {
+        // TODO handle user simply change cookie
     } else if (!room) {
+        // TODO handle user simply change room id
     } else if (
         room.visibility == "private" &&
         !room.members.includes(user.username)
     ) {
+        // TODO user not at room
     } else {
-        if (from != "20-newest") {
-            var id = room.messages.findIndex(e => e.id == from);
-            if (id > 0) {
-                var i = id - 20;
-                var j = id;
-            } else {
-                var i = room.messages.length - 20;
-                var j = room.messages.length;
-            }
-        } else {
-            var i = room.messages.length - 20;
-            var j = room.messages.length;
-        }
+        const fetchAmt = 30;
+        let end =
+            start == "last"
+                ? room.messages.length
+                : room.messages.findIndex(e => e.id == start);
 
-        let jsonmessage = [];
-        for (i; i < j; i = i + 1) {
-            var msg = room.messages[i];
+        let messages = [];
 
-            let username = await utils.findUserByUsername(msg.author);
+        for (let i = Math.max(0, end - fetchAmt); i < end; i++) {
+            let msg = room.messages[i];
+            let author = await utils.findUserByUsername(msg.author);
 
-            jsonmessage.push({
+            messages.push({
                 id: msg.id,
-                authorName: username.displayName,
-                authorUsername: username.username,
-                avatar: username.avatar,
+                authorName: author.displayName,
+                authorUsername: author.username,
+                avatar: author.avatar,
                 content: msg.content,
                 time: msg.createdAt,
                 pings: await utils.findPings(msg.content)
             });
         }
-        return res.json(jsonmessage);
+        return res.json(messages);
     }
 });
 

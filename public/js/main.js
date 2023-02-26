@@ -138,16 +138,14 @@ function clearRoom() {
     remove.forEach(e => roomsElement.removeChild(e));
 }
 
-function fetchmsg(cookieId, roomId) {
+function fetchMsg(cookieId, roomId) {
     $.ajax({
         url: "/get_message",
-
         type: "POST",
         data: {
             cookieId: cookieId,
             roomId: roomId,
-            from: "20-newest",
-            to: "newest"
+            start: "last"
         },
         success: response => {
             console.log(response);
@@ -189,8 +187,8 @@ function createTopic(room) {
 
         textbox.classList.remove("hide");
         contextMenu.classList.remove("active");
-        socket.emit("fetchmsg", cookieId, room._id);
-        fetchmsg(cookieId, room._id);
+        // socket.emit("fetchmsg", cookieId, room._id);
+        fetchMsg(cookieId, room._id);
     };
 
     topic.oncontextmenu = e => {
