@@ -343,3 +343,7 @@ body {
     text-decoration: none;
     color: rgb(26, 147, 199);
 }
+
+.links:hover {
+    text-decoration: underline;
+}
