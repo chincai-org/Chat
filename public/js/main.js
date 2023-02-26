@@ -331,6 +331,7 @@ async function createMsg(
     let username = document.createElement("span");
     username.innerText = `@${authorUsername}`;
     username.className = "username";
+    username.onclick = () => {textbox.innerText += `@${authorUsername}`};
     // username.onclick = () => {textbox.innerHTML += `<span class="mention">@${username}</span>`};
 
     let msg = document.createElement("p");
@@ -342,6 +343,9 @@ async function createMsg(
             `@${ping}`,
             `<span class="mention">@${ping}</span>`
         );
+        if (ping === authorUsername) {
+            containers.classList.add("mention-container")
+        }
     }
 
     msg.innerHTML = linkifyHtml(msg.innerHTML, options);
