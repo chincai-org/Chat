@@ -31,7 +31,7 @@ body {
 .chat {
     width: 69.7%;
     box-sizing: none; /*75.5 */
-    height: 84.3vh;
+    height: 87.5vh;
     overflow-y: auto;
     display: flex;
     flex-direction: column-reverse;
@@ -45,19 +45,24 @@ body {
     z-index: 999;
     height: fit-content;
     width: 67.4vw;
-    border: 0.1vh solid #fff;
-    background: rgb(50, 50, 50);
+    background: rgb(60, 60, 60);
     outline: none;
-    font-size: 2.5vh;
+    font-size: 1vw;
     color: white;
-    border-radius: 2vh;
+    border-radius: 1vh;
     bottom: 7.5vh;
     resize: none;
     padding: 1vh;
 }
 
 #text:focus {
-    background-color: rgb(60, 60, 60);
+    background-color: rgb(70, 70, 70);
+}
+
+[contentEditable="true"]:empty:not(:focus):before {
+    content: attr(data-placeholder);
+    color: #aaa;
+    font-size: 1vw;
 }
 
 ::-webkit-scrollbar {
@@ -131,7 +136,7 @@ body {
 
 .choice {
     color: white;
-    font-size: 4vh;
+    font-size: 2vw;
     border-radius: 1vh 1vh 0 0;
 }
 
@@ -165,9 +170,19 @@ body {
     width: calc(100vw - 0.3vh);
     background-color: rgb(30, 30, 30);
 }
-.bottom p:hover {
+.bottom p:hover,
+.bottom i:hover {
     background-color: rgb(50, 50, 50);
     cursor: pointer;
+}
+
+.bottom p {
+    width: 10vw;
+}
+
+.bottom i {
+    align-self: center;
+    font-size: 5vh;
 }
 
 .topic form {
@@ -323,4 +338,13 @@ body {
 
 .topic-bg-colour {
     background-color: rgb(30, 30, 30);
+}
+
+.links {
+    text-decoration: none;
+    color: rgb(26, 147, 199);
+}
+
+.links:hover {
+    text-decoration: underline;
 }
