@@ -6,8 +6,26 @@ const uri = process.env.uri;
 const client = new MongoClient(uri);
 const colors = ["blue", "green", "purple", "red", "yellow"];
 
+export const NO_USER = "User not found";
+export const NO_ROOM = "Room not found";
+export const NOT_IN_ROOM = "You are not a member of this room";
+export const MUTED = "You are muted";
+
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function generateWarningMessage(msg) {
+    return [
+        "SYSTEM0",
+        "System",
+        "system",
+        "/assets/system.png",
+        "$",
+        "Message failed to send: " + msg,
+        Date.now(),
+        []
+    ];
 }
 
 export async function findPings(msg) {
