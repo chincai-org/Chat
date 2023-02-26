@@ -290,6 +290,7 @@ async function createMsg(
     let username = document.createElement("span");
     username.innerText = `@${authorUsername}`;
     username.className = "username";
+    username.onclick = () => {textbox.value += "@" + authorUsername};
 
     let msg = document.createElement("p");
     msg.innerText = content;
