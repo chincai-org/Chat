@@ -92,7 +92,11 @@ command.on("purge", async (io, user, room, amt) => {
 
 command.on("kick", async (io, user, room, username) => {
     if (!username) return [2000, `Syntax: ${prefix}kick <username>`];
+    username = username.replace(/^@/, "");
     let target = await utils.findUserByUsername(username);
+
+    if (!target) return [2000, `User ${username} doesn't exist`];
+
     let kickerRole = getRole(user, room);
     let targetRole = getRole(target, room);
 
@@ -102,8 +106,43 @@ command.on("kick", async (io, user, room, username) => {
         return [2000, "You don't have the permission!"];
     } else {
         await utils.removeUser(target._id, room._id.toString());
-        console.log(room._id);
         return [2000, `Kicked user ${username}`];
+    }
+});
+
+command.on("mute", async (io, user, room, username) => {
+    if (!username) return [2000, `Syntax: ${prefix}mute <username>`];
+    username = username.replace(/^@/, "");
+    let target = await utils.findUserByUsername(username);
+
+    if (!target) return [2000, `User ${username} doesn't exist`];
+
+    let muterRole = getRole(user, room);
+    let targetRole = getRole(target, room);
+
+    if (roleValue.indexOf(muterRole) < roleValue.indexOf(targetRole)) {
+        return [2000, "You don't have the permission!"];
+    } else {
+        await utils.mute(room._id.toString(), username);
+        return [2000, `Muted user ${username}`];
+    }
+});
+
+command.on("unmute", async (io, user, room, username) => {
+    if (!username) return [2000, `Syntax: ${prefix}unmute <username>`];
+    username = username.replace(/^@/, "");
+    let target = await utils.findUserByUsername(username);
+
+    if (!target) return [2000, `User ${username} doesn't exist`];
+
+    let unmuterRole = getRole(user, room);
+    let targetRole = getRole(target, room);
+
+    if (roleValue.indexOf(unmuterRole) < roleValue.indexOf(targetRole)) {
+        return [2000, "You don't have the permission!"];
+    } else {
+        await utils.unmute(room._id.toString(), username);
+        return [2000, `Muted user ${username}`];
     }
 });
 
