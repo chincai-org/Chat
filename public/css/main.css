@@ -62,6 +62,7 @@ body {
 [contentEditable=true]:empty:not(:focus):before {
     content: attr(data-placeholder);
     color: #aaa;
+    font-size: 1vw;
 }
 
 ::-webkit-scrollbar {
@@ -336,4 +337,9 @@ body {
 
 .topic-bg-colour {
     background-color: rgb(30, 30, 30);
+}
+
+.links {
+    text-decoration: none;
+    color: rgb(26, 147, 199);
 }
