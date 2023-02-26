@@ -289,6 +289,7 @@ async function createMsg(
     let username = document.createElement("span");
     username.innerText = `@${authorUsername}`;
     username.className = "username";
+    username.onclick = () => {textbox.innerText += `@${authorUsername}`};
     // username.onclick = () => {textbox.innerHTML += `<span class="mention">@${username}</span>`};
 
     let msg = document.createElement("p");
