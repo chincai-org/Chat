@@ -5,12 +5,20 @@ const outerWrap = document.getElementById("outer-wrap");
 const roomsElement = document.getElementById("rooms");
 const searchBar = document.getElementById("search-bar");
 const chat = document.querySelector(".chat");
-const options = { className: "links" };
+const options = { className: "links", target: {url: "_blank"} };
 
 let openedContextMenu = null;
 let activeRoom = null;
 let visible = null;
 let currentRoom = "";
+
+document.oncopy = e => {
+    const text = document.getSelection().toString();
+    const clipdata = e.clipboardData || window.clipboardData;
+    clipdata.setData("text/plain", text);
+    clipdata.setData("text/html", text);
+    e.preventDefault(); 
+}
 
 textbox.onkeydown = e => {
     if (e.keyCode === 13 && !e.shiftKey) {
