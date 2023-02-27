@@ -6,17 +6,17 @@ const roleValue = ["member", "co-admin", "admin"];
 
 class Command {
     constructor() {
-        this.prefixes = [];
+        this.commands = [];
     }
 
     async parse(io, user, room, msg) {
-        for (let [command, func] of this.prefixes) {
-            if (msg.startsWith(prefix + command)) {
+        for (let [command, func] of this.commands) {
+            if (msg.match(new RegExp("^" + prefix + command + "(\\s+)?"))) {
                 return await func(
                     io,
                     user,
                     room,
-                    ...msg.split(" ").slice(1, msg.length)
+                    ...msg.split(/\s+/).slice(1, msg.length)
                 );
             }
         }
@@ -37,7 +37,7 @@ class Command {
      * @param {callback} callbackFn
      */
     on(command, callbackFn) {
-        this.prefixes.push([command, callbackFn]);
+        this.commands.push([command, callbackFn]);
     }
 }
 
@@ -92,17 +92,18 @@ command.on("purge", async (io, user, room, amt) => {
 
 command.on("kick", async (io, user, room, username) => {
     if (!username) return [2000, `Syntax: ${prefix}kick <username>`];
+    if (room.visibility == "public")
+        return [2000, "You can't kick anyone out of a public room!"];
+
     username = username.replace(/^@/, "");
     let target = await utils.findUserByUsername(username);
 
     if (!target) return [2000, `User ${username} doesn't exist`];
 
-    let kickerRole = getRole(user, room);
+    let authorRole = getRole(user, room);
     let targetRole = getRole(target, room);
 
-    if (room.visibility == "public") {
-        return [2000, "You can't kick anyone out of a public room!"];
-    } else if (roleValue.indexOf(kickerRole) < roleValue.indexOf(targetRole)) {
+    if (roleValue.indexOf(authorRole) < roleValue.indexOf(targetRole)) {
         return [2000, "You don't have the permission!"];
     } else {
         await utils.removeUser(target._id, room._id.toString());
@@ -117,10 +118,10 @@ command.on("mute", async (io, user, room, username) => {
 
     if (!target) return [2000, `User ${username} doesn't exist`];
 
-    let muterRole = getRole(user, room);
+    let authorRole = getRole(user, room);
     let targetRole = getRole(target, room);
 
-    if (roleValue.indexOf(muterRole) < roleValue.indexOf(targetRole)) {
+    if (roleValue.indexOf(authorRole) < roleValue.indexOf(targetRole)) {
         return [2000, "You don't have the permission!"];
     } else {
         await utils.mute(room._id.toString(), username);
@@ -135,15 +136,68 @@ command.on("unmute", async (io, user, room, username) => {
 
     if (!target) return [2000, `User ${username} doesn't exist`];
 
-    let unmuterRole = getRole(user, room);
+    let authorRole = getRole(user, room);
     let targetRole = getRole(target, room);
 
-    if (roleValue.indexOf(unmuterRole) < roleValue.indexOf(targetRole)) {
+    if (roleValue.indexOf(authorRole) < roleValue.indexOf(targetRole)) {
         return [2000, "You don't have the permission!"];
     } else {
         await utils.unmute(room._id.toString(), username);
         return [2000, `Muted user ${username}`];
     }
+});
+
+command.on("promote", async (io, user, room, username) => {
+    if (!username) return [2000, `Syntax: ${prefix}promote <username>`];
+    if (room.visibility == "public")
+        return [0, "You can't promote anyone in public room"];
+
+    username = username.replace(/^@/, "");
+    let target = await utils.findUserByUsername(username);
+
+    if (!target) return [2000, `User ${username} doesn't exist`];
+
+    let authorRole = getRole(user, room);
+    let targetRole = getRole(target, room);
+
+    if (authorRole != "admin") {
+        return [2000, "You don't have the permission!"];
+    } else if (targetRole != "member") {
+        return [2000, `You can't promote a ${targetRole}!`];
+    } else {
+        await utils.assignRole(username, room._id.toString(), "co-admin");
+        return [2000, `Promoted ${username} to co-admin`];
+    }
+});
+
+command.on("demote", async (io, user, room, username) => {
+    if (!username) return [2000, `Syntax: ${prefix}demote <username>`];
+    if (room.visibility == "public")
+        return [0, "You can't demote anyone in public room"];
+
+    username = username.replace(/^@/, "");
+    let target = await utils.findUserByUsername(username);
+
+    if (!target) return [2000, `User ${username} doesn't exist`];
+
+    let authorRole = getRole(user, room);
+    let targetRole = getRole(target, room);
+
+    if (authorRole != "admin") {
+        return [2000, "You don't have the permission!"];
+    } else if (targetRole != "co-admin") {
+        return [2000, `You can't demote a ${targetRole}!`];
+    } else {
+        await utils.assignRole(username, room._id.toString(), "member");
+        return [2000, `Demoted ${username} to member`];
+    }
+});
+
+command.on("check-role", async (io, user, room, username) => {
+    if (!username) username = user.username;
+    username = username.replace(/^@/, "");
+    let target = await utils.findUserByUsername(username);
+    return [0, `${username} is a ${getRole(target, room)} of ${room.name}`];
 });
 
 command.on("help-cmd", async (io, user, room) => {
@@ -153,7 +207,8 @@ command.on("help-cmd", async (io, user, room) => {
         ${prefix}purge <amount> Desc: delete an amount of message \n 
         ${prefix}delete <message id> Desc: delete a specific message \n 
         ${prefix}kick <username> Desc: kick users out of topic \n 
-        ${prefix}mute <username> Desc: mute users`
+        ${prefix}mute <username> Desc: mute users \n
+        ${prefix}unmute <username> Desc: unmute users `
     ];
 });
 

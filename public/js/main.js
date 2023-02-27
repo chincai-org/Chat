@@ -28,6 +28,36 @@ textbox.onkeydown = e => {
         e.preventDefault();
         sendMessage(textbox.innerText);
     }
+
+    if (e.keyCode == 9) {
+        e.preventDefault();
+        console.log(textbox.innerText);
+        let foundResult = textbox.innerText
+            .replace()
+            .match(/(?<=@)[a-zA-Z0-9_]+$/);
+
+        if (foundResult) {
+            let nameQuery = foundResult[0];
+            autoComplete(nameQuery)
+                .then(res => {
+                    let result = res.res;
+                    if (result) {
+                        textbox.innerText = textbox.innerText.replace(
+                            new RegExp(nameQuery + "$"),
+                            result
+                        );
+                        let range = document.createRange();
+                        let selection = window.getSelection();
+                        range.selectNodeContents(textbox);
+                        range.collapse(false);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    }
+                })
+                .catch(console.error);
+        }
+    }
+
     // for (let username of new Set(textbox.innerHTML.match(/(?<=@)[A-Za-z\d_]+/g) || [])) {
     //     console.log(username)
     //     if (isValid(username)) {
@@ -47,6 +77,9 @@ textbox.setAttribute(
 );
 
 textbox.oninput = () => {
+    if (textbox.innerHTML === "<br>") {
+        textbox.innerHTML = "";
+    }
     requestAnimationFrame(updateHeight);
 };
 
@@ -104,6 +137,15 @@ async function postData(url, method, data) {
 async function isValid(username) {
     return (
         await postData("/is_username_valid", "POST", { username: username })
+    ).json();
+}
+
+async function autoComplete(nameQuery) {
+    return (
+        await postData("/auto_complete", "POST", {
+            roomId: currentRoom,
+            nameQuery: nameQuery
+        })
     ).json();
 }
 
