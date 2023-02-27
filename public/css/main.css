@@ -64,7 +64,7 @@ body {
 
 #text {
     position: absolute;
-    z-index: 999;
+    z-index: 900;
     height: fit-content;
     width: 67.4vw;
     background: var(--grey-20);
@@ -134,6 +134,39 @@ body {
 .time {
     float: right;
     color: #aaa;
+}
+
+#scroll-down {
+    position: absolute;
+    background-color: var(--grey-50);
+    color: var(--grey-30);
+    width: 2.3vw;
+    font-size: 2.3vw;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-self: self-end;
+    visibility: hidden;
+}
+
+#scroll-down:hover {
+    background-color: var(--grey-45);
+}
+
+#new-msg-counter {
+    border-radius: 50%;
+    background-color: hsl(50, 100%, 55%);
+    position: absolute;
+    height: fit-content;
+    min-width: 1.5vw;
+    padding: 0.1vw;
+    font-size: 1.2vw;
+    color: black;
+    display: flex;
+    right: 1.3vw;
+    bottom: 1.3vw;
+    display: flex;
+    justify-content: center;
 }
 
 .topics {
