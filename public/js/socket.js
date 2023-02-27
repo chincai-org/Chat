@@ -22,7 +22,13 @@ socket.on(
                 time,
                 pings
             );
-            newMsgCounter.innerText = +newMsgCounter.innerText + 1;
+
+            let counter = newMsgCounter.innerText;
+            if (counter != "99+") {
+                let newCounter = +newMsgCounter.innerText + 1;
+                newMsgCounter.innerText =
+                    newCounter == 100 ? "99+" : newCounter;
+            }
             newMsgCounter.classList.remove("hide");
         }
     }
