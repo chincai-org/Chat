@@ -6,17 +6,17 @@ const roleValue = ["member", "co-admin", "admin"];
 
 class Command {
     constructor() {
-        this.prefixes = [];
+        this.commands = [];
     }
 
     async parse(io, user, room, msg) {
-        for (let [command, func] of this.prefixes) {
-            if (msg.startsWith(prefix + command)) {
+        for (let [command, func] of this.commands) {
+            if (msg.match(new RegExp("^" + prefix + command + "(\\s+)?"))) {
                 return await func(
                     io,
                     user,
                     room,
-                    ...msg.split(" ").slice(1, msg.length)
+                    ...msg.split(/\s+/).slice(1, msg.length)
                 );
             }
         }
@@ -37,7 +37,7 @@ class Command {
      * @param {callback} callbackFn
      */
     on(command, callbackFn) {
-        this.prefixes.push([command, callbackFn]);
+        this.commands.push([command, callbackFn]);
     }
 }
 

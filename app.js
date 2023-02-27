@@ -308,7 +308,10 @@ io.on("connection", socket => {
 
             let [del, response] = await command.parse(io, user, room, msg);
 
-            console.log(response);
+            console.log(
+                "🚀 ~ file: app.js:310 ~ socket.on ~ response:",
+                response
+            );
 
             if (response) {
                 let now = Date.now();
