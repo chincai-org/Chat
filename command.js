@@ -121,7 +121,7 @@ command.on("mute", async (io, user, room, username) => {
     let authorRole = getRole(user, room);
     let targetRole = getRole(target, room);
 
-    if (roleValue.indexOf(authorRole) < roleValue.indexOf(targetRole)) {
+    if (roleValue.indexOf(authorRole) <= roleValue.indexOf(targetRole)) {
         return [2000, "You don't have the permission!"];
     } else {
         await utils.mute(room._id.toString(), username);
@@ -139,11 +139,11 @@ command.on("unmute", async (io, user, room, username) => {
     let authorRole = getRole(user, room);
     let targetRole = getRole(target, room);
 
-    if (roleValue.indexOf(authorRole) < roleValue.indexOf(targetRole)) {
+    if (roleValue.indexOf(authorRole) <= roleValue.indexOf(targetRole)) {
         return [2000, "You don't have the permission!"];
     } else {
         await utils.unmute(room._id.toString(), username);
-        return [2000, `Muted user ${username}`];
+        return [2000, `Unmuted user ${username}`];
     }
 });
 
