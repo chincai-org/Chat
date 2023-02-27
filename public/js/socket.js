@@ -12,7 +12,7 @@ socket.on(
         time,
         pings
     ) => {
-        if (currentRoom === roomId || roomId == "$")
+        if (currentRoom === roomId || roomId == "$") {
             await createMsg(
                 id,
                 authorName,
@@ -22,6 +22,9 @@ socket.on(
                 time,
                 pings
             );
+            newMsgCounter.innerText = +newMsgCounter.innerText + 1;
+            newMsgCounter.classList.remove("hide");
+        }
     }
 );
 
