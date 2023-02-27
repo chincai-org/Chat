@@ -4,13 +4,27 @@ const textbox = document.getElementById("text");
 const outerWrap = document.getElementById("outer-wrap");
 const roomsElement = document.getElementById("rooms");
 const searchBar = document.getElementById("search-bar");
+const down = document.getElementById("scroll-down");
 const chat = document.querySelector(".chat");
+const downbtn = document.getElementById("down-btn")
 const options = { className: "links", target: {url: "_blank"} };
 
 let openedContextMenu = null;
 let activeRoom = null;
 let visible = null;
 let currentRoom = "";
+
+chat.onscroll = () => {
+    if (!Math.abs(chat.scrollHeight - chat.scrollTop < chat.scrollHeight + 1)) {
+        down.style.visibility = "visible";
+    } else {
+        down.style.visibility = "hidden";
+    }
+}
+
+downbtn.onclick = () => {
+    chat.scrollTop = chat.scrollHeight;
+}
 
 document.oncopy = e => {
     const text = document.getSelection().toString();
