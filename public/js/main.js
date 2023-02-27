@@ -6,8 +6,9 @@ const roomsElement = document.getElementById("rooms");
 const searchBar = document.getElementById("search-bar");
 const down = document.getElementById("scroll-down");
 const chat = document.querySelector(".chat");
-const downbtn = document.getElementById("down-btn")
-const options = { className: "links", target: {url: "_blank"} };
+const downbtn = document.getElementById("down-btn");
+const newMsgCounter = document.getElementById("new-msg-counter");
+const options = { className: "links", target: { url: "_blank" } };
 
 let openedContextMenu = null;
 let activeRoom = null;
@@ -19,20 +20,22 @@ chat.onscroll = () => {
         down.style.visibility = "visible";
     } else {
         down.style.visibility = "hidden";
+        newMsgCounter.innerText = "0";
+        newMsgCounter.classList.add("hide");
     }
-}
+};
 
 downbtn.onclick = () => {
     chat.scrollTop = chat.scrollHeight;
-}
+};
 
 document.oncopy = e => {
     const text = document.getSelection().toString();
     const clipdata = e.clipboardData || window.clipboardData;
     clipdata.setData("text/plain", text);
     clipdata.setData("text/html", text);
-    e.preventDefault(); 
-}
+    e.preventDefault();
+};
 
 textbox.onkeydown = e => {
     if (e.keyCode === 13 && !e.shiftKey) {
@@ -353,7 +356,9 @@ async function createMsg(
     let username = document.createElement("span");
     username.innerText = `@${authorUsername}`;
     username.className = "username";
-    username.onclick = () => {textbox.innerText += `@${authorUsername}`};
+    username.onclick = () => {
+        textbox.innerText += `@${authorUsername}`;
+    };
     // username.onclick = () => {textbox.innerHTML += `<span class="mention">@${username}</span>`};
 
     let msg = document.createElement("p");
@@ -366,7 +371,7 @@ async function createMsg(
             `<span class="mention">@${ping}</span>`
         );
         if (ping === authorUsername) {
-            containers.classList.add("mention-container")
+            containers.classList.add("mention-container");
         }
     }
 
