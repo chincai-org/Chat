@@ -116,6 +116,35 @@ export async function findUserByUsername(username) {
     }
 }
 
+export async function findUserByUsernameQuery(roomId, username) {
+    try {
+        const users = client.db("db").collection("users");
+        let room = await findRoom(roomId);
+
+        let query = {
+            username: {
+                $regex: new RegExp("^" + username),
+                $options: "i"
+            }
+        };
+
+        if (room.visibility == "private") {
+            query["rooms." + roomId] = { $exists: true };
+        }
+
+        console.log(
+            "🚀 ~ file: utils.js:135 ~ findUserByUsernameQuery ~ query:",
+            query
+        );
+
+        return await users.findOne(query);
+    } catch (e) {
+        console.error(e);
+        return null;
+    } finally {
+    }
+}
+
 export async function findUserByCookie(cookieId) {
     try {
         const users = client.db("db").collection("users");
