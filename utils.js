@@ -5,11 +5,12 @@ config();
 const uri = process.env.uri;
 const client = new MongoClient(uri);
 const colors = ["blue", "green", "purple", "red", "yellow"];
-
-export const NO_USER = "User not found";
-export const NO_ROOM = "Room not found";
-export const NOT_IN_ROOM = "You are not a member of this room";
-export const MUTED = "You are muted";
+const MSG_PREFIX = "Message failed to send: ";
+export const NO_USER = MSG_PREFIX + "User not found";
+export const NO_ROOM = MSG_PREFIX + "Room not found";
+export const NOT_IN_ROOM = MSG_PREFIX + "You are not a member of this room";
+export const MUTED = MSG_PREFIX + "You are muted";
+export const NO_SELECT_VISIBILITY = "Please select a PUBLIC | PRIVATE";
 
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -22,7 +23,7 @@ export function generateWarningMessage(msg) {
         "system",
         "/assets/system.png",
         "$",
-        "Message failed to send: " + msg,
+        msg,
         Date.now(),
         []
     ];
@@ -163,7 +164,7 @@ export async function findRoom(roomId) {
     }
 }
 
-export async function findRoomWithUser(username, visibility) {
+export async function findRoomWithUser(username, visibility, limit) {
     try {
         const rooms = client.db("db").collection("rooms");
         return await rooms
@@ -188,6 +189,10 @@ export async function findRoomWithUser(username, visibility) {
                     }
                 }
             )
+            .sort({
+                name: 1
+            })
+            .limit(limit)
             .toArray();
     } finally {
     }
