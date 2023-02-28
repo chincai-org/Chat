@@ -50,8 +50,26 @@
             <h5 class="choice" id="choice-1" title="Public topic">Public</h5>
             <h5 class="choice" id="choice-2" title="Private topic">Private</h5>
         </div>
-        <div class="topic" id="rooms">
-            <form><input id="search-bar" name="" placeholder="Search"><i id="create-new" title="Create new topic" class="fa-solid fa-plus"></i></form>
+        <div id="room-wrapper">
+            <div>
+                <input id="search-bar" name="" placeholder="Search">
+                <i id="create-new" title="Create new topic" class="fa-solid fa-plus"></i>
+            </div>
+            <div class="topic" id="rooms"></div>
+        </div>
+    </div>
+    <div class="new-topic" id="new-topic">
+        <p>Start a new discussion!</p>
+        <p class="p-desc">Topic name:</p>
+        <div contenteditable="true" id="new-topic-input-name"data-placeholder="Enter topic name"></div>
+        <p class="p-desc">Allow 18+ content?</p>
+        <label class="switch">
+            <input type="checkbox">
+            <span class="slider round"></span>
+        </label>
+        <div class="new-topic-btns">
+            <div class="new-topic-btn" id="new-topic-btn-create">Create</div>
+            <div class="new-topic-btn" id="new-topic-btn-cancel">Cancel</div>
         </div>
     </div>
     <div class="bottom">

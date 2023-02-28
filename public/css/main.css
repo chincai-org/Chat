@@ -81,7 +81,7 @@ body {
     background-color: var(--grey-25);
 }
 
-[contentEditable="true"]:empty:not(:focus):before {
+[contentEditable="true"][id="text"]:empty:not(:focus):before {
     content: attr(data-placeholder);
     color: #aaa;
     font-size: 1.2vw;
@@ -199,7 +199,7 @@ body {
 
 .topic {
     overflow-y: scroll;
-    height: 79vh;
+    height: 73.5vh;
     background-color: var(--grey-15);
 }
 
@@ -294,6 +294,159 @@ body {
     margin-top: 1vh;
     padding: 1vh 2vh;
     border-top: 0.1vh solid white;
+}
+
+.new-topic {
+    position: absolute;
+    background: url(/assets/bamboo-bg.jpg);
+    background-color: white;
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+    width: 25%;
+    height: 30%;
+    font-size: 1.8vw;
+    font-weight: bold;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #220151;
+    display: none;
+}
+
+.new-topic-btn {
+    border-radius: 1vw;
+    padding: 0.3vw;
+    color: black;
+    user-select: none;
+}
+
+.new-topic-btn[id="new-topic-btn-create"] {
+    background: linear-gradient(hsl(120, 100%, 50%), hsl(120, 98%, 20%));
+    font-weight: normal;
+}
+
+.new-topic-btn[id="new-topic-btn-create"]:hover {
+    background: linear-gradient(hsl(120, 100%, 60%), hsl(120, 100%, 30%));
+    font-weight: normal;
+}
+
+.new-topic-btn[id="new-topic-btn-create"]:active {
+    background: linear-gradient(hsl(120, 100%, 50%), hsl(120, 98%, 20%));
+    font-weight: normal;
+}
+
+.new-topic-btn[id="new-topic-btn-cancel"] {
+    background: linear-gradient(hsl(0, 100%, 60%), hsl(0, 100%, 30%));
+    font-weight: normal;
+}
+
+.new-topic-btn[id="new-topic-btn-cancel"]:hover {
+    background: linear-gradient(hsl(0, 100%, 70%), hsl(0, 100%, 40%));
+    font-weight: normal;
+}
+
+.new-topic-btn[id="new-topic-btn-cancel"]:active {
+    background: linear-gradient(hsl(0, 100%, 60%), hsl(0, 100%, 30%));
+    font-weight: normal;
+}
+
+.new-topic-btns {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5vw;
+    font-size: 1.5vw;
+}
+
+.p-desc {
+    font-weight: bold;
+    font-size: 1.5vw;
+}
+
+@keyframes focus-textbox {
+    0% {background: linear-gradient(hsla(0, 100%, 100%, 0), hsla(0, 0%, 100%, 0.6));}
+    25% {background: linear-gradient(hsla(0, 100%, 100%, 0.3), hsla(0, 0%, 100%, 0.9));}
+    50% {background: linear-gradient(hsla(0, 100%, 100%, 0.5), hsla(0, 0%, 100%, 1));}
+    75% {background: linear-gradient(hsla(0, 100%, 100%, 0.8), hsla(0, 0%, 100%, 1));}
+    100% {background: linear-gradient(hsla(0, 100%, 100%, 1), hsla(0, 0%, 100%, 1));}
+}
+
+#new-topic-input-name {
+    margin: 0.3vw;
+    outline: none;
+    border-bottom: black solid 0.1vw;
+    font-weight: normal;
+    font-size: 1.2vw;
+    background: linear-gradient(hsla(0, 100%, 100%, 0), hsla(0, 0%, 100%, 0.6));
+}
+
+#new-topic-input-name:focus {
+    animation-name: focus-textbox;
+    animation-duration: 300ms;
+    animation-direction: normal;
+    background-color: white;
+}
+
+[contentEditable="true"][id="new-topic-input-name"]:empty:not(:focus):before {
+    content: attr(data-placeholder);
+    color: var(--grey-10);
+    font-size: 1.2vw;
+    pointer-events: none;
+}
+
+.switch {
+position: relative;
+display: inline-block;
+width: 4vw;
+height: 2vw;
+}
+
+.switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #ccc;
+transition: .4s;
+}
+
+.slider:before {
+position: absolute;
+content: "";
+height: 1.4vw;
+width: 1.4vw;
+left: 0.2vw;
+bottom: 0.2vw;
+background-color: white;
+transition: .4s;
+}
+
+input:checked + .slider {
+background-color: #2196F3;
+}
+
+input:focus + .slider {
+box-shadow: 0 0 0.1vw #2196F3;
+}
+
+input:checked + .slider:before {
+transform: translateX(2vw);
+}
+
+.slider.round {
+border-radius: 2vw;
+}
+
+.slider.round:before {
+border-radius: 50%;
 }
 
 #choice-1,
