@@ -23,6 +23,9 @@ Users:
     "username": "Bob",
     "avatar": "/assets/default_red.png",
     "password": "password123",
+    "birthday": {
+        "$date": "2007-10-05T16:00:00.000Z"
+    },
     "cookieId": "idasdno8hdoAksdj",
     "rooms": {
         "9hfm09asfsd": "admin",
