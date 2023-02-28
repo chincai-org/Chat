@@ -72,6 +72,8 @@ app.get("/signup", (req, res) => {
         "",
         "",
         "",
+        "",
+        "",
         ""
     ];
 
@@ -83,6 +85,8 @@ app.get("/signup", (req, res) => {
         "",
         "Please use character between A to Z and 0 to 9 only. ",
         "This username cannot be used. ",
+        "",
+        "",
         ""
     ];
 
@@ -91,6 +95,8 @@ app.get("/signup", (req, res) => {
         "",
         "",
         "Please don't leave this empty. ",
+        "",
+        "",
         "",
         "",
         "",
@@ -105,14 +111,30 @@ app.get("/signup", (req, res) => {
         "Please don't leave this empty. ",
         "",
         "",
-        "This is not the same with password. "
+        "This is not the same with password. ",
+        "",
+        ""
+    ];
+
+    const birthdayError = [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "Please do not leave this empty",
+        "Go register for Guinness World Records before signing up an account"
     ];
 
     res.render("signup.ejs", {
         name: nameError[e],
         username: usernameError[e],
         password: passwordError[e],
-        confirmpassword: confirmPasswordError[e]
+        confirmpassword: confirmPasswordError[e],
+        birthday: birthdayError[e]
     });
 });
 
@@ -138,7 +160,7 @@ app.post("/login_validator", async (req, res) => {
 });
 
 app.post("/signup_validator", async (req, res) => {
-    let { name, username, password, confirmpassword } = req.body;
+    let { name, username, password, confirmpassword, birthday } = req.body;
 
     if (!name) {
         res.cookie("e", "1");
@@ -152,18 +174,24 @@ app.post("/signup_validator", async (req, res) => {
     } else if (!confirmpassword) {
         res.cookie("e", "4");
         res.redirect("/signup");
+    } else if (!birthday) {
+        res.cookie("e", "8");
+        res.redirect("/signup");
     } else if (username.match(/[^A-Za-z0-9_]/g)) {
-        console.log("else if");
         res.cookie("e", "5");
         res.redirect("/signup");
     } else if (await utils.findUserByUsername(username)) {
         res.cookie("e", "6");
         res.redirect("/signup");
-        console.log("e9");
     } else if (password != confirmpassword) {
         res.cookie("e", "7");
         res.redirect("/signup");
-        console.log("e10");
+    } else if (
+        new Date(Date.now() - new Date(birthday)).getUTCFullYear() - 1970 >
+        120
+    ) {
+        res.cookie("e", "9");
+        res.redirect("/signup");
     } else {
         let id = "id";
         while (id == "id") {
