@@ -14,21 +14,26 @@
         <h1>Sign Up</h1>
         <form action="/signup_validator" method="POST">
             <p>Display name</p>
-            
             <p class="warning"><%= name %></p>
-            <input type="text" maxlength="15" name="name" placeholder="Enter name" required>
+            <input type="text" maxlength="15" name="name" placeholder="Display name use for display" required>
+            
             <p>Username</p>
             <p class="warning"><%= username %></p>
-            <input type="text" maxlength="15" name="username" placeholder="Enter username" required>
+            <input type="text" maxlength="15" name="username" placeholder="Username use for login" required>
+            
             <p>Password</p>
             <p class="warning"><%= password %></p>
-            <input type="password" maxlength="20" name="password" placeholder="Enter password" required>
-            <p>Confirm Password</p>
+            <input type="password" maxlength="20" name="password" placeholder="Password use for login" required>
             
+            <p>Confirm Password</p>
             <p class="warning"><%= confirmpassword %></p>
-            <input type="password" maxlength="20" name="confirmpassword" placeholder="Enter password" required>
+            <input type="password" maxlength="20" name="confirmpassword" placeholder="Key in the same password as above if comfirmed" required>
+            <p>Birthday</p>
+            <input type="text" maxlength="10" name="age" placeholder="dd/mm/yyyy">
             <br><br>
+            
             <input type="submit" name="" id="loginbtn" value="Sign Up">
+            
             <p>Have an account? <a href="/login">Login</a></p>
         </form>
     </div>
