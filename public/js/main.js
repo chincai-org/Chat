@@ -8,12 +8,30 @@ const down = document.getElementById("scroll-down");
 const chat = document.querySelector(".chat");
 const downbtn = document.getElementById("down-btn");
 const newMsgCounter = document.getElementById("new-msg-counter");
+const newTopicName = document.getElementById("new-topic-input-name");
+const newTopic = document.getElementById("new-topic");
+const createNewTopic = document.getElementById("create-new");
+const newTopicCancel = document.getElementById("new-topic-btn-cancel");
+const newTopicConfirm = document.getElementById("new-topic-btn-create");
 const options = { className: "links", target: { url: "_blank" } };
 
 let openedContextMenu = null;
 let activeRoom = null;
 let visible = null;
 let currentRoom = "";
+
+createNewTopic.onclick = () => {
+    newTopic.style.display = newTopic.tagName === "SPAN" ? "inline" : "block"   
+}
+
+newTopicCancel.onclick = () => {
+    newTopic.style.display = "none"
+}
+
+newTopicConfirm.onclick = () => {
+    //TODO create new topic
+    newTopic.style.display = "none"
+}
 
 chat.onscroll = () => {
     if (!Math.abs(chat.scrollHeight - chat.scrollTop < chat.scrollHeight + 1)) {
@@ -29,12 +47,19 @@ downbtn.onclick = () => {
     chat.scrollTop = chat.scrollHeight;
 };
 
-document.oncopy = e => {
-    const text = document.getSelection().toString();
-    const clipdata = e.clipboardData || window.clipboardData;
-    clipdata.setData("text/plain", text);
-    clipdata.setData("text/html", text);
+newTopicName.onkeydown = e => {
+    if (e.keyCode === 13) {
+        e.preventDefault();
+        newTopicName.blur();
+    }
+}
+
+textbox.onpaste = e => {
     e.preventDefault();
+    const text = (e.clipboardData || window.clipboardData).getData(
+        "text/plain"
+    );
+    document.execCommand("insertHTML", false, text);
 };
 
 textbox.onkeydown = e => {
