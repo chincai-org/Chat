@@ -161,6 +161,7 @@ app.post("/login_validator", async (req, res) => {
 
 app.post("/signup_validator", async (req, res) => {
     let { name, username, password, confirmpassword, birthday } = req.body;
+    let bday = new Date(birthday);
 
     if (!name) {
         res.cookie("e", "1");
@@ -186,10 +187,7 @@ app.post("/signup_validator", async (req, res) => {
     } else if (password != confirmpassword) {
         res.cookie("e", "7");
         res.redirect("/signup");
-    } else if (
-        new Date(Date.now() - new Date(birthday)).getUTCFullYear() - 1970 >
-        120
-    ) {
+    } else if (new Date(Date.now() - bday).getUTCFullYear() - 1970 > 120) {
         res.cookie("e", "9");
         res.redirect("/signup");
     } else {
@@ -209,7 +207,7 @@ app.post("/signup_validator", async (req, res) => {
                 id = id;
             }
         }
-        await utils.createUser(name, username, password, id);
+        await utils.createUser(name, username, password, bday, id);
         res.cookie("id", id);
         res.redirect("/chat");
     }
