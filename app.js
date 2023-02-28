@@ -74,6 +74,7 @@ app.get("/signup", (req, res) => {
         "",
         "",
         "",
+        "",
         ""
     ];
 
@@ -87,6 +88,7 @@ app.get("/signup", (req, res) => {
         "This username cannot be used. ",
         "",
         "",
+        "",
         ""
     ];
 
@@ -95,6 +97,7 @@ app.get("/signup", (req, res) => {
         "",
         "",
         "Please don't leave this empty. ",
+        "",
         "",
         "",
         "",
@@ -113,6 +116,7 @@ app.get("/signup", (req, res) => {
         "",
         "This is not the same with password. ",
         "",
+        "",
         ""
     ];
 
@@ -126,7 +130,8 @@ app.get("/signup", (req, res) => {
         "",
         "",
         "Please do not leave this empty",
-        "Go register for Guinness World Records before signing up an account"
+        "Go register for Guinness World Records before signing up an account",
+        "Too young to have a chat account"
     ];
 
     res.render("signup.ejs", {
@@ -189,6 +194,9 @@ app.post("/signup_validator", async (req, res) => {
         res.redirect("/signup");
     } else if (new Date(Date.now() - bday).getUTCFullYear() - 1970 > 120) {
         res.cookie("e", "9");
+        res.redirect("/signup");
+    } else if (new Date(Date.now() - bday).getUTCFullYear() - 1970 < 1) {
+        res.cookie("e", "10");
         res.redirect("/signup");
     } else {
         let id = "id";
