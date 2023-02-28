@@ -5,7 +5,6 @@ const outerWrap = document.getElementById("outer-wrap");
 const roomsElement = document.getElementById("rooms");
 const searchBar = document.getElementById("search-bar");
 const down = document.getElementById("scroll-down");
-const chat = document.querySelector(".chat");
 const downbtn = document.getElementById("down-btn");
 const newMsgCounter = document.getElementById("new-msg-counter");
 const newTopicName = document.getElementById("new-topic-input-name");
@@ -13,6 +12,8 @@ const newTopic = document.getElementById("new-topic");
 const createNewTopic = document.getElementById("create-new");
 const newTopicCancel = document.getElementById("new-topic-btn-cancel");
 const newTopicConfirm = document.getElementById("new-topic-btn-create");
+const chat = document.querySelector(".chat");
+
 const options = { className: "links", target: { url: "_blank" } };
 
 let openedContextMenu = null;
@@ -156,6 +157,13 @@ searchBar.oninput = () => {
         socket.emit("findrooms", cookieId, visible, searchBar.value);
     }
 };
+
+searchBar.onkeydown = e => {
+    if (e.keyCode === 13) {
+        e.preventDefault();
+        searchBar.blur();
+    }
+}
 
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
