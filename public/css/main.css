@@ -378,6 +378,15 @@ body {
     font-weight: normal;
     font-size: 1.2vw;
     background: linear-gradient(hsla(0, 100%, 100%, 0), hsla(0, 0%, 100%, 0.6));
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+#new-topic-input-name::-webkit-scrollbar {
+    height: 0;
 }
 
 #new-topic-input-name:focus {
