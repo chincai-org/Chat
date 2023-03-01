@@ -35,12 +35,17 @@ newTopicConfirm.onclick = () => {
 };
 
 chat.onscroll = () => {
-    if (!Math.abs(chat.scrollTop > - 1)) {
+    if (!Math.abs(chat.scrollTop > - 1)) { 
         down.style.visibility = "visible";
     } else {
         down.style.visibility = "hidden";
         newMsgCounter.innerText = "0";
         newMsgCounter.classList.add("hide");
+    }
+    
+    if (chat.scrollTop            -                     chat.clientHeight + chat.scrollHeight                     < 1)   {
+
+        fetchMsg(cookieId, currentRoom, outerWrap.firstChild.id)
     }
 
 };
@@ -240,20 +245,22 @@ function clearRoom() {
     remove.forEach(e => roomsElement.removeChild(e));
 }
 
-function fetchMsg(cookieId, roomId) {
+function fetchMsg(cookieId, roomId, messageId) {
     $.ajax({
         url: "/get_message",
         type: "POST",
         data: {
             cookieId: cookieId,
             roomId: roomId,
-            start: "last"
+            start: messageId == 0 ? "last": messageId 
         },
         success: response => {
             console.log(response);
-
-            for (let msg of response) {
+            //if == 0
+            for (let i = messageId == 0 ? 0: response.length - 1                  ; messageId == 0 ? i < response.length: i > -1;  messageId == 0? i = i + 1: i = i - 1) {
+                let msg = response[i] 
                 createMsg(
+                    messageId, 
                     msg.id,
                     msg.authorName,
                     msg.authorUsername,
@@ -290,7 +297,7 @@ function createTopic(room) {
         textbox.classList.remove("hide");
         contextMenu.classList.remove("active");
         // socket.emit("fetchmsg", cookieId, room._id);
-        fetchMsg(cookieId, room._id);
+        fetchMsg(cookieId, room._id, 0); 
     };
 
     topic.oncontextmenu = e => {
@@ -367,6 +374,7 @@ function createContextMenu(room) {
 }
 
 async function createMsg(
+    messageId, 
     id,
     authorName,
     authorUsername,
@@ -427,7 +435,7 @@ async function createMsg(
     image.alt = "default";
     image.src = avatar;
     image.className = "image";
-
+    
     name.appendChild(username);
     containers.appendChild(image);
     textContainer.appendChild(name);
@@ -436,7 +444,7 @@ async function createMsg(
     containers.appendChild(textContainer);
     containers.id = id;
 
-    outerWrap.appendChild(containers);
+    messageId == 0 ? outerWrap.appendChild(containers): outerWrap.insertBefore(containers, outerWrap.firstChild);
 
     if (id.startsWith("SYSTEM")) {
         containers.classList.add("system-colour");
