@@ -24,13 +24,15 @@ socket.on(
                 false
             );
 
-            let counter = newMsgCounter.innerText;
-            if (counter != "99+") {
-                let newCounter = +newMsgCounter.innerText + 1;
-                newMsgCounter.innerText =
-                    newCounter == 100 ? "99+" : newCounter;
+            if (!isAtBottomMost) {
+                let counter = newMsgCounter.innerText;
+                if (counter != "99+") {
+                    let newCounter = +newMsgCounter.innerText + 1;
+                    newMsgCounter.innerText =
+                        newCounter == 100 ? "99+" : newCounter;
+                }
+                newMsgCounter.classList.remove("hide");
             }
-            newMsgCounter.classList.remove("hide");
         }
     }
 );
