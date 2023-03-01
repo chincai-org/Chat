@@ -445,8 +445,8 @@ async function createMsg(
     containers.id = id;
 
     isOld
-        ? outerWrap.appendChild(containers)
-        : outerWrap.insertBefore(containers, outerWrap.firstChild);
+        ? outerWrap.insertBefore(containers, outerWrap.firstChild)
+        : outerWrap.appendChild(containers);
 
     if (id.startsWith("SYSTEM")) {
         containers.classList.add("system-colour");
