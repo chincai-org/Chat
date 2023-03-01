@@ -20,6 +20,7 @@ let openedContextMenu = null;
 let activeRoom = null;
 let visible = null;
 let currentRoom = "";
+let isAtBottomMost = true;
 
 createNewTopic.onclick = () => {
     newTopic.style.display = newTopic.tagName === "SPAN" ? "inline" : "block";
@@ -37,10 +38,12 @@ newTopicConfirm.onclick = () => {
 chat.onscroll = () => {
     if (!Math.abs(chat.scrollTop > -1)) {
         down.style.visibility = "visible";
+        isAtBottomMost = false;
     } else {
         down.style.visibility = "hidden";
         newMsgCounter.innerText = "0";
         newMsgCounter.classList.add("hide");
+        isAtBottomMost = true;
     }
 
     if (chat.scrollTop - chat.clientHeight + chat.scrollHeight < 1) {
