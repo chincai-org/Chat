@@ -200,6 +200,10 @@ command.on("check-role", async (io, user, room, username) => {
     return [0, `${username} is a ${getRole(target, room)} of ${room.name}`];
 });
 
+command.on("count-msg", async (io, user, room) => {
+    return [0, `${room.messages.length} messages`];
+});
+
 command.on("help-cmd", async (io, user, room) => {
     return [
         0,
