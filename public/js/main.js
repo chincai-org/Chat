@@ -22,17 +22,17 @@ let visible = null;
 let currentRoom = "";
 
 createNewTopic.onclick = () => {
-    newTopic.style.display = newTopic.tagName === "SPAN" ? "inline" : "block"   
-}
+    newTopic.style.display = newTopic.tagName === "SPAN" ? "inline" : "block";
+};
 
 newTopicCancel.onclick = () => {
-    newTopic.style.display = "none"
-}
+    newTopic.style.display = "none";
+};
 
 newTopicConfirm.onclick = () => {
-    //TODO create new topic
-    newTopic.style.display = "none"
-}
+    socket.emit("room", newTopicName.innerText, visible, cookieId);
+    newTopic.style.display = "none";
+};
 
 chat.onscroll = () => {
     if (!Math.abs(chat.scrollTop > - 1)) {
@@ -54,7 +54,7 @@ newTopicName.onkeydown = e => {
         e.preventDefault();
         newTopicName.blur();
     }
-}
+};
 
 textbox.onpaste = e => {
     e.preventDefault();
@@ -164,7 +164,7 @@ searchBar.onkeydown = e => {
         e.preventDefault();
         searchBar.blur();
     }
-}
+};
 
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
