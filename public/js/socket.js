@@ -20,7 +20,8 @@ socket.on(
                 avatar,
                 content,
                 time,
-                pings
+                pings,
+                false
             );
 
             let counter = newMsgCounter.innerText;
