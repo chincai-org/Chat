@@ -35,13 +35,14 @@ newTopicConfirm.onclick = () => {
 }
 
 chat.onscroll = () => {
-    if (!Math.abs(chat.scrollHeight - chat.scrollTop < chat.scrollHeight + 1)) {
+    if (!Math.abs(chat.scrollTop > - 1)) {
         down.style.visibility = "visible";
     } else {
         down.style.visibility = "hidden";
         newMsgCounter.innerText = "0";
         newMsgCounter.classList.add("hide");
     }
+
 };
 
 downbtn.onclick = () => {
