@@ -35,19 +35,17 @@ newTopicConfirm.onclick = () => {
 };
 
 chat.onscroll = () => {
-    if (!Math.abs(chat.scrollTop > - 1)) { 
+    if (!Math.abs(chat.scrollTop > -1)) {
         down.style.visibility = "visible";
     } else {
         down.style.visibility = "hidden";
         newMsgCounter.innerText = "0";
         newMsgCounter.classList.add("hide");
     }
-    
-    if (chat.scrollTop            -                     chat.clientHeight + chat.scrollHeight                     < 1)   {
 
-        fetchMsg(cookieId, currentRoom, outerWrap.firstChild.id)
+    if (chat.scrollTop - chat.clientHeight + chat.scrollHeight < 1) {
+        fetchMsg(cookieId, currentRoom, outerWrap.firstChild.id);
     }
-
 };
 
 downbtn.onclick = () => {
@@ -252,22 +250,25 @@ function fetchMsg(cookieId, roomId, messageId) {
         data: {
             cookieId: cookieId,
             roomId: roomId,
-            start: messageId == 0 ? "last": messageId 
+            start: messageId == 0 ? "last" : messageId
         },
         success: response => {
             console.log(response);
-            //if == 0
-            for (let i = messageId == 0 ? 0: response.length - 1                  ; messageId == 0 ? i < response.length: i > -1;  messageId == 0? i = i + 1: i = i - 1) {
-                let msg = response[i] 
+
+            if (messageId != 0) {
+                response.reverse();
+            }
+
+            for (let msg of response) {
                 createMsg(
-                    messageId, 
                     msg.id,
                     msg.authorName,
                     msg.authorUsername,
                     msg.avatar,
                     msg.content,
                     msg.time,
-                    msg.pings
+                    msg.pings,
+                    messageId != 0
                 );
             }
         },
@@ -297,7 +298,7 @@ function createTopic(room) {
         textbox.classList.remove("hide");
         contextMenu.classList.remove("active");
         // socket.emit("fetchmsg", cookieId, room._id);
-        fetchMsg(cookieId, room._id, 0); 
+        fetchMsg(cookieId, room._id, 0);
     };
 
     topic.oncontextmenu = e => {
@@ -374,16 +375,15 @@ function createContextMenu(room) {
 }
 
 async function createMsg(
-    messageId, 
     id,
     authorName,
     authorUsername,
     avatar,
     content,
     time,
-    pings
+    pings,
+    isOld
 ) {
-    console.time(id);
     let date = new Date(time);
 
     let containers = document.createElement("div");
@@ -435,7 +435,7 @@ async function createMsg(
     image.alt = "default";
     image.src = avatar;
     image.className = "image";
-    
+
     name.appendChild(username);
     containers.appendChild(image);
     textContainer.appendChild(name);
@@ -444,7 +444,9 @@ async function createMsg(
     containers.appendChild(textContainer);
     containers.id = id;
 
-    messageId == 0 ? outerWrap.appendChild(containers): outerWrap.insertBefore(containers, outerWrap.firstChild);
+    isOld
+        ? outerWrap.appendChild(containers)
+        : outerWrap.insertBefore(containers, outerWrap.firstChild);
 
     if (id.startsWith("SYSTEM")) {
         containers.classList.add("system-colour");
@@ -457,5 +459,4 @@ async function createMsg(
                 outerWrap.removeChild(containers);
             }, deleteAfter);
     }
-    console.timeEnd(id);
 }
