@@ -22,20 +22,20 @@ let visible = null;
 let currentRoom = "";
 
 createNewTopic.onclick = () => {
-    newTopic.style.display = newTopic.tagName === "SPAN" ? "inline" : "block"   
-}
+    newTopic.style.display = newTopic.tagName === "SPAN" ? "inline" : "block";
+};
 
 newTopicCancel.onclick = () => {
-    newTopic.style.display = "none"
-}
+    newTopic.style.display = "none";
+};
 
 newTopicConfirm.onclick = () => {
-    //TODO create new topic
-    newTopic.style.display = "none"
-}
+    socket.emit("room", newTopicName.innerText, visible, cookieId);
+    newTopic.style.display = "none";
+};
 
-chat.onscroll = (roomId) => {
-    if (!Math.abs(chat.scrollHeight - chat.scrollTop < chat.scrollHeight + 1)) { 
+chat.onscroll = () => {
+    if (!Math.abs(chat.scrollTop > - 1)) { 
         down.style.visibility = "visible";
     } else {
         down.style.visibility = "hidden";
@@ -47,6 +47,7 @@ chat.onscroll = (roomId) => {
 
         fetchMsg(cookieId, currentRoom, outerWrap.firstChild.id)
     }
+
 };
 
 downbtn.onclick = () => {
@@ -58,7 +59,7 @@ newTopicName.onkeydown = e => {
         e.preventDefault();
         newTopicName.blur();
     }
-}
+};
 
 textbox.onpaste = e => {
     e.preventDefault();
@@ -168,7 +169,7 @@ searchBar.onkeydown = e => {
         e.preventDefault();
         searchBar.blur();
     }
-}
+};
 
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
