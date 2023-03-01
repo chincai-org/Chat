@@ -95,7 +95,8 @@ export async function createRoom(name, visibility, creater) {
             visibility: visibility,
             msgId: 0,
             messages: [],
-            members: visibility == "public" ? [] : [creater]
+            members: visibility == "public" ? [] : [creater],
+            muted: []
         });
 
         if (visibility == "private") {
@@ -172,6 +173,23 @@ export async function findRoom(roomId) {
     }
 }
 
+/**
+ * # Warning, this only searches the public room
+ * @param {string} name
+ * @returns {Promise<import("mongodb").WithId<import("mongodb").Document> | null>}
+ */
+export async function findRoomByName(name) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+
+        return await rooms.findOne({
+            name: name,
+            visibility: "public"
+        });
+    } finally {
+    }
+}
+
 export async function findRoomWithUser(username, visibility, limit) {
     try {
         const rooms = client.db("db").collection("rooms");
@@ -241,7 +259,7 @@ export async function findRoomWithUserAndQuery(username, visibility, query) {
 }
 
 /**
- * Warning, the room can only be private
+ * # Warning, the room can only be private
  * @param {string} userId
  * @param {string} roomId
  */
