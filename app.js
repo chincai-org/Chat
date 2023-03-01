@@ -32,6 +32,7 @@ app.get("/about", (req, res) => {
 app.get("/chat", async (req, res) => {
     let user = await utils.findUserByCookie(req.cookies.id);
     if (user) {
+        console.log(`User @${user.username} logged in`);
         res.render("main.ejs", {
             displayName: user.displayName,
             username: user.username
@@ -223,7 +224,6 @@ app.post("/signup_validator", async (req, res) => {
 
 app.post("/get_user_by_cookie_id", async (req, res) => {
     let { id } = req.body;
-    console.log(id);
     return res.json(await utils.findUserByCookie(id));
 });
 
@@ -385,7 +385,6 @@ io.on("connection", socket => {
             );
         } else {
             let pins = user.pins[visibility];
-            console.log(pins.length);
             let rooms = await utils.findRoomWithUser(
                 user.username,
                 visibility,
@@ -415,6 +414,28 @@ io.on("connection", socket => {
                 e.name.toLowerCase().contains(query.toLowerCase())
             );
             socket.emit("rooms", rooms, pins);
+        }
+    });
+
+    socket.on("room", async (name, visibility, cookieId) => {
+        let user = await utils.findUserByCookie(cookieId);
+
+        if (!user) {
+            socket.emit("msg", ...utils.generateWarningMessage(utils.NO_USER));
+        } else if (!visibility) {
+            socket.emit(
+                "msg",
+                ...utils.generateWarningMessage(utils.NO_SELECT_VISIBILITY)
+            );
+        } else if (!name) {
+            // TODO handle no type name
+        } else {
+            let result = await utils.createRoom(
+                name,
+                visibility,
+                user.username
+            );
+            io.emit("room", { _id: result.insertedId, name: name });
         }
     });
 });
