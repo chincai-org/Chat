@@ -62,6 +62,11 @@ socket.on("rooms", (rooms, pins) => {
     }
 });
 
+socket.on("room", room => {
+    console.log("🚀 ~ file: socket.js:69 ~ room:", room);
+    document.getElementById("rooms").appendChild(createTopic(room));
+});
+
 socket.on("delete", msgId => {
     outerWrap.removeChild(document.getElementById(msgId));
 });
