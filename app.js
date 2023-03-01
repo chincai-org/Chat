@@ -242,7 +242,7 @@ app.post("/get_message", async (req, res) => {
     ) {
         socket.emit("msg", ...utils.generateWarningMessage(utils.NOT_IN_ROOM));
     } else {
-        const fetchAmt = 30;
+        const fetchAmt = 30; 
         let end =
             start == "last"
                 ? room.messages.length
