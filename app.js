@@ -242,7 +242,7 @@ app.post("/get_message", async (req, res) => {
     ) {
         socket.emit("msg", ...utils.generateWarningMessage(utils.NOT_IN_ROOM));
     } else {
-        const fetchAmt = 30; 
+        const fetchAmt = 30;
         let end =
             start == "last"
                 ? room.messages.length
@@ -417,7 +417,7 @@ io.on("connection", socket => {
         }
     });
 
-    socket.on("room", async (name, visibility, cookieId) => {
+    socket.on("new-room", async (name, visibility, cookieId) => {
         let user = await utils.findUserByCookie(cookieId);
 
         if (!user) {
@@ -429,13 +429,20 @@ io.on("connection", socket => {
             );
         } else if (!name) {
             // TODO handle no type name
+        } else if (
+            visibility == "public" &&
+            (await utils.findRoomByName(name))
+        ) {
+            // TODO handle duplicated name
         } else {
             let result = await utils.createRoom(
                 name,
                 visibility,
                 user.username
             );
-            io.emit("room", { _id: result.insertedId, name: name });
+
+            if (visibility == "public")
+                io.emit("room", { _id: result.insertedId, name: name });
         }
     });
 });

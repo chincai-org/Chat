@@ -30,7 +30,7 @@ newTopicCancel.onclick = () => {
 };
 
 newTopicConfirm.onclick = () => {
-    socket.emit("room", newTopicName.innerText, visible, cookieId);
+    socket.emit("new-room", newTopicName.innerText, visible, cookieId);
     newTopic.style.display = "none";
 };
 
