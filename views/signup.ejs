@@ -28,11 +28,14 @@
             <p>Confirm Password</p>
             <p class="warning"><%= confirmpassword %></p>
             <input type="password" maxlength="20" name="confirmpassword" placeholder="Key in the same password as above if comfirmed" required>
+
             <p>Birthday</p>
-            <input type="text" maxlength="10" name="age" placeholder="dd/mm/yyyy">
+            <p class="warning"><%= birthday %></p>
+            <input type="date" maxlength="10" name="birthday" placeholder="dd/mm/yyyy" required>
+
             <br><br>
             
-            <input type="submit" name="" id="loginbtn" value="Sign Up">
+            <input type="submit" id="loginbtn" value="Sign Up">
             
             <p>Have an account? <a href="/login">Login</a></p>
         </form>

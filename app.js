@@ -32,6 +32,7 @@ app.get("/about", (req, res) => {
 app.get("/chat", async (req, res) => {
     let user = await utils.findUserByCookie(req.cookies.id);
     if (user) {
+        console.log(`User @${user.username} logged in`);
         res.render("main.ejs", {
             displayName: user.displayName,
             username: user.username
@@ -72,6 +73,9 @@ app.get("/signup", (req, res) => {
         "",
         "",
         "",
+        "",
+        "",
+        "",
         ""
     ];
 
@@ -83,6 +87,9 @@ app.get("/signup", (req, res) => {
         "",
         "Please use character between A to Z and 0 to 9 only. ",
         "This username cannot be used. ",
+        "",
+        "",
+        "",
         ""
     ];
 
@@ -91,6 +98,9 @@ app.get("/signup", (req, res) => {
         "",
         "",
         "Please don't leave this empty. ",
+        "",
+        "",
+        "",
         "",
         "",
         "",
@@ -105,14 +115,32 @@ app.get("/signup", (req, res) => {
         "Please don't leave this empty. ",
         "",
         "",
-        "This is not the same with password. "
+        "This is not the same with password. ",
+        "",
+        "",
+        ""
+    ];
+
+    const birthdayError = [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "Please do not leave this empty",
+        "Go register for Guinness World Records before signing up an account",
+        "Too young to have a chat account"
     ];
 
     res.render("signup.ejs", {
         name: nameError[e],
         username: usernameError[e],
         password: passwordError[e],
-        confirmpassword: confirmPasswordError[e]
+        confirmpassword: confirmPasswordError[e],
+        birthday: birthdayError[e]
     });
 });
 
@@ -138,7 +166,8 @@ app.post("/login_validator", async (req, res) => {
 });
 
 app.post("/signup_validator", async (req, res) => {
-    let { name, username, password, confirmpassword } = req.body;
+    let { name, username, password, confirmpassword, birthday } = req.body;
+    let bday = new Date(birthday);
 
     if (!name) {
         res.cookie("e", "1");
@@ -152,18 +181,24 @@ app.post("/signup_validator", async (req, res) => {
     } else if (!confirmpassword) {
         res.cookie("e", "4");
         res.redirect("/signup");
+    } else if (!birthday) {
+        res.cookie("e", "8");
+        res.redirect("/signup");
     } else if (username.match(/[^A-Za-z0-9_]/g)) {
-        console.log("else if");
         res.cookie("e", "5");
         res.redirect("/signup");
     } else if (await utils.findUserByUsername(username)) {
         res.cookie("e", "6");
         res.redirect("/signup");
-        console.log("e9");
     } else if (password != confirmpassword) {
         res.cookie("e", "7");
         res.redirect("/signup");
-        console.log("e10");
+    } else if (new Date(Date.now() - bday).getUTCFullYear() - 1970 > 120) {
+        res.cookie("e", "9");
+        res.redirect("/signup");
+    } else if (new Date(Date.now() - bday).getUTCFullYear() - 1970 < 1) {
+        res.cookie("e", "10");
+        res.redirect("/signup");
     } else {
         let id = "id";
         while (id == "id") {
@@ -181,7 +216,7 @@ app.post("/signup_validator", async (req, res) => {
                 id = id;
             }
         }
-        await utils.createUser(name, username, password, id);
+        await utils.createUser(name, username, password, bday, id);
         res.cookie("id", id);
         res.redirect("/chat");
     }
@@ -189,7 +224,6 @@ app.post("/signup_validator", async (req, res) => {
 
 app.post("/get_user_by_cookie_id", async (req, res) => {
     let { id } = req.body;
-    console.log(id);
     return res.json(await utils.findUserByCookie(id));
 });
 
@@ -351,7 +385,6 @@ io.on("connection", socket => {
             );
         } else {
             let pins = user.pins[visibility];
-            console.log(pins.length);
             let rooms = await utils.findRoomWithUser(
                 user.username,
                 visibility,
@@ -381,6 +414,28 @@ io.on("connection", socket => {
                 e.name.toLowerCase().contains(query.toLowerCase())
             );
             socket.emit("rooms", rooms, pins);
+        }
+    });
+
+    socket.on("room", async (name, visibility, cookieId) => {
+        let user = await utils.findUserByCookie(cookieId);
+
+        if (!user) {
+            socket.emit("msg", ...utils.generateWarningMessage(utils.NO_USER));
+        } else if (!visibility) {
+            socket.emit(
+                "msg",
+                ...utils.generateWarningMessage(utils.NO_SELECT_VISIBILITY)
+            );
+        } else if (!name) {
+            // TODO handle no type name
+        } else {
+            let result = await utils.createRoom(
+                name,
+                visibility,
+                user.username
+            );
+            io.emit("room", { _id: result.insertedId, name: name });
         }
     });
 });

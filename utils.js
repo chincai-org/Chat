@@ -47,9 +47,16 @@ export async function findPings(msg) {
  * @param {string} displayName - Display name of user, can be duplicated, no rules
  * @param {string} username - Username of user, can't be duplicated, only limited to alphanumeric characters
  * @param {string} password - Can be anything
+ * @param {number} birthday - Birthday as unix time format
  * @param {string} cookieId - The cookieId of the user
  */
-export async function createUser(displayName, username, password, cookieId) {
+export async function createUser(
+    displayName,
+    username,
+    password,
+    birthday,
+    cookieId
+) {
     try {
         const users = client.db("db").collection("users");
 
@@ -61,6 +68,7 @@ export async function createUser(displayName, username, password, cookieId) {
                 colors[randint(1, colors.length - 1)] +
                 ".png",
             password: password,
+            birthday: birthday,
             cookieId: cookieId,
             rooms: {},
             pins: {
