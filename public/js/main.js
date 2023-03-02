@@ -18,6 +18,7 @@ const check18 = document.getElementById("check18");
 const options = { className: "links", target: { url: "_blank" } };
 
 let openedContextMenu = null;
+let openedMsgContextMenu = null;
 let activeRoom = null;
 let visible = null;
 let currentRoom = "";
@@ -166,7 +167,9 @@ private.onclick = () => {
 
 document.onclick = () => {
     openedContextMenu?.classList.remove("active");
+    openedMsgContextMenu?.classList.remove("active");
     openedContextMenu = null;
+    openedMsgContextMenu = null;
 };
 
 searchBar.oninput = () => {
@@ -302,7 +305,7 @@ function clearMessage() {
 
 function createTopic(room) {
     let topic = document.createElement("div");
-    let contextMenu = createContextMenu(room);
+    let contextMenu = createTopicContextMenu(room);
     topic.id = room._id;
     
     // topic.ondblclick = e => {
@@ -359,7 +362,7 @@ function createTopic(room) {
     return topic;
 }
 
-function createContextMenu(room) {
+function createMsgContextMenu(id) {
     let wrapper = document.createElement("div");
     wrapper.className = "wrapper";
 
@@ -401,6 +404,36 @@ function createContextMenu(room) {
     return wrapper;
 }
 
+function createTopicContextMenu(room) {
+    let wrapper = document.createElement("div");
+    wrapper.className = "wrapper";
+    wrapper.innerHTML = `
+    <div class="menu-content">
+        <ul class="menu">
+            <li class="item">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </li>
+            <li class="item">
+                <i class="fa-sharp fa-solid fa-map-pin"></i>
+                <span>Pin</span>
+            </li>
+        </ul>
+        <div class="copy-id">
+            <li class="item">
+                <i class="fa-solid fa-id-card-clip"></i>
+                <span>Copy ID</span>
+            </li>
+            <li class="item">
+                <i class="fa-solid fa-door-open"></i>
+                <span>Leave</span>
+            </li>
+        </div>
+    </div>
+    `;
+    return wrapper;
+}
+
 async function createMsg(
     id,
     authorName,
@@ -412,7 +445,7 @@ async function createMsg(
     topicIds, // TODO: do something with topicIds, topicIds = list of ids that have # infront
     isOld
 ) {
-    console.log("🚀 ~ file: main.js:392 ~ topicIds:", topicIds);
+    let msgContextMenu = createMsgContextMenu(id);
     let date = new Date(time);
 
     let containers = document.createElement("div");
@@ -444,6 +477,13 @@ async function createMsg(
         if (ping === authorUsername) {
             containers.classList.add("mention-container");
         }
+    }
+
+    for (let topicId of topicIds) {
+        msg.innerHTML = msg.innerHTML.replaceAll(
+            `#${topicId}`,
+            `<span class="mention">#${topicId}</span>`
+        );
     }
 
     msg.innerHTML = linkifyHtml(msg.innerHTML, options);
@@ -489,8 +529,26 @@ async function createMsg(
             }, deleteAfter);
     }
 
+    msgContextMenu.classList.remove("active");
+
     containers.oncontextmenu = e => {
         e.preventDefault();
-        console.log("a")
-    }
+        openedMsgContextMenu?.classList.remove("active");
+        msgContextMenu.classList.add("active");
+
+        openedMsgContextMenu = msgContextMenu;
+
+        let x = Math.min(
+            e.clientX,
+            window.innerWidth - msgContextMenu.offsetWidth
+        );
+        let y = Math.min(
+            e.clientY,
+            window.innerHeight - msgContextMenu.offsetHeight
+        );
+
+        msgContextMenu.style.left = `${(x / window.innerWidth) * 100}vw`;
+        msgContextMenu.style.top = `${(y / window.innerHeight) * 100}vh`;
+    };
+
 }
