@@ -28,19 +28,27 @@
                             <i class="fa-solid fa-gear"></i>
                             <span>Settings</span>
                         </li>
+                        <li class="item">
+                            <i class="fa-sharp fa-solid fa-map-pin"></i>
+                            <span>Pin</span>
+                        </li>
                     </ul>
                     <div class="copy-id">
                         <li class="item">
                             <i class="fa-solid fa-id-card-clip"></i>
                             <span>Copy ID</span>
                         </li>
+                        <li class="item">
+                            <i class="fa-solid fa-door-open"></i>
+                            <span>Leave</span>
+                        </li>
                     </div>
                 </div>
             </div> -->
-        </div>
-        <div id="scroll-down">
-            <i class="fa-solid fa-arrow-down" id="down-btn"></i>
-            <p class="hide" id="new-msg-counter">0</p>
+            <div id="scroll-down">
+                <i class="fa-solid fa-arrow-down" id="down-btn"></i>
+                <p class="hide" id="new-msg-counter">0</p>
+            </div>
         </div>
         <div contenteditable="true" id="text" class="hide" data-placeholder="Message"></div>
     </section>
@@ -64,7 +72,7 @@
         <div contenteditable="true" id="new-topic-input-name"data-placeholder="Enter topic name"></div>
         <p class="p-desc">Allow 18+ content?</p>
         <label class="switch">
-            <input type="checkbox">
+            <input type="checkbox" id="check18">
             <span class="slider round"></span>
         </label>
         <div class="new-topic-btns">
@@ -78,7 +86,7 @@
             <br>
             <span class="username-bottom font-size-2vh">@<%= username %></span>
         </p>
-        <i class="fa-solid fa-user-plus" title="Invite request"></i>
+        <i class="fa-solid fa-users" title="Invite request"></i>
     </div>
 </body>
 </html>

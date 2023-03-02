@@ -13,6 +13,7 @@ const createNewTopic = document.getElementById("create-new");
 const newTopicCancel = document.getElementById("new-topic-btn-cancel");
 const newTopicConfirm = document.getElementById("new-topic-btn-create");
 const chat = document.querySelector(".chat");
+const check18 = document.getElementById("check18");
 
 const options = { className: "links", target: { url: "_blank" } };
 
@@ -28,13 +29,22 @@ createNewTopic.onclick = () => {
 
 newTopicCancel.onclick = () => {
     newTopic.style.display = "none";
+    newTopicName.innerHTML = "";
+    check18.checked = false
 };
 
 newTopicConfirm.onclick = () => {
+    if (!/\S/.test(textbox.innerText)) {
+        return;
+    }
     socket.emit("new-room", newTopicName.innerText, visible, cookieId);
     newTopic.style.display = "none";
+    newTopicName.innerHTML = "";
+    check18.checked = false
 };
 
+
+var allowFetch = true;
 chat.onscroll = () => {
     if (!Math.abs(chat.scrollTop > -1)) {
         down.style.visibility = "visible";
@@ -46,9 +56,13 @@ chat.onscroll = () => {
         isAtBottomMost = true;
     }
 
-    if (chat.scrollTop - chat.clientHeight + chat.scrollHeight < 1) {
+    if (allowFetch && chat.scrollTop - chat.clientHeight + chat.scrollHeight < 2) {
         fetchMsg(cookieId, currentRoom, outerWrap.firstChild.id);
+        allowFetch = false;
     }
+    setTimeout(() => {
+        allowFetch = true;
+    }, 500);
 };
 
 downbtn.onclick = () => {
@@ -290,6 +304,15 @@ function createTopic(room) {
     let topic = document.createElement("div");
     let contextMenu = createContextMenu(room);
     topic.id = room._id;
+    
+    // topic.ondblclick = e => {
+    //     e.preventDefault();
+    //     topic.contentEditable = "true"
+    //     topic.focus();
+    //     window.onclick = e => {
+    //         topic.contentEditable = "false"
+    //     }
+    // }
 
     topic.onclick = () => {
         clearMessage();
@@ -464,5 +487,10 @@ async function createMsg(
             setTimeout(() => {
                 outerWrap.removeChild(containers);
             }, deleteAfter);
+    }
+
+    containers.oncontextmenu = e => {
+        e.preventDefault();
+        console.log("a")
     }
 }
