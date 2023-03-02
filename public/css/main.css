@@ -210,9 +210,6 @@ body {
 .topic h5 {
     font-size: 3vh;
     color: white;
-    overflow-x: hidden ;
-    white-space: nowrap;
-    text-overflow: ellipsis;
 }
 
 .topic h5:hover {
