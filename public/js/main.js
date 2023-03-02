@@ -43,6 +43,8 @@ newTopicConfirm.onclick = () => {
     check18.checked = false
 };
 
+
+var allowFetch = true;
 chat.onscroll = () => {
     if (!Math.abs(chat.scrollTop > -1)) {
         down.style.visibility = "visible";
@@ -54,9 +56,13 @@ chat.onscroll = () => {
         isAtBottomMost = true;
     }
 
-    if (chat.scrollTop - chat.clientHeight + chat.scrollHeight < 1) {
+    if (allowFetch && chat.scrollTop - chat.clientHeight + chat.scrollHeight < 2) {
         fetchMsg(cookieId, currentRoom, outerWrap.firstChild.id);
+        allowFetch = false;
     }
+    setTimeout(() => {
+        allowFetch = true;
+    }, 500);
 };
 
 downbtn.onclick = () => {
