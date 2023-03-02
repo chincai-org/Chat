@@ -207,12 +207,16 @@ command.on("count-msg", async (io, user, room) => {
 command.on("help-cmd", async (io, user, room) => {
     return [
         0,
-        `List of cmd: \n 
-        ${prefix}purge <amount> Desc: delete an amount of message \n 
-        ${prefix}delete <message id> Desc: delete a specific message \n 
-        ${prefix}kick <username> Desc: kick users out of topic \n 
-        ${prefix}mute <username> Desc: mute users \n
-        ${prefix}unmute <username> Desc: unmute users `
+        `List of cmd:
+        ${prefix}purge <amount> Desc: delete an amount of message
+        ${prefix}delete <message id> Desc: delete a specific message
+        ${prefix}kick <username> Desc: kick users out of topic
+        ${prefix}mute <username> Desc: mute users
+        ${prefix}unmute <username> Desc: unmute users
+        ${prefix}promote <username> Desc: promote users
+        ${prefix}demote <username> Desc: demote users
+        ${prefix}check-role <username> Desc: check role of the user in this topic
+        ${prefix}count-msg Desc: count the amoutn of message in this topic`
     ];
 });
 
