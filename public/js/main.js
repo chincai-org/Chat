@@ -23,6 +23,7 @@ let activeRoom = null;
 let visible = null;
 let currentRoom = "";
 let isAtBottomMost = true;
+let allowFetch = true;
 
 createNewTopic.onclick = () => {
     newTopic.style.display = newTopic.tagName === "SPAN" ? "inline" : "block";
@@ -31,7 +32,7 @@ createNewTopic.onclick = () => {
 newTopicCancel.onclick = () => {
     newTopic.style.display = "none";
     newTopicName.innerHTML = "";
-    check18.checked = false
+    check18.checked = false;
 };
 
 newTopicConfirm.onclick = () => {
@@ -41,11 +42,9 @@ newTopicConfirm.onclick = () => {
     socket.emit("new-room", newTopicName.innerText, visible, cookieId);
     newTopic.style.display = "none";
     newTopicName.innerHTML = "";
-    check18.checked = false
+    check18.checked = false;
 };
 
-
-var allowFetch = true;
 chat.onscroll = () => {
     if (!Math.abs(chat.scrollTop > -1)) {
         down.style.visibility = "visible";
@@ -57,7 +56,10 @@ chat.onscroll = () => {
         isAtBottomMost = true;
     }
 
-    if (allowFetch && chat.scrollTop - chat.clientHeight + chat.scrollHeight < 2) {
+    if (
+        allowFetch &&
+        chat.scrollTop - chat.clientHeight + chat.scrollHeight < 2
+    ) {
         fetchMsg(cookieId, currentRoom, outerWrap.firstChild.id);
         allowFetch = false;
     }
@@ -167,9 +169,7 @@ private.onclick = () => {
 
 document.onclick = () => {
     openedContextMenu?.classList.remove("active");
-    openedMsgContextMenu?.classList.remove("active");
     openedContextMenu = null;
-    openedMsgContextMenu = null;
 };
 
 searchBar.oninput = () => {
@@ -303,11 +303,131 @@ function clearMessage() {
     outerWrap.innerHTML = "";
 }
 
+async function createMsg(
+    id,
+    authorName,
+    authorUsername,
+    avatar,
+    content,
+    time,
+    pings,
+    topicIds, // TODO: do something with topicIds, topicIds = list of ids that have # infront
+    isOld
+) {
+    let msgContextMenu = createMsgContextMenu(id);
+    let date = new Date(time);
+
+    let containers = document.createElement("div");
+    containers.className = "container";
+    containers.id = id;
+
+    containers.oncontextmenu = e => {
+        e.preventDefault();
+
+        openedContextMenu?.classList.remove("active");
+        msgContextMenu.classList.add("active");
+
+        openedContextMenu = msgContextMenu;
+
+        let x = Math.min(
+            e.clientX,
+            window.innerWidth - msgContextMenu.offsetWidth
+        );
+        let y = Math.min(
+            e.clientY,
+            window.innerHeight - msgContextMenu.offsetHeight
+        );
+
+        msgContextMenu.style.left = `${(x / window.innerWidth) * 100}vw`;
+        msgContextMenu.style.top = `${(y / window.innerHeight) * 100}vh`;
+    };
+
+    let textContainer = document.createElement("div");
+    textContainer.className = "text-container";
+
+    let name = document.createElement("h5");
+    name.innerText = authorName;
+
+    let username = document.createElement("span");
+    username.innerText = `@${authorUsername}`;
+    username.className = "username";
+    username.onclick = () => {
+        textbox.innerText += `@${authorUsername}`;
+    };
+    // username.onclick = () => {textbox.innerHTML += `<span class="mention">@${username}</span>`};
+
+    let msg = document.createElement("p");
+    msg.innerText = content;
+    msg.className = "msg";
+
+    for (let ping of pings) {
+        msg.innerHTML = msg.innerHTML.replaceAll(
+            `@${ping}`,
+            `<span class="mention">@${ping}</span>`
+        );
+        if (ping === authorUsername) {
+            containers.classList.add("mention-container");
+        }
+    }
+
+    for (let topicId of topicIds) {
+        msg.innerHTML = msg.innerHTML.replaceAll(
+            `#${topicId}`,
+            `<span class="mention">#${topicId}</span>`
+        );
+    }
+
+    msg.innerHTML = linkifyHtml(msg.innerHTML, options);
+
+    let clock = document.createElement("span");
+    clock.className = "time";
+    clock.innerText =
+        String(date.getDate()) +
+        "/" +
+        String(date.getMonth() + 1) +
+        "/" +
+        String(date.getFullYear()) +
+        " " +
+        date.toLocaleTimeString().slice(0, -6) +
+        (date.getHours() > 11 ? " PM" : " AM");
+
+    let image = document.createElement("img");
+    image.alt = "default";
+    image.src = avatar;
+    image.className = "image";
+
+    name.appendChild(username);
+
+    textContainer.appendChild(name);
+    textContainer.appendChild(msg);
+    textContainer.appendChild(clock);
+
+    containers.appendChild(image);
+    containers.appendChild(textContainer);
+    containers.appendChild(msgContextMenu);
+
+    isOld
+        ? outerWrap.insertBefore(containers, outerWrap.firstChild)
+        : outerWrap.appendChild(containers);
+
+    if (id.startsWith("SYSTEM")) {
+        containers.classList.add("system-colour");
+        clock.classList.add("system-colour");
+
+        let deleteAfter = +id.split("$")[0].slice(6, id.length);
+
+        if (deleteAfter)
+            setTimeout(() => {
+                outerWrap.removeChild(containers);
+            }, deleteAfter);
+    }
+}
+
 function createTopic(room) {
     let topic = document.createElement("div");
     let contextMenu = createTopicContextMenu(room);
     topic.id = room._id;
-    
+
     // topic.ondblclick = e => {
     //     e.preventDefault();
     //     topic.contentEditable = "true"
@@ -432,123 +552,4 @@ function createTopicContextMenu(room) {
     </div>
     `;
     return wrapper;
-}
-
-async function createMsg(
-    id,
-    authorName,
-    authorUsername,
-    avatar,
-    content,
-    time,
-    pings,
-    topicIds, // TODO: do something with topicIds, topicIds = list of ids that have # infront
-    isOld
-) {
-    let msgContextMenu = createMsgContextMenu(id);
-    let date = new Date(time);
-
-    let containers = document.createElement("div");
-    containers.className = "container";
-
-    let textContainer = document.createElement("div");
-    textContainer.className = "text-container";
-
-    let name = document.createElement("h5");
-    name.innerText = authorName;
-
-    let username = document.createElement("span");
-    username.innerText = `@${authorUsername}`;
-    username.className = "username";
-    username.onclick = () => {
-        textbox.innerText += `@${authorUsername}`;
-    };
-    // username.onclick = () => {textbox.innerHTML += `<span class="mention">@${username}</span>`};
-
-    let msg = document.createElement("p");
-    msg.innerText = content;
-    msg.className = "msg";
-
-    for (let ping of pings) {
-        msg.innerHTML = msg.innerHTML.replaceAll(
-            `@${ping}`,
-            `<span class="mention">@${ping}</span>`
-        );
-        if (ping === authorUsername) {
-            containers.classList.add("mention-container");
-        }
-    }
-
-    for (let topicId of topicIds) {
-        msg.innerHTML = msg.innerHTML.replaceAll(
-            `#${topicId}`,
-            `<span class="mention">#${topicId}</span>`
-        );
-    }
-
-    msg.innerHTML = linkifyHtml(msg.innerHTML, options);
-
-    let clock = document.createElement("span");
-    clock.className = "time";
-    clock.innerText =
-        String(date.getDate()) +
-        "/" +
-        String(date.getMonth() + 1) +
-        "/" +
-        String(date.getFullYear()) +
-        " " +
-        date.toLocaleTimeString().slice(0, -6) +
-        (date.getHours() > 11 ? " PM" : " AM");
-
-    let image = document.createElement("img");
-    image.alt = "default";
-    image.src = avatar;
-    image.className = "image";
-
-    name.appendChild(username);
-    containers.appendChild(image);
-    textContainer.appendChild(name);
-    textContainer.appendChild(msg);
-    textContainer.appendChild(clock);
-    containers.appendChild(textContainer);
-    containers.id = id;
-
-    isOld
-        ? outerWrap.insertBefore(containers, outerWrap.firstChild)
-        : outerWrap.appendChild(containers);
-
-    if (id.startsWith("SYSTEM")) {
-        containers.classList.add("system-colour");
-        clock.classList.add("system-colour");
-
-        let deleteAfter = +id.split("$")[0].slice(6, id.length);
-
-        if (deleteAfter)
-            setTimeout(() => {
-                outerWrap.removeChild(containers);
-            }, deleteAfter);
-    }
-
-    msgContextMenu.classList.remove("active");
-
-    containers.oncontextmenu = e => {
-        e.preventDefault();
-        openedMsgContextMenu?.classList.remove("active");
-        msgContextMenu.classList.add("active");
-
-        openedMsgContextMenu = msgContextMenu;
-
-        let x = Math.min(
-            e.clientX,
-            window.innerWidth - msgContextMenu.offsetWidth
-        );
-        let y = Math.min(
-            e.clientY,
-            window.innerHeight - msgContextMenu.offsetHeight
-        );
-
-        msgContextMenu.style.left = `${(x / window.innerWidth) * 100}vw`;
-        msgContextMenu.style.top = `${(y / window.innerHeight) * 100}vh`;
-    };
-
 }
