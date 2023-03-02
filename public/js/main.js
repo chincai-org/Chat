@@ -303,6 +303,15 @@ function createTopic(room) {
     let topic = document.createElement("div");
     let contextMenu = createContextMenu(room);
     topic.id = room._id;
+    
+    // topic.ondblclick = e => {
+    //     e.preventDefault();
+    //     topic.contentEditable = "true"
+    //     topic.focus();
+    //     window.onclick = e => {
+    //         topic.contentEditable = "false"
+    //     }
+    // }
 
     topic.onclick = () => {
         clearMessage();
