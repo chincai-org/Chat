@@ -26,11 +26,11 @@ let isAtBottomMost = true;
 let allowFetch = true;
 
 createNewTopic.onclick = () => {
-    newTopic.style.display = newTopic.tagName === "SPAN" ? "inline" : "block";
+    newTopic.classList.remove("hide");
 };
 
 newTopicCancel.onclick = () => {
-    newTopic.style.display = "none";
+    newTopic.classList.add("hide");
     newTopicName.innerHTML = "";
     check18.checked = false;
 };
@@ -40,7 +40,7 @@ newTopicConfirm.onclick = () => {
         return;
     }
     socket.emit("new-room", newTopicName.innerText, visible, cookieId);
-    newTopic.style.display = "none";
+    newTopic.classList.add("hide");
     newTopicName.innerHTML = "";
     check18.checked = false;
 };
