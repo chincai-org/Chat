@@ -10,8 +10,10 @@ socket.on(
         roomId,
         content,
         time,
-        pings
+        pings,
+        topicIds
     ) => {
+        console.table(topicIds);
         if (currentRoom === roomId || roomId == "$") {
             await createMsg(
                 id,
@@ -21,6 +23,7 @@ socket.on(
                 content,
                 time,
                 pings,
+                topicIds,
                 false
             );
 

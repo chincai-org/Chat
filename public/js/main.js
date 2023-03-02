@@ -271,6 +271,7 @@ function fetchMsg(cookieId, roomId, messageId) {
                     msg.content,
                     msg.time,
                     msg.pings,
+                    msg.topicIds,
                     messageId != 0
                 );
             }
@@ -385,8 +386,10 @@ async function createMsg(
     content,
     time,
     pings,
+    topicIds, // TODO: do something with topicIds, topicIds = list of ids that have # infront
     isOld
 ) {
+    console.log("🚀 ~ file: main.js:392 ~ topicIds:", topicIds);
     let date = new Date(time);
 
     let containers = document.createElement("div");
