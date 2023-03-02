@@ -369,6 +369,7 @@ io.on("connection", socket => {
                     roomId,
                     response,
                     now,
+                    [],
                     []
                 );
             }
@@ -431,6 +432,8 @@ io.on("connection", socket => {
             );
         } else if (!name) {
             // TODO handle no type name
+        } else if (!name.match(/\S/)) {
+            // TODO handle empty topic name
         } else if (
             visibility == "public" &&
             (await utils.findRoomByName(name))
