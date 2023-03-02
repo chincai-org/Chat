@@ -210,6 +210,10 @@ body {
 .topic h5 {
     font-size: 3vh;
     color: white;
+    overflow-x: hidden ;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    user-select: none;
 }
 
 .topic h5:hover {
@@ -281,7 +285,7 @@ body {
 }
 
 .menu-content .item:hover {
-    background-color: white;
+    background-color: var(--grey-10);
 }
 
 .menu-content .item span {
@@ -312,6 +316,7 @@ body {
     transform: translate(-50%, -50%);
     color: #220151;
     display: none;
+    border-radius: 5%;
 }
 
 .new-topic-btn {
