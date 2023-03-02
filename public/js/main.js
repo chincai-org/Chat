@@ -13,6 +13,7 @@ const createNewTopic = document.getElementById("create-new");
 const newTopicCancel = document.getElementById("new-topic-btn-cancel");
 const newTopicConfirm = document.getElementById("new-topic-btn-create");
 const chat = document.querySelector(".chat");
+const check18 = document.getElementById("check18");
 
 const options = { className: "links", target: { url: "_blank" } };
 
@@ -28,11 +29,18 @@ createNewTopic.onclick = () => {
 
 newTopicCancel.onclick = () => {
     newTopic.style.display = "none";
+    newTopicName.innerHTML = "";
+    check18.checked = false
 };
 
 newTopicConfirm.onclick = () => {
+    if (!/\S/.test(textbox.innerText)) {
+        return;
+    }
     socket.emit("new-room", newTopicName.innerText, visible, cookieId);
     newTopic.style.display = "none";
+    newTopicName.innerHTML = "";
+    check18.checked = false
 };
 
 chat.onscroll = () => {
@@ -461,5 +469,10 @@ async function createMsg(
             setTimeout(() => {
                 outerWrap.removeChild(containers);
             }, deleteAfter);
+    }
+
+    containers.oncontextmenu = e => {
+        e.preventDefault();
+        console.log("a")
     }
 }
