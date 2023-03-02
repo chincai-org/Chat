@@ -527,29 +527,72 @@ function createMsgContextMenu(id) {
 function createTopicContextMenu(room) {
     let wrapper = document.createElement("div");
     wrapper.className = "wrapper";
-    wrapper.innerHTML = `
-    <div class="menu-content">
-        <ul class="menu">
-            <li class="item">
-                <i class="fa-solid fa-gear"></i>
-                <span>Settings</span>
-            </li>
-            <li class="item">
-                <i class="fa-sharp fa-solid fa-map-pin"></i>
-                <span>Pin</span>
-            </li>
-        </ul>
-        <div class="copy-id">
-            <li class="item">
-                <i class="fa-solid fa-id-card-clip"></i>
-                <span>Copy ID</span>
-            </li>
-            <li class="item">
-                <i class="fa-solid fa-door-open"></i>
-                <span>Leave</span>
-            </li>
-        </div>
-    </div>
-    `;
+
+    let menuContent = document.createElement("div");
+    menuContent.classList.add("menu-content");
+
+    let menu = document.createElement("ul");
+    menu.classList.add("menu");
+
+    let settingsItem = document.createElement("li");
+    settingsItem.classList.add("item");
+
+    let settingsIcon = document.createElement("i");
+    settingsIcon.classList.add("fa-solid", "fa-gear");
+    settingsItem.appendChild(settingsIcon);
+
+    let settingsText = document.createElement("span");
+    settingsText.textContent = "Settings";
+    settingsItem.appendChild(settingsText);
+
+    menu.appendChild(settingsItem);
+
+    let pinItem = document.createElement("li");
+    pinItem.classList.add("item");
+
+    let pinIcon = document.createElement("i");
+    pinIcon.classList.add("fa-sharp", "fa-solid", "fa-map-pin");
+    pinItem.appendChild(pinIcon);
+
+    let pinText = document.createElement("span");
+    pinText.textContent = "Pin";
+    pinItem.appendChild(pinText);
+
+    menu.appendChild(pinItem);
+
+    menuContent.appendChild(menu);
+
+    let copyId = document.createElement("div");
+    copyId.classList.add("copy-id");
+
+    let copyIdItem = document.createElement("li");
+    copyIdItem.classList.add("item");
+
+    let copyIdIcon = document.createElement("i");
+    copyIdIcon.classList.add("fa-solid", "fa-id-card-clip");
+    copyIdItem.appendChild(copyIdIcon);
+
+    let copyIdText = document.createElement("span");
+    copyIdText.textContent = "Copy ID";
+    copyIdItem.appendChild(copyIdText);
+
+    copyId.appendChild(copyIdItem);
+
+    let leaveItem = document.createElement("li");
+    leaveItem.classList.add("item");
+
+    let leaveIcon = document.createElement("i");
+    leaveIcon.classList.add("fa-solid", "fa-door-open");
+    leaveItem.appendChild(leaveIcon);
+
+    let leaveText = document.createElement("span");
+    leaveText.textContent = "Leave";
+    leaveItem.appendChild(leaveText);
+
+    copyId.appendChild(leaveItem);
+
+    menuContent.appendChild(copyId);
+    wrapper.appendChild(menuContent);
+
     return wrapper;
 }
