@@ -33,13 +33,33 @@ export async function findPings(msg) {
     let pings = [];
 
     for (let username of new Set(msg.match(/(?<=@)[A-Za-z\d_]+/g) || [])) {
-        console.log(username);
         if (await findUserByUsername(username)) {
             pings.push(username);
         }
     }
 
     return pings;
+}
+
+export async function findHashtagTopic(msg) {
+    try {
+        let topicIds = [];
+
+        for (let topicId of new Set(msg.match(/(?<=#)[a-z\d]+/g) || [])) {
+            console.log(
+                "🚀 ~ file: utils.js:49 ~ findHashtagTopic ~ topicId:",
+                topicId
+            );
+
+            let topic = await findRoom(topicId);
+            if (topic && topic.visibility == "public") {
+                topicIds.push(topicId);
+            }
+        }
+
+        return topicIds;
+    } finally {
+    }
 }
 
 /**

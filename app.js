@@ -265,7 +265,8 @@ app.post("/get_message", async (req, res) => {
                 avatar: author.avatar,
                 content: msg.content,
                 time: msg.createdAt,
-                pings: await utils.findPings(msg.content)
+                pings: await utils.findPings(msg.content),
+                topicIds: await utils.findHashtagTopic(msg.content)
             });
         }
         return res.json(messages);
@@ -337,7 +338,8 @@ io.on("connection", socket => {
                 roomId,
                 msg,
                 time,
-                await utils.findPings(msg)
+                await utils.findPings(msg),
+                await utils.findHashtagTopic(msg)
             );
 
             let [del, response] = await command.parse(io, user, room, msg);
