@@ -138,9 +138,8 @@ textbox.onkeydown = e => {
 
 textbox.setAttribute(
     "style",
-    `height:${
-        (textbox.scrollHeight / window.innerHeight) * 100
-    }vh;overflow-y:hidden;`
+    `height:auto;
+    overflow-y:hidden;`
 );
 
 textbox.oninput = () => {
@@ -373,7 +372,7 @@ async function createMsg(
     for (let topicId of topicIds) {
         msg.innerHTML = msg.innerHTML.replaceAll(
             `#${topicId}`,
-            `<span class="mention">#${topicId}</span>`
+            `<span class="hashtag">#${topicId}</span>`
         );
     }
 
