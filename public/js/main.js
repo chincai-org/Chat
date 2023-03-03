@@ -236,12 +236,12 @@ function updateHeight() {
         ((windowHeight - textHeight) / windowHeight) * 100 -
         (53 / windowHeight) * 100;
     if (textHeightPercentage > 50) {
-        textbox.style.height = "50vh";
-        chat.style.height = "43.29738058551618vh";
+        textbox.style.height = "50svh";
+        chat.style.height = "43svh";
         textbox.style.overflowY = "scroll";
     } else {
-        textbox.style.height = `${textHeightPercentage}vh`;
-        chat.style.height = `${chatHeightPercentage}vh`;
+        textbox.style.height = `auto`;
+        chat.style.height = `${chatHeightPercentage}svh`;
         textbox.style.overflowY = "hidden";
     }
 }
