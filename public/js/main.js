@@ -46,14 +46,18 @@ newTopicConfirm.onclick = () => {
 };
 
 chat.onscroll = () => {
-    if (!Math.abs(chat.scrollTop > -1)) {
-        down.style.visibility = "visible";
+    if (chat.scrollHeight - chat.scrollTop >= chat.scrollHeight + 1) {
+        // Not at bottom most
+        down.classList.remove("hide");
         isAtBottomMost = false;
+        console.log("not btm");
     } else {
-        down.style.visibility = "hidden";
+        // At bottom most
+        down.classList.add("hide");
         newMsgCounter.innerText = "0";
         newMsgCounter.classList.add("hide");
         isAtBottomMost = true;
+        console.log("btm");
     }
 
     if (
