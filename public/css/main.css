@@ -70,12 +70,12 @@ body {
     width: 67.4vw;
     background: var(--grey-20);
     outline: none;
-    font-size: 1.2vw;
+    font-size: 2.5svh;
     color: white;
     border-radius: 1vh;
     bottom: 7.5vh;
     resize: none;
-    padding: 1vw;
+    padding: 1.4svh;
 }
 
 #text:focus {

@@ -371,8 +371,8 @@ async function createMsg(
 
     for (let topicId of topicIds) {
         msg.innerHTML = msg.innerHTML.replaceAll(
-            `#${topicId}`,
-            `<span class="hashtag">#${topicId}</span>`
+            `#${topicId.id}`,
+            `<span class="hashtag" id="hashtag">#${topicId.name}</span>`
         );
     }
 
