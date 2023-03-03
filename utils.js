@@ -546,3 +546,52 @@ export async function unmute(roomId, username) {
     } finally {
     }
 }
+
+export async function defineWord(roomId, word, definition) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+
+        await rooms.updateOne(
+            {
+                _id: new ObjectId(roomId)
+            },
+            {
+                $set: {
+                    ["dictionary." + word]: definition
+                }
+            }
+        );
+    } finally {
+    }
+}
+
+export async function undefineWord(roomId, word) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+
+        await rooms.updateOne(
+            {
+                _id: new ObjectId(roomId)
+            },
+            {
+                $unset: {
+                    ["dictionary." + word]: 1
+                }
+            }
+        );
+    } finally {
+    }
+}
+
+export async function getWordDefinition(roomId, word) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+
+        let room = await rooms.findOne({
+            _id: new ObjectId(roomId)
+        });
+
+        return room.dictionary[word];
+    } finally {
+    }
+}

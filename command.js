@@ -204,6 +204,29 @@ command.on("count-msg", async (io, user, room) => {
     return [0, `${room.messages.length} messages`];
 });
 
+command.on("define", async (io, user, room, ...args) => {
+    if (!args) return [0, 'Syntax: >define "<phrase>" <definition>'];
+    let all = args.join(" ");
+    let word = all.match(/(?<=")[^"]+(?=" )/);
+
+    if (all.match(/^"/) && (all.match(/"/g) || []).length > 2)
+        return [0, 'Too many "double quotes"!!'];
+
+    let phrase, definition;
+
+    if (word) {
+        phrase = word[0];
+        definition = all.replace(phrase, "").split(/\s+/).slice(1).join(" ");
+    } else if (args.length > 1) {
+        phrase = args[0];
+        definition = args.slice(1, args.length).join(" ");
+    } else {
+        return [0, "Please provide the definition!"];
+    }
+
+    return [0, `${phrase} is ${definition}`];
+});
+
 command.on("help-cmd", async (io, user, room) => {
     return [
         0,
