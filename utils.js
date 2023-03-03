@@ -53,7 +53,7 @@ export async function findHashtagTopic(msg) {
 
             let topic = await findRoom(topicId);
             if (topic && topic.visibility == "public") {
-                topicIds.push(topicId);
+                topicIds.push({ id: topicId, name: topic.name });
             }
         }
 
