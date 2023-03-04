@@ -227,7 +227,7 @@ async function autoComplete(nameQuery) {
 }
 
 function updateHeight() {
-    textbox.style.height = "auto";
+    textbox.style.height = `auto`;
 
     const windowHeight = window.innerHeight;
     const textHeight = textbox.scrollHeight;
@@ -240,7 +240,7 @@ function updateHeight() {
         chat.style.height = "43svh";
         textbox.style.overflowY = "scroll";
     } else {
-        textbox.style.height = `auto`;
+        textbox.style.height = `${textHeightPercentage}svh`;
         chat.style.height = `${chatHeightPercentage}svh`;
         textbox.style.overflowY = "hidden";
     }
