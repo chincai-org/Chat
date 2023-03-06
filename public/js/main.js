@@ -83,14 +83,6 @@ newTopicName.onkeydown = e => {
     }
 };
 
-textbox.onpaste = e => {
-    e.preventDefault();
-    const text = (e.clipboardData || window.clipboardData).getData(
-        "text/plain"
-    );
-    document.execCommand("insertHTML", false, text);
-};
-
 textbox.onkeydown = e => {
     if (e.keyCode === 13 && !e.shiftKey) {
         if (!/\S/.test(textbox.innerText)) {
