@@ -205,7 +205,7 @@ command.on("count-msg", async (io, user, room) => {
 });
 
 command.on("define", async (io, user, room, ...args) => {
-    if (!args) return [0, 'Syntax: >define "<phrase>" <definition>'];
+    if (!args) return [0, `Syntax: ${prefix}define "<phrase>" <definition>`];
     let all = args.join(" ");
     let word = all.match(/(?<=")[^"]+(?=" )/);
 
@@ -229,7 +229,7 @@ command.on("define", async (io, user, room, ...args) => {
 });
 
 command.on("whatis", async (io, user, room, ...args) => {
-    if (!args) return [0, "Syntax: >whatis <phrase>"];
+    if (!args) return [0, `Syntax: ${prefix}whatis <phrase>`];
 
     let phrase = args.join(" ");
     let definition = await utils.getWordDefinition(room._id.toString(), phrase);
@@ -246,7 +246,7 @@ command.on("whatis", async (io, user, room, ...args) => {
 });
 
 command.on("forget", async (io, user, room, ...args) => {
-    if (!args) return [0, "Syntax: >whatis <phrase>"];
+    if (!args) return [0, `Syntax: ${prefix}whatis <phrase>`];
 
     let phrase = args.join(" ");
     let definition = await utils.getWordDefinition(room._id.toString(), phrase);
@@ -256,6 +256,61 @@ command.on("forget", async (io, user, room, ...args) => {
         return [0, `Successfully forgotten ${phrase}`];
     } else {
         return [0, `I've never known the definition of ${phrase}`];
+    }
+});
+
+command.on("remindme", async (io, user, room, time, ...args) => {
+    if (!time) {
+        return [0, `Syntax: ${prefix}remindme <hh:mm:ss> <content>`];
+    } else if (!time.match(/^(\d?\d:)?(\d?\d:)?\d?\d$/)) {
+        return [0, "Time format wrong! Use hh:mm:ss time format!"];
+    } else {
+        let timeParse = time.split(":");
+        let hour = timeParse.at(-3) || 0;
+        let minute = timeParse.at(-2) || 0;
+        let second = +timeParse.at(-1);
+
+        let total = hour * 3600 + minute * 60 + +second;
+        console.log("🚀 ~ file: command.js:274 ~ command.on ~ total:", total);
+
+        if (total === 0) return [0, "The time can't be zero!"];
+
+        let content = args.join(" ");
+        let hourMsg = hour ? ` ${hour} hours `.slice(0, -1 - (hour == 1)) : "";
+        let minuteMsg = minute
+            ? ` ${minute} minutes `.slice(0, -1 - (minute == 1))
+            : "";
+        let secondMsg = ` ${second} seconds `.slice(0, -1 - (second == 1));
+
+        setTimeout(async () => {
+            let now = Date.now();
+            let msg = `@${user.username} your timer has ended!\n${content}`;
+            let systemMsgId = await utils.insertMessage(
+                room._id.toString(),
+                "system",
+                msg,
+                now,
+                "SYSTEM0" + "$"
+            );
+
+            io.emit(
+                "msg",
+                systemMsgId,
+                "System",
+                "system",
+                "/assets/system.png",
+                room._id.toString(),
+                msg,
+                now,
+                await utils.findPings(msg),
+                []
+            );
+        }, total * 1000);
+
+        return [
+            0,
+            `Ok I will remind you after${hourMsg}${minuteMsg}${secondMsg}.`
+        ];
     }
 });
 
@@ -271,7 +326,11 @@ command.on("help-cmd", async (io, user, room) => {
         ${prefix}promote <username> Desc: promote users
         ${prefix}demote <username> Desc: demote users
         ${prefix}check-role <username> Desc: check role of the user in this topic
-        ${prefix}count-msg Desc: count the amoutn of message in this topic`
+        ${prefix}count-msg Desc: count the amoutn of message in this topic
+        ${prefix}define "<phrase>" <definition> Desc: define a word for this topic
+        ${prefix}whatis "<phrase>" Desc: check definition of a word for this topic
+        ${prefix}forget "<phrase>" Desc: delete definition of a word for this topic
+        ${prefix}remindme <hh:mm:ss> <content> Desc: remind you to do something`
     ];
 });
 
