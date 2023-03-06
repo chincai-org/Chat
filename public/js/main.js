@@ -174,6 +174,7 @@ document.onclick = e => {
     openedContextMenu?.classList.remove("active");
     openedContextMenu = null;
     if(topicDblclick && !topicDblclick.contains(e.target)){
+        //TODO rename
         topicDblclick.contentEditable = "false"
     }
     topicDblclick = null;
