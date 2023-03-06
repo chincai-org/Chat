@@ -342,12 +342,8 @@ io.on("connection", socket => {
                 await utils.findHashtagTopic(msg)
             );
 
+            // Handle system reponse
             let [del, response] = await command.parse(io, user, room, msg);
-
-            console.log(
-                "🚀 ~ file: app.js:310 ~ socket.on ~ response:",
-                response
-            );
 
             if (response) {
                 let now = Date.now();
@@ -369,7 +365,7 @@ io.on("connection", socket => {
                     roomId,
                     response,
                     now,
-                    [],
+                    await utils.findPings(response),
                     []
                 );
             }
