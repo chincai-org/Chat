@@ -18,9 +18,9 @@ const check18 = document.getElementById("check18");
 const options = { className: "links", target: { url: "_blank" } };
 
 let openedContextMenu = null;
-let openedMsgContextMenu = null;
 let activeRoom = null;
 let visible = null;
+let topicDblclick = null
 let currentRoom = "";
 let isAtBottomMost = true;
 let allowFetch = true;
@@ -170,9 +170,13 @@ private.onclick = () => {
     switchTo("private");
 };
 
-document.onclick = () => {
+document.onclick = e => {
     openedContextMenu?.classList.remove("active");
     openedContextMenu = null;
+    if(topicDblclick && !topicDblclick.contains(e.target)){
+        topicDblclick.contentEditable = "false"
+    }
+    topicDblclick = null;
 };
 
 searchBar.oninput = () => {
@@ -256,10 +260,6 @@ function switchTo(visibility) {
     clearRoom();
     visible = visibility;
     socket.emit("rooms", cookieId, visible);
-}
-
-function redirectTopic() {
-    //TODO switch topic
 }
 
 function clearRoom() {
@@ -380,7 +380,7 @@ async function createMsg(
     for (let topicId of topicIds) {
         msg.innerHTML = msg.innerHTML.replaceAll(
             `#${topicId.id}`,
-            `<span class="hashtag" id="hashtag" onclick="redirectTopic()">#${topicId.name}</span>`
+            `<span class="hashtag" id="hashtag">#${topicId.name}</span>`
         );
     }
 
@@ -439,13 +439,7 @@ function createTopic(room) {
         e.preventDefault();
         topic.contentEditable = "true"
         topic.focus();
-
-        document.onclick = e => {
-            if (!topic.contains(e.target)) {
-                //TODO accept the new name
-                topic.contentEditable = "false"
-            } 
-        }
+        topicDblclick = topic
     }
 
     topic.onclick = () => {
