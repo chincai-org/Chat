@@ -227,20 +227,20 @@ async function autoComplete(nameQuery) {
 }
 
 function updateHeight() {
-    textbox.style.height = "auto";
+    textbox.style.height = `auto`;
 
     const windowHeight = window.innerHeight;
     const textHeight = textbox.scrollHeight;
     const textHeightPercentage = (textHeight / windowHeight) * 100;
     const chatHeightPercentage =
         ((windowHeight - textHeight) / windowHeight) * 100 -
-        (63  / windowHeight) * 100;
+        (53  / windowHeight) * 100;
     if (textHeightPercentage > 50) {
         textbox.style.height = "50svh";
         chat.style.height = "43svh";
         textbox.style.overflowY = "scroll";
     } else {
-        textbox.style.height = `auto`;
+        textbox.style.height = `${textHeightPercentage}svh`;
         chat.style.height = `${chatHeightPercentage}svh`;
         textbox.style.overflowY = "hidden";
     }
