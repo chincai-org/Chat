@@ -258,6 +258,10 @@ function switchTo(visibility) {
     socket.emit("rooms", cookieId, visible);
 }
 
+function redirectTopic() {
+    //TODO switch topic
+}
+
 function clearRoom() {
     let remove = [];
     for (let room of roomsElement.children) {
@@ -314,7 +318,7 @@ async function createMsg(
     content,
     time,
     pings,
-    topicIds, // TODO: do something with topicIds, topicIds = list of ids that have # infront
+    topicIds,
     isOld
 ) {
     let msgContextMenu = createMsgContextMenu(id);
@@ -376,7 +380,7 @@ async function createMsg(
     for (let topicId of topicIds) {
         msg.innerHTML = msg.innerHTML.replaceAll(
             `#${topicId.id}`,
-            `<span class="hashtag" id="hashtag">#${topicId.name}</span>`
+            `<span class="hashtag" id="hashtag" onclick="redirectTopic()">#${topicId.name}</span>`
         );
     }
 
@@ -431,14 +435,18 @@ function createTopic(room) {
     let contextMenu = createTopicContextMenu(room);
     topic.id = room._id;
 
-    // topic.ondblclick = e => {
-    //     e.preventDefault();
-    //     topic.contentEditable = "true"
-    //     topic.focus();
-    //     window.onclick = e => {
-    //         topic.contentEditable = "false"
-    //     }
-    // }
+    topic.ondblclick = e => {
+        e.preventDefault();
+        topic.contentEditable = "true"
+        topic.focus();
+
+        document.onclick = e => {
+            if (!topic.contains(e.target)) {
+                //TODO accept the new name
+                topic.contentEditable = "false"
+            } 
+        }
+    }
 
     topic.onclick = () => {
         clearMessage();
