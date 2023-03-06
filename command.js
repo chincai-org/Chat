@@ -224,7 +224,39 @@ command.on("define", async (io, user, room, ...args) => {
         return [0, "Please provide the definition!"];
     }
 
-    return [0, `${phrase} is ${definition}`];
+    await utils.defineWord(room._id.toString(), phrase, definition);
+    return [0, `Defined ${phrase} as ${definition}`];
+});
+
+command.on("whatis", async (io, user, room, ...args) => {
+    if (!args) return [0, "Syntax: >whatis <phrase>"];
+
+    let phrase = args.join(" ");
+    let definition = await utils.getWordDefinition(room._id.toString(), phrase);
+
+    if (definition) {
+        return [0, `${phrase} is ${definition}`];
+    } else {
+        return [
+            0,
+            `Can't find the definition of ${phrase},
+            do >define "${phrase}" <definition> to define it`
+        ];
+    }
+});
+
+command.on("forget", async (io, user, room, ...args) => {
+    if (!args) return [0, "Syntax: >whatis <phrase>"];
+
+    let phrase = args.join(" ");
+    let definition = await utils.getWordDefinition(room._id.toString(), phrase);
+
+    if (definition) {
+        await utils.undefineWord(room._id.toString(), phrase);
+        return [0, `Successfully forgotten ${phrase}`];
+    } else {
+        return [0, `I've never known the definition of ${phrase}`];
+    }
 });
 
 command.on("help-cmd", async (io, user, room) => {
