@@ -20,7 +20,7 @@ const options = { className: "links", target: { url: "_blank" } };
 let openedContextMenu = null;
 let activeRoom = null;
 let visible = null;
-let topicDblclick = null
+let topicDblclick = null;
 let currentRoom = "";
 let isAtBottomMost = true;
 let allowFetch = true;
@@ -165,11 +165,16 @@ private.onclick = () => {
 document.onclick = e => {
     openedContextMenu?.classList.remove("active");
     openedContextMenu = null;
-    if(topicDblclick && !topicDblclick.contains(e.target)){
-        //TODO rename
-        topicDblclick.contentEditable = "false"
+    if (topicDblclick && !topicDblclick.contains(e.target)) {
+        topicDblclick.contentEditable = "false";
+        socket.emit(
+            "change-name",
+            cookieId,
+            topicDblclick.id,
+            topicDblclick.children[0].innerText
+        );
+        topicDblclick = null;
     }
-    topicDblclick = null;
 };
 
 searchBar.oninput = () => {
@@ -231,7 +236,7 @@ function updateHeight() {
     const textHeightPercentage = (textHeight / windowHeight) * 100;
     const chatHeightPercentage =
         ((windowHeight - textHeight) / windowHeight) * 100 -
-        (53  / windowHeight) * 100;
+        (53 / windowHeight) * 100;
     if (textHeightPercentage > 50) {
         textbox.style.height = "50svh";
         chat.style.height = "43svh";
@@ -430,10 +435,10 @@ function createTopic(room) {
 
     topic.ondblclick = e => {
         e.preventDefault();
-        topic.contentEditable = "true"
+        topic.contentEditable = "true";
         topic.focus();
-        topicDblclick = topic
-    }
+        topicDblclick = topic;
+    };
 
     topic.onclick = () => {
         clearMessage();
