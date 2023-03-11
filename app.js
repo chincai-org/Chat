@@ -3,7 +3,7 @@ import http from "http";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
 import * as utils from "./utils.js";
-import { command } from "./command.js";
+import { command, getRole } from "./command.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -233,14 +233,14 @@ app.post("/get_message", async (req, res) => {
     let room = await utils.findRoom(roomId);
 
     if (!user) {
-        socket.emit("msg", ...utils.generateWarningMessage(utils.NO_USER));
+        socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
     } else if (!room) {
-        socket.emit("msg", ...utils.generateWarningMessage(utils.NO_ROOM));
+        socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
     } else if (
         room.visibility == "private" &&
         !room.members.includes(user.username)
     ) {
-        socket.emit("msg", ...utils.generateWarningMessage(utils.NOT_IN_ROOM));
+        socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
     } else {
         const fetchAmt = 30;
         let end =
@@ -306,19 +306,16 @@ io.on("connection", socket => {
         let room = await utils.findRoom(roomId);
 
         if (!user) {
-            socket.emit("msg", ...utils.generateWarningMessage(utils.NO_USER));
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
         } else if (!room) {
-            socket.emit("msg", ...utils.generateWarningMessage(utils.NO_ROOM));
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
         } else if (
             room.visibility == "private" &&
             !room.members.includes(user.username)
         ) {
-            socket.emit(
-                "msg",
-                ...utils.generateWarningMessage(utils.NOT_IN_ROOM)
-            );
+            socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
         } else if (room.muted.includes(user.username)) {
-            socket.emit("msg", ...utils.generateWarningMessage(utils.MUTED));
+            socket.emit("msg", utils.generateWarningMessage(utils.MUTED));
         } else {
             msg = msg.trim();
             console.log(`${user.displayName}: ${msg}`);
@@ -329,18 +326,17 @@ io.on("connection", socket => {
                 time
             );
 
-            io.emit(
-                "msg",
-                id,
-                user.displayName,
-                user.username,
-                user.avatar,
-                roomId,
-                msg,
-                time,
-                await utils.findPings(msg),
-                await utils.findHashtagTopic(msg)
-            );
+            io.emit("msg", {
+                id: id,
+                authorName: user.displayName,
+                authorUsername: user.username,
+                avatar: user.avatar,
+                roomId: roomId,
+                content: msg,
+                time: time,
+                pings: await utils.findPings(msg),
+                topicIds: await utils.findHashtagTopic(msg)
+            });
 
             // Handle system reponse
             let [del, response] = await command.parse(io, user, room, msg);
@@ -356,18 +352,17 @@ io.on("connection", socket => {
                         now,
                         systemMsgId
                     );
-                io.emit(
-                    "msg",
-                    systemMsgId,
-                    "System",
-                    "system",
-                    "/assets/system.png",
-                    roomId,
-                    response,
-                    now,
-                    await utils.findPings(response),
-                    []
-                );
+                io.emit("msg", {
+                    id: systemMsgId,
+                    authorName: "System",
+                    authorUsername: "system",
+                    avatar: "/assets/system.png",
+                    roomId: roomId,
+                    content: response,
+                    time: now,
+                    pings: await utils.findPings(response),
+                    topicIds: []
+                });
             }
         }
     });
@@ -376,11 +371,11 @@ io.on("connection", socket => {
         let user = await utils.findUserByCookie(cookieId);
 
         if (!user) {
-            socket.emit("msg", ...utils.generateWarningMessage(utils.NO_USER));
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
         } else if (!visibility) {
             socket.emit(
                 "msg",
-                ...utils.generateWarningMessage(utils.NO_SELECT_VISIBILITY)
+                utils.generateWarningMessage(utils.NO_SELECT_VISIBILITY)
             );
         } else {
             let pins = user.pins[visibility];
@@ -397,11 +392,11 @@ io.on("connection", socket => {
         let user = await utils.findUserByCookie(cookieId);
 
         if (!user) {
-            socket.emit("msg", ...utils.generateWarningMessage(utils.NO_USER));
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
         } else if (!visibility) {
             socket.emit(
                 "msg",
-                ...utils.generateWarningMessage(utils.NO_SELECT_VISIBILITY)
+                utils.generateWarningMessage(utils.NO_SELECT_VISIBILITY)
             );
         } else {
             let rooms = await utils.findRoomWithUserAndQuery(
@@ -420,11 +415,11 @@ io.on("connection", socket => {
         let user = await utils.findUserByCookie(cookieId);
 
         if (!user) {
-            socket.emit("msg", ...utils.generateWarningMessage(utils.NO_USER));
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
         } else if (!visibility) {
             socket.emit(
                 "msg",
-                ...utils.generateWarningMessage(utils.NO_SELECT_VISIBILITY)
+                utils.generateWarningMessage(utils.NO_SELECT_VISIBILITY)
             );
         } else if (!name) {
             // TODO handle no type name
@@ -445,6 +440,32 @@ io.on("connection", socket => {
             if (visibility == "public")
                 io.emit("room", { _id: result.insertedId, name: name });
             else socket.emit("room", { _id: result.insertedId, name: name });
+        }
+    });
+
+    socket.on("change-name", async (cookieId, roomId, newName) => {
+        let user = await utils.findUserByCookie(cookieId);
+        let room = await utils.findRoom(roomId);
+
+        if (!user) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
+        } else if (!room) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
+        } else if (!newName) {
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage("Missing arg: newName")
+            );
+        } else if (
+            room.visibility == "private" &&
+            !room.members.includes(user.username)
+        ) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
+        } else if (getRole(user, room) == "member") {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_PERM));
+        } else {
+            await utils.changeRoomName(roomId, newName);
+            socket.broadcast.emit("change-name", roomId, newName);
         }
     });
 });

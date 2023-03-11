@@ -1,8 +1,7 @@
 const socket = io();
 
-socket.on(
-    "msg",
-    async (
+socket.on("msg", async message => {
+    let {
         id,
         authorName,
         authorUsername,
@@ -12,33 +11,32 @@ socket.on(
         time,
         pings,
         topicIds
-    ) => {
-        console.table(topicIds);
-        if (currentRoom === roomId || roomId == "$") {
-            await createMsg(
-                id,
-                authorName,
-                authorUsername,
-                avatar,
-                content,
-                time,
-                pings,
-                topicIds,
-                false
-            );
+    } = message;
 
-            if (!isAtBottomMost) {
-                let counter = newMsgCounter.innerText;
-                if (counter != "99+") {
-                    let newCounter = +newMsgCounter.innerText + 1;
-                    newMsgCounter.innerText =
-                        newCounter == 100 ? "99+" : newCounter;
-                }
-                newMsgCounter.classList.remove("hide");
+    if (currentRoom === roomId || roomId == "$") {
+        await createMsg(
+            id,
+            authorName,
+            authorUsername,
+            avatar,
+            content,
+            time,
+            pings || [],
+            topicIds || [],
+            false
+        );
+
+        if (!isAtBottomMost) {
+            let counter = newMsgCounter.innerText;
+            if (counter != "99+") {
+                let newCounter = +newMsgCounter.innerText + 1;
+                newMsgCounter.innerText =
+                    newCounter == 100 ? "99+" : newCounter;
             }
+            newMsgCounter.classList.remove("hide");
         }
     }
-);
+});
 
 socket.on("rooms", (rooms, pins) => {
     console.table(rooms);
@@ -75,4 +73,9 @@ socket.on("room", room => {
 
 socket.on("delete", msgId => {
     outerWrap.removeChild(document.getElementById(msgId));
+});
+
+socket.on("change-name", (roomId, newName) => {
+    // TODO change name
+    console.log(roomId, newName);
 });

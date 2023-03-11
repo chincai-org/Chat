@@ -11,22 +11,22 @@ export const NO_ROOM = MSG_PREFIX + "Room not found";
 export const NOT_IN_ROOM = MSG_PREFIX + "You are not a member of this room";
 export const MUTED = MSG_PREFIX + "You are muted";
 export const NO_SELECT_VISIBILITY = "Please select a PUBLIC | PRIVATE";
+export const NO_PERM = "You don't have the permission";
 
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 export function generateWarningMessage(msg) {
-    return [
-        "SYSTEM0",
-        "System",
-        "system",
-        "/assets/system.png",
-        "$",
-        msg,
-        Date.now(),
-        []
-    ];
+    return {
+        id: "SYSTEM0",
+        authorName: "System",
+        authorUsername: "system",
+        avatar: "/assets/system.png",
+        roomId: "$",
+        content: msg,
+        time: Date.now()
+    };
 }
 
 export async function findPings(msg) {
