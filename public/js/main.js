@@ -539,6 +539,13 @@ function createMsgContextMenu(id) {
     menuContent.appendChild(copyId);
     wrapper.appendChild(menuContent);
 
+    itemCopyId.onclick = () => {
+        //TODO copy id msg
+    }
+    itemTrash.onclick = () => {
+        //TODO delete msg
+    }
+
     return wrapper;
 }
 
@@ -611,6 +618,19 @@ function createTopicContextMenu(room) {
 
     menuContent.appendChild(copyId);
     wrapper.appendChild(menuContent);
+
+    settingsItem.onclick = () => {
+        //TODO open settings
+    }
+    pinItem.onclick = () => {
+        //TODO pin
+    }
+    copyIdItem.onclick = () => {
+        //TODO copy id
+    }
+    leaveItem.onclick = () => {
+        //TODO leave
+    }//TODO only show leave in private topics
 
     return wrapper;
 }
