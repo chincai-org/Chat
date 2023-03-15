@@ -50,14 +50,12 @@ chat.onscroll = () => {
         // Not at bottom most
         down.classList.remove("hide");
         isAtBottomMost = false;
-        console.log("not btm");
     } else {
         // At bottom most
         down.classList.add("hide");
         newMsgCounter.innerText = "0";
         newMsgCounter.classList.add("hide");
         isAtBottomMost = true;
-        console.log("btm");
     }
 
     if (
@@ -268,6 +266,10 @@ function clearRoom() {
     remove.forEach(e => roomsElement.removeChild(e));
 }
 
+function redirectTopic() {
+    //TODO redirect topic
+}
+
 function fetchMsg(cookieId, roomId, messageId) {
     $.ajax({
         url: "/get_message",
@@ -378,7 +380,7 @@ async function createMsg(
     for (let topicId of topicIds) {
         msg.innerHTML = msg.innerHTML.replaceAll(
             `#${topicId.id}`,
-            `<span class="hashtag" id="hashtag">#${topicId.name}</span>`
+            `<span class="hashtag" onclick="redirectTopic()">#${topicId.name}</span>`
         );
     }
 
@@ -439,6 +441,19 @@ function createTopic(room) {
         topic.focus();
         topicDblclick = topic;
     };
+
+    topic.onkeydown = e => {
+        if (topicDblclick && e.keyCode === 13) {
+            topicDblclick.contentEditable = "false";
+            socket.emit(
+                "change-name",
+                cookieId,
+                topicDblclick.id,
+                topicDblclick.children[0].innerText
+            );
+            topicDblclick = null;
+        }
+    }
 
     topic.onclick = () => {
         clearMessage();
