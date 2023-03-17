@@ -238,8 +238,19 @@ body {
     cursor: pointer;
 }
 
-.bottom p {
+.bottom .displayname-bottom {
     width: 21vh;
+}
+
+.typing {
+    font-size: 2.2vh;
+    width: 51vh;
+    pointer-events: none;
+}
+
+.gap {
+    width: 37vh;
+    pointer-events: none;
 }
 
 .bottom i {
