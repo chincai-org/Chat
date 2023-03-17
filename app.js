@@ -9,6 +9,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 const port = process.env.PORT || 3000;
+const usersTyping = {};
 
 app.use(express.static("public"));
 app.use(express.json());
@@ -466,6 +467,72 @@ io.on("connection", socket => {
         } else {
             await utils.changeRoomName(roomId, newName);
             socket.broadcast.emit("change-name", roomId, newName);
+        }
+    });
+
+    socket.on("typing", async (cookieId, roomId, timeStart) => {
+        let user = await utils.findUserByCookie(cookieId);
+        let room = await utils.findRoom(roomId);
+
+        if (!user) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
+        } else if (!room) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
+        } else if (
+            room.visibility == "private" &&
+            !room.members.includes(user.username)
+        ) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
+        } else {
+            usersTyping[roomId] ||= {};
+            usersTyping[roomId][user.username] = timeStart;
+            socket.broadcast.emit("typing", user.username, timeStart);
+        }
+    });
+
+    socket.on("fetch-typing", async (cookieId, roomId) => {
+        let user = await utils.findUserByCookie(cookieId);
+        let room = await utils.findRoom(roomId);
+
+        if (!user) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
+        } else if (!room) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
+        } else if (
+            room.visibility == "private" &&
+            !room.members.includes(user.username)
+        ) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
+        } else {
+            socket.emit("typings", usersTyping[roomId] || {});
+        }
+    });
+
+    socket.on("typing-kill", async (id, roomId) => {
+        let user =
+            (await utils.findUserByCookie(id)) ||
+            (await utils.findUserByUsername(id));
+        let room = await utils.findRoom(roomId);
+
+        if (!user) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
+        } else if (!room) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
+        } else if (
+            room.visibility == "private" &&
+            !room.members.includes(user.username)
+        ) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
+        } else {
+            try {
+                delete usersTyping[roomId][user.username];
+                socket.broadcast.emit("typing-kill", user.username);
+            } catch {
+                console.log(
+                    `Can't find ${user.username} for some reason, usersTyping below incase you need`
+                );
+                console.log(usersTyping);
+            }
         }
     });
 });

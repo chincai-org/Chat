@@ -1,5 +1,3 @@
-const public = document.getElementById("choice-1");
-const private = document.getElementById("choice-2");
 const textbox = document.getElementById("text");
 const outerWrap = document.getElementById("outer-wrap");
 const roomsElement = document.getElementById("rooms");
@@ -7,43 +5,16 @@ const searchBar = document.getElementById("search-bar");
 const down = document.getElementById("scroll-down");
 const downbtn = document.getElementById("down-btn");
 const newMsgCounter = document.getElementById("new-msg-counter");
-const newTopicName = document.getElementById("new-topic-input-name");
-const newTopic = document.getElementById("new-topic");
-const createNewTopic = document.getElementById("create-new");
-const newTopicCancel = document.getElementById("new-topic-btn-cancel");
-const newTopicConfirm = document.getElementById("new-topic-btn-create");
 const chat = document.querySelector(".chat");
-const check18 = document.getElementById("check18");
+const typing = document.getElementById("typing");
 
 const options = { className: "links", target: { url: "_blank" } };
+const timeoutPreference = 5000;
+const usersTyping = {};
 
 let openedContextMenu = null;
-let activeRoom = null;
-let visible = null;
-let topicDblclick = null;
-let currentRoom = "";
 let isAtBottomMost = true;
 let allowFetch = true;
-
-createNewTopic.onclick = () => {
-    newTopic.classList.remove("hide");
-};
-
-newTopicCancel.onclick = () => {
-    newTopic.classList.add("hide");
-    newTopicName.innerHTML = "";
-    check18.checked = false;
-};
-
-newTopicConfirm.onclick = () => {
-    if (!/\S/.test(textbox.innerText)) {
-        return;
-    }
-    socket.emit("new-room", newTopicName.innerText, visible, cookieId);
-    newTopic.classList.add("hide");
-    newTopicName.innerHTML = "";
-    check18.checked = false;
-};
 
 chat.onscroll = () => {
     if (chat.scrollHeight - chat.scrollTop >= chat.scrollHeight + 1) {
@@ -72,13 +43,6 @@ chat.onscroll = () => {
 
 downbtn.onclick = () => {
     chat.scrollTop = chat.scrollHeight;
-};
-
-newTopicName.onkeydown = e => {
-    if (e.keyCode === 13) {
-        e.preventDefault();
-        newTopicName.blur();
-    }
 };
 
 textbox.onkeydown = e => {
@@ -137,10 +101,10 @@ textbox.setAttribute(
 );
 
 textbox.oninput = () => {
-    if (textbox.innerHTML === "<br>") {
-        textbox.innerHTML = "";
-    }
+    if (textbox.innerHTML === "<br>") textbox.innerHTML = "";
+
     requestAnimationFrame(updateHeight);
+    socket.emit("typing", cookieId, currentRoom, Date.now());
 };
 
 // Convert image paste to link, doesnt work
@@ -177,23 +141,6 @@ textbox.oninput = () => {
 //     }
 // };
 
-public.onclick = () => {
-    public.classList.add("clicked");
-
-    if (private.classList.contains("clicked")) {
-        private.classList.remove("clicked");
-    }
-    switchTo("public");
-};
-
-private.onclick = () => {
-    private.classList.add("clicked");
-    if (public.classList.contains("clicked")) {
-        public.classList.remove("clicked");
-    }
-    switchTo("private");
-};
-
 document.onclick = e => {
     openedContextMenu?.classList.remove("active");
     openedContextMenu = null;
@@ -206,23 +153,6 @@ document.onclick = e => {
             topicDblclick.children[0].innerText
         );
         topicDblclick = null;
-    }
-};
-
-searchBar.oninput = () => {
-    if (searchBar.value == "") {
-        clearRoom();
-        socket.emit("rooms", cookieId, visible);
-    } else {
-        clearRoom();
-        socket.emit("findrooms", cookieId, visible, searchBar.value);
-    }
-};
-
-searchBar.onkeydown = e => {
-    if (e.keyCode === 13) {
-        e.preventDefault();
-        searchBar.blur();
     }
 };
 
@@ -260,6 +190,31 @@ async function autoComplete(nameQuery) {
     ).json();
 }
 
+function updateTypingUsers() {
+    let users = Object.keys(usersTyping);
+    console.log("🚀 ~ file: main.js:195 ~ updateTypingUsers ~ users:", users);
+    if (users.length == 0) {
+        typing.innerText = "";
+    } else {
+        let toBe = users.length == 1 ? "is" : "are";
+        let firstTwo = users.slice(
+            0,
+            Math.max(1, Math.min(2, users.length - 1))
+        );
+        let lastFew = users.slice(firstTwo.length, users.length);
+        let lastFewLength = lastFew.length;
+
+        let beforeAnd = firstTwo.join(", ");
+        let afterAnd = // The most insane ternary operator usage
+            (lastFewLength ? "and " : "") +
+            (lastFewLength > 1
+                ? (lastFewLength > 99 ? "99+" : lastFewLength) + " more"
+                : lastFew.join());
+
+        typing.innerText = `${beforeAnd} ${afterAnd} ${toBe} typing...`;
+    }
+}
+
 function updateHeight() {
     textbox.style.height = `auto`;
 
@@ -284,24 +239,6 @@ function sendMessage(msg) {
     textbox.innerText = "";
     socket.emit("msg", cookieId, currentRoom, msg, Date.now());
     updateHeight();
-}
-
-function switchTo(visibility) {
-    clearRoom();
-    visible = visibility;
-    socket.emit("rooms", cookieId, visible);
-}
-
-function clearRoom() {
-    let remove = [];
-    for (let room of roomsElement.children) {
-        if (room.tagName != "FORM") remove.push(room);
-    }
-    remove.forEach(e => roomsElement.removeChild(e));
-}
-
-function redirectTopic() {
-    //TODO redirect topic
 }
 
 function fetchMsg(cookieId, roomId, messageId) {
@@ -464,76 +401,6 @@ async function createMsg(
     }
 }
 
-function createTopic(room) {
-    let topic = document.createElement("div");
-    let contextMenu = createTopicContextMenu(room);
-    topic.id = room._id;
-
-    topic.ondblclick = e => {
-        e.preventDefault();
-        topic.contentEditable = "true";
-        topic.focus();
-        topicDblclick = topic;
-    };
-
-    topic.onkeydown = e => {
-        if (topicDblclick && e.keyCode === 13) {
-            topicDblclick.contentEditable = "false";
-            socket.emit(
-                "change-name",
-                cookieId,
-                topicDblclick.id,
-                topicDblclick.children[0].innerText
-            );
-            topicDblclick = null;
-        }
-    }
-
-    topic.onclick = () => {
-        clearMessage();
-        currentRoom = room._id;
-
-        activeRoom?.classList.remove("topic-bg-colour");
-        topic.classList.add("topic-bg-colour");
-        activeRoom = topic;
-
-        textbox.classList.remove("hide");
-        contextMenu.classList.remove("active");
-        // socket.emit("fetchmsg", cookieId, room._id);
-        fetchMsg(cookieId, room._id, 0);
-    };
-
-    topic.oncontextmenu = e => {
-        e.preventDefault();
-
-        openedContextMenu?.classList.remove("active");
-        contextMenu.classList.add("active");
-
-        openedContextMenu = contextMenu;
-
-        let x = Math.min(
-            e.clientX,
-            window.innerWidth - contextMenu.offsetWidth
-        );
-        let y = Math.min(
-            e.clientY,
-            window.innerHeight - contextMenu.offsetHeight
-        );
-
-        contextMenu.style.left = `${(x / window.innerWidth) * 100}vw`;
-        contextMenu.style.top = `${(y / window.innerHeight) * 100}vh`;
-    };
-
-    let topicName = document.createElement("h5");
-    topicName.title = "Right click for more info";
-    topicName.innerText = room.name;
-
-    topic.appendChild(topicName);
-    topic.appendChild(contextMenu);
-
-    return topic;
-}
-
 function createMsgContextMenu(id) {
     let wrapper = document.createElement("div");
     wrapper.className = "wrapper";
@@ -575,96 +442,28 @@ function createMsgContextMenu(id) {
 
     itemCopyId.onclick = () => {
         //TODO copy id msg
-    }
+    };
     itemTrash.onclick = () => {
         //TODO delete msg
-    }
+    };
 
     return wrapper;
 }
 
-function createTopicContextMenu(room) {
-    let wrapper = document.createElement("div");
-    wrapper.className = "wrapper";
-
-    let menuContent = document.createElement("div");
-    menuContent.classList.add("menu-content");
-
-    let menu = document.createElement("ul");
-    menu.classList.add("menu");
-
-    let settingsItem = document.createElement("li");
-    settingsItem.classList.add("item");
-
-    let settingsIcon = document.createElement("i");
-    settingsIcon.classList.add("fa-solid", "fa-gear");
-    settingsItem.appendChild(settingsIcon);
-
-    let settingsText = document.createElement("span");
-    settingsText.textContent = "Settings";
-    settingsItem.appendChild(settingsText);
-
-    menu.appendChild(settingsItem);
-
-    let pinItem = document.createElement("li");
-    pinItem.classList.add("item");
-
-    let pinIcon = document.createElement("i");
-    pinIcon.classList.add("fa-sharp", "fa-solid", "fa-map-pin");
-    pinItem.appendChild(pinIcon);
-
-    let pinText = document.createElement("span");
-    pinText.textContent = "Pin";
-    pinItem.appendChild(pinText);
-
-    menu.appendChild(pinItem);
-
-    menuContent.appendChild(menu);
-
-    let copyId = document.createElement("div");
-    copyId.classList.add("copy-id");
-
-    let copyIdItem = document.createElement("li");
-    copyIdItem.classList.add("item");
-
-    let copyIdIcon = document.createElement("i");
-    copyIdIcon.classList.add("fa-solid", "fa-id-card-clip");
-    copyIdItem.appendChild(copyIdIcon);
-
-    let copyIdText = document.createElement("span");
-    copyIdText.textContent = "Copy ID";
-    copyIdItem.appendChild(copyIdText);
-
-    copyId.appendChild(copyIdItem);
-
-    let leaveItem = document.createElement("li");
-    leaveItem.classList.add("item");
-
-    let leaveIcon = document.createElement("i");
-    leaveIcon.classList.add("fa-solid", "fa-door-open");
-    leaveItem.appendChild(leaveIcon);
-
-    let leaveText = document.createElement("span");
-    leaveText.textContent = "Leave";
-    leaveItem.appendChild(leaveText);
-
-    copyId.appendChild(leaveItem);
-
-    menuContent.appendChild(copyId);
-    wrapper.appendChild(menuContent);
-
-    settingsItem.onclick = () => {
-        //TODO open settings
+// Remove typing users that reached the timeoutPreference
+setInterval(() => {
+    try {
+        let now = Date.now();
+        let change = false;
+        for (let [username, startTime] of Object.entries(usersTyping)) {
+            if (now - startTime > timeoutPreference) {
+                delete usersTyping[username];
+                change = true;
+                socket.emit("typing-kill", username, currentRoom);
+            }
+        }
+        if (change) updateTypingUsers();
+    } catch (e) {
+        console.log(e);
     }
-    pinItem.onclick = () => {
-        //TODO pin
-    }
-    copyIdItem.onclick = () => {
-        //TODO copy id
-    }
-    leaveItem.onclick = () => {
-        //TODO leave
-    }//TODO only show leave in private topics
-
-    return wrapper;
-}
+}, 2000);
