@@ -145,6 +145,40 @@ textbox.oninput = () => {
     requestAnimationFrame(updateHeight);
 };
 
+// Convert image paste to link, doesnt work
+// textbox.onpaste = event => {
+//     let items = (event.clipboardData || event.originalEvent.clipboardData)
+//         .items;
+//     for (let item of items) {
+//         if (item.kind === "file" && item.type?.indexOf("image/") === 0) {
+//             event.preventDefault();
+//             let file = item.getAsFile();
+//             console.log("Image pasted:", file);
+//             // Do something with the image file, such as upload it to a server or display it on the page
+
+//             let formData = new FormData();
+//             formData.append("file", file);
+//             formData.append("key", "32c4dcb1bb5d6134cf83044dea7a3838");
+
+//             fetch("https://postimages.org/api.php", {
+//                 method: "POST",
+//                 body: formData
+//             })
+//                 .then(response => {
+//                     return response.text();
+//                 })
+//                 .then(result => {
+//                     let imageUrl = result.trim();
+//                     console.log("Image uploaded to Postimages:", imageUrl);
+//                     textbox.innerText += imageUrl;
+//                 })
+//                 .catch(error => {
+//                     console.error(error);
+//                 });
+//         }
+//     }
+// };
+
 public.onclick = () => {
     public.classList.add("clicked");
 
