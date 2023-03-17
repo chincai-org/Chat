@@ -79,3 +79,19 @@ socket.on("change-name", (roomId, newName) => {
     // TODO change name
     console.log(roomId, newName);
 });
+
+socket.on("typing", (username, timeStart) => {
+    usersTyping[username] = timeStart;
+    updateTypingUsers();
+});
+
+socket.on("typings", _usersTyping => {
+    for (let username in usersTyping) delete usersTyping[username];
+    Object.assign(usersTyping, _usersTyping);
+    updateTypingUsers();
+});
+
+socket.on("typing-kill", username => {
+    delete usersTyping[username];
+    updateTypingUsers();
+});
