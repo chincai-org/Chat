@@ -77,13 +77,15 @@ socket.on("delete", msgId => {
 
 socket.on("change-name", (roomId, newName) => {
     // TODO change name
-    document.getElementById(roomId).children[0].innerText = newName
+    document.getElementById(roomId).children[0].innerText = newName;
     console.log(roomId, newName);
 });
 
-socket.on("typing", (username, timeStart) => {
-    usersTyping[username] = timeStart;
-    updateTypingUsers();
+socket.on("typing", (username, roomId, timeStart) => {
+    if (roomId === currentRoom) {
+        usersTyping[username] = timeStart;
+        updateTypingUsers();
+    }
 });
 
 socket.on("typings", _usersTyping => {

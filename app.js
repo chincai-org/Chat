@@ -494,7 +494,7 @@ io.on("connection", socket => {
         } else {
             usersTyping[roomId] ||= {};
             usersTyping[roomId][user.username] = timeStart;
-            socket.broadcast.emit("typing", user.username, timeStart);
+            socket.broadcast.emit("typing", user.username, roomId, timeStart);
         }
     });
 
