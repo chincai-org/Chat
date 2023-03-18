@@ -239,7 +239,6 @@ function sendMessage(msg) {
     textbox.innerText = "";
     updateHeight();
     socket.emit("msg", cookieId, currentRoom, msg, Date.now());
-    socket.emit("typing-kill", cookieId, currentRoom);
 }
 
 function fetchMsg(cookieId, roomId, messageId) {
