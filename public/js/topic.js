@@ -133,8 +133,8 @@ function createTopic(room) {
             socket.emit(
                 "change-name",
                 cookieId,
-                topicDblclick.id,
-                topicDblclick.children[0].innerText
+                topic.id,
+                topic.children[0].innerText
             );
         }
     };
