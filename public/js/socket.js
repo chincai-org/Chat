@@ -77,6 +77,7 @@ socket.on("delete", msgId => {
 
 socket.on("change-name", (roomId, newName) => {
     // TODO change name
+    document.getElementById(roomId).innerText = newName
     console.log(roomId, newName);
 });
 
