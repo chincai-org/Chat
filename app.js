@@ -11,6 +11,13 @@ const io = new Server(server);
 const port = process.env.PORT || 3000;
 const usersTyping = {};
 
+function typingKill(username, roomId, socket) {
+    try {
+        delete usersTyping[roomId][username];
+        socket.broadcast.emit("typing-kill", username);
+    } catch {}
+}
+
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -338,6 +345,7 @@ io.on("connection", socket => {
                 pings: await utils.findPings(msg),
                 topicIds: await utils.findHashtagTopic(msg)
             });
+            typingKill(user.username, roomId, socket);
 
             // Handle system reponse
             let [del, response] = await command.parse(io, user, room, msg);
@@ -524,15 +532,7 @@ io.on("connection", socket => {
         ) {
             socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
         } else {
-            try {
-                delete usersTyping[roomId][user.username];
-                socket.broadcast.emit("typing-kill", user.username);
-            } catch {
-                console.log(
-                    `Can't find ${user.username} for some reason, usersTyping below incase you need`
-                );
-                console.log(usersTyping);
-            }
+            typingKill(user.username, roomId, socket);
         }
     });
 });
