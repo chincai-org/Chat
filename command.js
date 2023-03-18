@@ -326,7 +326,7 @@ command.on("help-cmd", async (io, user, room) => {
         ${prefix}promote <username> Desc: promote users
         ${prefix}demote <username> Desc: demote users
         ${prefix}check-role <username> Desc: check role of the user in this topic
-        ${prefix}count-msg Desc: count the amoutn of message in this topic
+        ${prefix}count-msg Desc: count the amount of message in this topic
         ${prefix}define "<phrase>" <definition> Desc: define a word for this topic
         ${prefix}whatis "<phrase>" Desc: check definition of a word for this topic
         ${prefix}forget "<phrase>" Desc: delete definition of a word for this topic
