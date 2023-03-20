@@ -193,7 +193,9 @@ function createTopicContextMenu(room) {
     settingsText.textContent = "Settings";
     settingsItem.appendChild(settingsText);
 
-    menu.appendChild(settingsItem);
+    if (visible == "private") {
+        menu.appendChild(settingsItem);
+    };
 
     let pinItem = document.createElement("li");
     pinItem.classList.add("item");
@@ -237,14 +239,16 @@ function createTopicContextMenu(room) {
     leaveText.textContent = "Leave";
     leaveItem.appendChild(leaveText);
 
-    copyId.appendChild(leaveItem);
+    if (visible == "private") {
+        copyId.appendChild(leaveItem);
+    }
 
     menuContent.appendChild(copyId);
     wrapper.appendChild(menuContent);
 
     settingsItem.onclick = () => {
         //TODO open settings
-    };
+    }; 
     pinItem.onclick = () => {
         //TODO pin
     };
@@ -253,7 +257,7 @@ function createTopicContextMenu(room) {
     };
     leaveItem.onclick = () => {
         //TODO leave
-    }; //TODO only show leave in private topics
+    }; 
 
     return wrapper;
 }
