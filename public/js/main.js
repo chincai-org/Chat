@@ -351,7 +351,7 @@ async function createMsg(
     for (let topicId of topicIds) {
         msg.innerHTML = msg.innerHTML.replaceAll(
             `#${topicId.id}`,
-            `<span class="hashtag" onclick="redirectTopic()">#${topicId.name}</span>`
+            `<span class="hashtag" onclick=redirectTopic("${topicId.id}")>#${topicId.name}</span>`
         );
     }
 
