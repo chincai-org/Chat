@@ -7,6 +7,7 @@ const createNewTopic = document.getElementById("create-new");
 const newTopicCancel = document.getElementById("new-topic-btn-cancel");
 const newTopicConfirm = document.getElementById("new-topic-btn-create");
 const check18 = document.getElementById("check18");
+const topics = document.getElementById("rooms");
 
 // Changable global variable
 let activeRoom = null;
@@ -173,6 +174,7 @@ function createTopic(room) {
 }
 
 function createTopicContextMenu(room) {
+    //#region
     let wrapper = document.createElement("div");
     wrapper.className = "wrapper";
 
@@ -195,7 +197,7 @@ function createTopicContextMenu(room) {
 
     if (visible == "private") {
         menu.appendChild(settingsItem);
-    };
+    }
 
     let pinItem = document.createElement("li");
     pinItem.classList.add("item");
@@ -245,24 +247,59 @@ function createTopicContextMenu(room) {
 
     menuContent.appendChild(copyId);
     wrapper.appendChild(menuContent);
+    //#endregion
 
     settingsItem.onclick = () => {
         //TODO open settings
-    }; 
+    };
 
-    pinItem.onclick = () => {
-        //TODO pin
-        // socket.emit("pin", room._id)
+    pinItem.onclick = e => {
+        let topic = document.getElementById(room._id);
+
+        socket.emit("pin", room._id);
+
+        let textPin = document.getElementsByClassName("text-pin");
+        console.log(
+            "🚀 ~ file: topic.js:260 ~ createTopicContextMenu ~ textPin:",
+            textPin
+        );
+
+        if (textPin.length) {
+            for (let i = 0; i < textPin.length; i++) {
+                let textPinElement = textPin[i];
+
+                if (!textPinElement.innerText) {
+                    topics.removeChild(topic);
+                    topics.insertBefore(topic, textPinElement);
+                    break;
+                }
+            }
+        } else {
+            topics.removeChild(topic);
+
+            let textPin2 = document.createElement("p");
+            textPin2.className = "text-pin";
+            topics.insertBefore(textPin2, topics.firstChild);
+
+            topics.insertBefore(topic, topics.firstChild);
+
+            let textPin = document.createElement("p");
+            textPin.className = "text-pin";
+            textPin.innerText = "pin";
+            topics.insertBefore(textPin, topics.firstChild);
+        }
+
+        e.stopPropagation();
     };
 
     copyIdItem.onclick = e => {
         navigator.clipboard.writeText(room._id);
-        e.stopPropagation()
+        e.stopPropagation();
     };
 
     leaveItem.onclick = () => {
         //TODO leave
-    }; 
+    };
 
     return wrapper;
 }
