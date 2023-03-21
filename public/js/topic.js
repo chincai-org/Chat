@@ -249,13 +249,17 @@ function createTopicContextMenu(room) {
     settingsItem.onclick = () => {
         //TODO open settings
     }; 
+
     pinItem.onclick = () => {
         //TODO pin
+        // socket.emit("pin", room._id)
     };
+
     copyIdItem.onclick = e => {
         navigator.clipboard.writeText(room._id);
         e.stopPropagation()
     };
+
     leaveItem.onclick = () => {
         //TODO leave
     }; 
