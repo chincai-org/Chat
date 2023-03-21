@@ -357,3 +357,15 @@ command.on("showcase", (io, user, room, arg1, arg2, arg3) => {
     //      Delete message after this ms
     //      Put `0` to never delete this message
 });
+
+command.on("generate", (io, user, room) => {
+    let consonant = "bcdfghjklmnpqrstvwxyz";
+    let consonantArray = consonant.split(""); 
+    let vowelArray = ["a","e","i","o","u"]
+    let randWord = ""
+    for (let i = 0; i < 10; i++) {
+        randWord += String(consonantArray[Math.floor(Math.random() * consonant.length)])
+        randWord += String(vowelArray[Math.floor(Math.random() * vowelArray.length)])
+    }
+    return [0, randWord];
+});

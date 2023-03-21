@@ -252,8 +252,9 @@ function createTopicContextMenu(room) {
     pinItem.onclick = () => {
         //TODO pin
     };
-    copyIdItem.onclick = () => {
-        //TODO copy id
+    copyIdItem.onclick = e => {
+        navigator.clipboard.writeText(room._id);
+        e.stopPropagation()
     };
     leaveItem.onclick = () => {
         //TODO leave
