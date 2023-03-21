@@ -254,7 +254,6 @@ function sendMessage(msg) {
     textbox.innerText = "";
     updateHeight();
     socket.emit("msg", cookieId, currentRoom, msg, Date.now());
-    socket.emit("typing-kill", cookieId, currentRoom);
 }
 
 function fetchMsg(cookieId, roomId, messageId) {
@@ -367,7 +366,7 @@ async function createMsg(
     for (let topicId of topicIds) {
         msg.innerHTML = msg.innerHTML.replaceAll(
             `#${topicId.id}`,
-            `<span class="hashtag" onclick="redirectTopic()">#${topicId.name}</span>`
+            `<span class="hashtag" onclick=redirectTopic("${topicId.id}")>#${topicId.name}</span>`
         );
     }
 

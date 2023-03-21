@@ -555,6 +555,7 @@ input:checked+.slider:before {
 
 .hashtag:hover {
     color: hsl(198, 86%, 50%);
+    cursor: pointer;
 }
 
 .msg {
