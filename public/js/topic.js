@@ -97,6 +97,30 @@ function clearRoom() {
     remove.forEach(e => roomsElement.removeChild(e));
 }
 
+window.onresize = () => {
+    ilvtopic(null); 
+}
+
+function ilvtopic(d) {
+    if (window.innerWidth > 700) {
+        document.getElementById("topics").style.width = "auto";
+        document.getElementById("topics").style.backgroundColor = "transparent";
+        document.getElementById("topics").style.display = "block";
+        sizeOfChat("69.7%");
+        lengthOfText("67.4vw");
+    } else {
+        document.getElementById("topics").style.width = "100vw";
+        document.getElementById("topics").style.backgroundColor = "gray";
+        if (d == 1) {
+            document.getElementById("topics").style.display = "block";
+        } else {
+            document.getElementById("topics").style.display = "none";
+        }
+        sizeOfChat("100%");
+        lengthOfText("90%");
+    }
+}
+
 function redirectTopic(id) {
     let topic = document.getElementById(id);
     if (currentRoom) socket.emit("typing-kill", cookieId, currentRoom);
@@ -112,6 +136,12 @@ function redirectTopic(id) {
     // contextMenu.classList.remove("active");
     socket.emit("fetch-typing", cookieId, id);
     fetchMsg(cookieId, id, 0);
+    if (window.innerWidth < 701) {
+        topicStatus(0);
+        sizeOfChat("100%");
+        lengthOfText("90%");
+        
+    }
 }
 
 function createTopic(room) {
