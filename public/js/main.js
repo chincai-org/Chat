@@ -51,7 +51,7 @@ textbox.onkeydown = e => {
             return;
         }
         e.preventDefault();
-        sendMessage(textbox.innerText);
+        sendMessage(textbox.innerText)
     }
 
     if (e.keyCode == 9) {
@@ -440,9 +440,11 @@ function createMsgContextMenu(id) {
     menuContent.appendChild(copyId);
     wrapper.appendChild(menuContent);
 
-    itemCopyId.onclick = () => {
-        //TODO copy id msg
+    itemCopyId.onclick = e => {
+        navigator.clipboard.writeText(id);
+        e.stopPropagation()
     };
+
     itemTrash.onclick = () => {
         //TODO delete msg
     };
