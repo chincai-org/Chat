@@ -42,7 +42,6 @@ socket.on("rooms", (rooms, pins) => {
     console.table(rooms);
     console.table(pins);
 
-    const topics = document.getElementById("rooms");
     let pinList = [];
 
     if (pins.length) {
