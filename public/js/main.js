@@ -441,12 +441,15 @@ function createMsgContextMenu(id) {
     wrapper.appendChild(menuContent);
 
     itemCopyId.onclick = e => {
+        wrapper.classList.remove("active");
         navigator.clipboard.writeText(id);
         e.stopPropagation()
     };
 
-    itemTrash.onclick = () => {
+    itemTrash.onclick = e => {
         //TODO delete msg
+        wrapper.classList.remove("active");
+        e.stopPropagation()
     };
 
     return wrapper;

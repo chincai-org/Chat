@@ -174,7 +174,7 @@ function createTopic(room) {
 }
 
 function createTopicContextMenu(room) {
-    //#region
+    //#region createtopic
     let wrapper = document.createElement("div");
     wrapper.className = "wrapper";
 
@@ -251,12 +251,14 @@ function createTopicContextMenu(room) {
 
     settingsItem.onclick = () => {
         //TODO open settings
+        wrapper.classList.remove("active");
+        e.stopPropagation();
     };
 
     pinItem.onclick = e => {
         let topic = document.getElementById(room._id);
 
-        socket.emit("pin", room._id);
+        socket.emit("pin", cookieId ,room._id);
 
         let textPin = document.getElementsByClassName("text-pin");
         console.log(
@@ -289,16 +291,20 @@ function createTopicContextMenu(room) {
             topics.insertBefore(textPin, topics.firstChild);
         }
 
+        wrapper.classList.remove("active");
         e.stopPropagation();
     };
 
     copyIdItem.onclick = e => {
         navigator.clipboard.writeText(room._id);
+        wrapper.classList.remove("active");
         e.stopPropagation();
     };
 
     leaveItem.onclick = () => {
         //TODO leave
+        wrapper.classList.remove("active");
+        e.stopPropagation();
     };
 
     return wrapper;
