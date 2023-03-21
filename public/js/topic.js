@@ -254,15 +254,10 @@ function createTopicContextMenu(room) {
     };
 
     pinItem.onclick = e => {
-        let topic = document.getElementById(room._id);
-
         socket.emit("pin", room._id);
 
+        let topic = document.getElementById(room._id);
         let textPin = document.getElementsByClassName("text-pin");
-        console.log(
-            "🚀 ~ file: topic.js:260 ~ createTopicContextMenu ~ textPin:",
-            textPin
-        );
 
         if (textPin.length) {
             for (let i = 0; i < textPin.length; i++) {
