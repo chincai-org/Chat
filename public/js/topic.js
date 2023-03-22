@@ -256,7 +256,6 @@ function createTopicContextMenu(room) {
     };
 
     pinItem.onclick = e => {
-        let topic = document.getElementById(room._id);
 
         socket.emit("pin", cookieId ,room._id);
 
@@ -299,7 +298,7 @@ function createTopicContextMenu(room) {
     };
 
     leaveItem.onclick = () => {
-        //TODO leave
+        socket.emit("leave", cookieId, room._id);
         wrapper.classList.remove("active");
         e.stopPropagation();
     };

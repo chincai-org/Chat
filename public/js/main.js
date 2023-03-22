@@ -447,7 +447,7 @@ function createMsgContextMenu(id) {
     };
 
     itemTrash.onclick = e => {
-        //TODO delete msg
+        socket.emit("delete-msg", cookieId, id)
         wrapper.classList.remove("active");
         e.stopPropagation()
     };
