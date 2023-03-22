@@ -448,7 +448,7 @@ io.on("connection", socket => {
 
             if (visibility == "public")
                 io.emit("room", { _id: result.insertedId, name: name });
-            else socket.emit("room", { _id: result.insertedId, name: name });
+            else socket.emit("room", { _id: result.ingsertedId, name: name });
         }
     });
 
@@ -534,6 +534,14 @@ io.on("connection", socket => {
         } else {
             typingKill(user.username, roomId, socket);
         }
+    });
+
+    socket.on("leave", async(cookieId, roomId) => {
+        //TODO leave
+    });
+
+    socket.on("delete-msg", async(cookieId, roomId) => {
+        //TODO delete msg
     });
 });
 
