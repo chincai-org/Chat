@@ -256,15 +256,16 @@ function createTopicContextMenu(room) {
     };
 
     pinItem.onclick = e => {
+<<<<<<< HEAD
         let topic = document.getElementById(room._id);
 
         socket.emit("pin", cookieId ,room._id);
+=======
+        socket.emit("pin", room._id);
+>>>>>>> b999da2bee26f0a02891db0ea480d23b43ccdac7
 
+        let topic = document.getElementById(room._id);
         let textPin = document.getElementsByClassName("text-pin");
-        console.log(
-            "🚀 ~ file: topic.js:260 ~ createTopicContextMenu ~ textPin:",
-            textPin
-        );
 
         if (textPin.length) {
             for (let i = 0; i < textPin.length; i++) {
