@@ -448,7 +448,7 @@ io.on("connection", socket => {
 
             if (visibility == "public")
                 io.emit("room", { _id: result.insertedId, name: name });
-            else socket.emit("room", { _id: result.ingsertedId, name: name });
+            else socket.emit("room", { _id: result.insertedId, name: name });
         }
     });
 
