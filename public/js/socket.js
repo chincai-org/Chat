@@ -72,7 +72,7 @@ socket.on("room", room => {
 
 socket.on("delete", msgId => {
     outerWrap.removeChild(document.getElementById(msgId));
-});
+}); 
 
 socket.on("change-name", (roomId, newName) => {
     // TODO change name
@@ -96,4 +96,8 @@ socket.on("typings", _usersTyping => {
 socket.on("typing-kill", username => {
     delete usersTyping[username];
     updateTypingUsers();
+});
+
+socket.on("pin", roomId => {
+    //TODO pin
 });
