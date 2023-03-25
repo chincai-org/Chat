@@ -98,10 +98,10 @@ socket.on("typing-kill", username => {
     updateTypingUsers();
 });
 
-socket.on("pin", roomId => {
+socket.on("pin", cookieId, roomId => {
     //TODO pin
 });
 
-socket.on("unpin", roomId => {
+socket.on("unpin", cookieId, roomId => {
     //TODO unpin
 });
