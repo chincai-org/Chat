@@ -101,3 +101,7 @@ socket.on("typing-kill", username => {
 socket.on("pin", roomId => {
     //TODO pin
 });
+
+socket.on("unpin", roomId => {
+    //TODO unpin
+});

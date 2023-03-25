@@ -295,11 +295,11 @@ function createTopicContextMenu(room) {
                 topics.removeChild(topic)
                 topics.appendChild(topic)
             }
+            socket.emit("unpin", cookieId ,room._id);
             if (topics.children[0].className == "text-pin" &&  topics.children[1].className == "text-pin") {
                     topics.removeChild(textPin[0])
                     topics.removeChild(textPin[0])
             }
-            // socket.emit("pin", cookieId ,room._id);
             
         }
 
