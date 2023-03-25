@@ -569,10 +569,18 @@ io.on("connection", socket => {
         }
     });
 
-    socket.on("delete-msg", async (cookieId, roomId) => {
+    socket.on("delete-msg", async (cookieId, roomId, messageId) => {
         //TODO delete msg
     });
+    socket.on("pin", async (roomId) => {
+        //TODO pin
+    });
+    
+    socket.on("unpin", async(roomId) => {
+        //TODO unpin
+    });
 });
+
 
 server.listen(port, () => {
     console.log(`Running server at http://localhost:${port}`);
