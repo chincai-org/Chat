@@ -572,11 +572,11 @@ io.on("connection", socket => {
     socket.on("delete-msg", async (cookieId, roomId, messageId) => {
         //TODO delete msg
     });
-    socket.on("pin", async (roomId) => {
+    socket.on("pin", async (cookieId, roomId) => {
         //TODO pin
     });
     
-    socket.on("unpin", async(roomId) => {
+    socket.on("unpin", async(cookieId, roomId) => {
         //TODO unpin
     });
 });
