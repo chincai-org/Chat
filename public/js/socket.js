@@ -97,11 +97,3 @@ socket.on("typing-kill", username => {
     delete usersTyping[username];
     updateTypingUsers();
 });
-
-socket.on("pin", cookieId, roomId => {
-    //TODO pin
-});
-
-socket.on("unpin", cookieId, roomId => {
-    //TODO unpin
-});
