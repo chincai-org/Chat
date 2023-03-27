@@ -72,7 +72,7 @@ socket.on("room", room => {
 
 socket.on("delete", msgId => {
     outerWrap.removeChild(document.getElementById(msgId));
-}); 
+});
 
 socket.on("change-name", (roomId, newName) => {
     // TODO change name
@@ -81,7 +81,7 @@ socket.on("change-name", (roomId, newName) => {
 });
 
 socket.on("typing", (username, roomId, timeStart) => {
-    if (roomId === currentRoom) {
+    if (roomId === currentRoom && Date.now() - timeStart <= timeoutPreference) {
         usersTyping[username] = timeStart;
         updateTypingUsers();
     }
