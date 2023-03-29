@@ -25,6 +25,7 @@ socket.on("msg", async message => {
             topicIds || [],
             false
         );
+        chat.scrollTop = chat.scrollHeight;
 
         if (!isAtBottomMost) {
             let counter = newMsgCounter.innerText;
