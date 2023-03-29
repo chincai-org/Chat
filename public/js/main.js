@@ -239,6 +239,7 @@ function sendMessage(msg) {
     textbox.innerText = "";
     updateHeight();
     socket.emit("msg", cookieId, currentRoom, msg, Date.now());
+    chat.scrollTop = chat.scrollHeight;
 }
 
 function fetchMsg(cookieId, roomId, messageId) {
