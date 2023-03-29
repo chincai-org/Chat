@@ -9,8 +9,8 @@ socket.on("msg", async message => {
         roomId,
         content,
         time,
-        pings,
-        topicIds
+        pings = [],
+        topicIds = []
     } = message;
 
     if (currentRoom === roomId || roomId == "$") {
@@ -21,8 +21,8 @@ socket.on("msg", async message => {
             avatar,
             content,
             time,
-            pings || [],
-            topicIds || [],
+            pings,
+            topicIds,
             false
         );
 
@@ -71,6 +71,7 @@ socket.on("room", room => {
 });
 
 socket.on("delete", msgId => {
+    console.log("hi");
     outerWrap.removeChild(document.getElementById(msgId));
 });
 

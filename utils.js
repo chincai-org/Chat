@@ -107,7 +107,7 @@ export async function createUser(
  * @param {string} visibility - "public" | "private"
  * @param {string} creater: Username of creater
  */
-export async function createRoom(name, visibility, creater) {
+export async function createRoom(name, visibility, creater, nsfw) {
     try {
         const rooms = client.db("db").collection("rooms");
 
@@ -117,7 +117,8 @@ export async function createRoom(name, visibility, creater) {
             msgId: 0,
             messages: [],
             members: visibility == "public" ? [] : [creater],
-            muted: []
+            muted: [],
+            nsfw: nsfw
         });
 
         if (visibility == "private") {

@@ -29,10 +29,18 @@ newTopicCancel.onclick = () => {
 
 // Confirm create new topic
 newTopicConfirm.onclick = () => {
-    if (!/\S/.test(textbox.innerText)) {
+    if (!/\S/.test(newTopicName.innerText)) {
         return;
     }
-    socket.emit("new-room", newTopicName.innerText, visible, cookieId);
+
+    socket.emit(
+        "new-room",
+        cookieId,
+        newTopicName.innerText,
+        visible,
+        check18.checked
+    );
+
     newTopic.classList.add("hide");
     newTopicName.innerHTML = "";
     check18.checked = false;
@@ -261,12 +269,12 @@ function createTopicContextMenu(room) {
 
         if (pinText.textContent == "Pin") {
             pinText.textContent = "Unpin";
-            socket.emit("pin", cookieId ,room._id);
+            socket.emit("pin", cookieId, room._id);
 
             if (textPin.length) {
                 for (let i = 0; i < textPin.length; i++) {
                     let textPinElement = textPin[i];
-    
+
                     if (!textPinElement.innerText) {
                         topics.removeChild(topic);
                         topics.insertBefore(topic, textPinElement);
@@ -275,13 +283,13 @@ function createTopicContextMenu(room) {
                 }
             } else {
                 topics.removeChild(topic);
-    
+
                 let textPin2 = document.createElement("p");
                 textPin2.className = "text-pin";
                 topics.insertBefore(textPin2, topics.firstChild);
-    
+
                 topics.insertBefore(topic, topics.firstChild);
-    
+
                 let textPin = document.createElement("p");
                 textPin.className = "text-pin";
                 textPin.innerText = "pin";
@@ -292,15 +300,17 @@ function createTopicContextMenu(room) {
             let textPin = document.getElementsByClassName("text-pin");
             let topic = document.getElementById(room._id);
             if (textPin) {
-                topics.removeChild(topic)
-                topics.appendChild(topic)
+                topics.removeChild(topic);
+                topics.appendChild(topic);
             }
-            socket.emit("unpin", cookieId ,room._id);
-            if (topics.children[0].className == "text-pin" &&  topics.children[1].className == "text-pin") {
-                    topics.removeChild(textPin[0])
-                    topics.removeChild(textPin[0])
+            socket.emit("unpin", cookieId, room._id);
+            if (
+                topics.children[0].className == "text-pin" &&
+                topics.children[1].className == "text-pin"
+            ) {
+                topics.removeChild(textPin[0]);
+                topics.removeChild(textPin[0]);
             }
-            
         }
 
         wrapper.classList.remove("active");
