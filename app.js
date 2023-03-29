@@ -457,7 +457,10 @@ io.on("connection", socket => {
             visibility == "public" &&
             (await utils.findRoomByName(name))
         ) {
-            // TODO handle duplicated name
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage("Room name already exist")
+            );
         } else {
             console.log(nsfw);
             let result = await utils.createRoom(
