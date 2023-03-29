@@ -433,7 +433,7 @@ io.on("connection", socket => {
         }
     });
 
-    socket.on("new-room", async (name, visibility, cookieId) => {
+    socket.on("new-room", async (cookieId, name, visibility, nsfw = false) => {
         let user = await utils.findUserByCookie(cookieId);
 
         if (!user) {
@@ -444,19 +444,27 @@ io.on("connection", socket => {
                 utils.generateWarningMessage(utils.NO_SELECT_VISIBILITY)
             );
         } else if (!name) {
-            // TODO handle no type name
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage("Please type room name")
+            );
         } else if (!name.match(/\S/)) {
-            // TODO handle empty topic name
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage("No empty room name")
+            );
         } else if (
             visibility == "public" &&
             (await utils.findRoomByName(name))
         ) {
             // TODO handle duplicated name
         } else {
+            console.log(nsfw);
             let result = await utils.createRoom(
                 name,
                 visibility,
-                user.username
+                user.username,
+                nsfw
             );
 
             if (visibility == "public")
