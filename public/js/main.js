@@ -239,6 +239,7 @@ function sendMessage(msg) {
     textbox.innerText = "";
     updateHeight();
     socket.emit("msg", cookieId, currentRoom, msg, Date.now());
+    chat.scrollTop = chat.scrollHeight;
 }
 
 function fetchMsg(cookieId, roomId, messageId) {
@@ -447,7 +448,7 @@ function createMsgContextMenu(id) {
     };
 
     itemTrash.onclick = e => {
-        socket.emit("delete-msg", cookieId, roomId, id)
+        socket.emit("delete-msg", cookieId, currentRoom, id)
         wrapper.classList.remove("active");
         e.stopPropagation()
     };
