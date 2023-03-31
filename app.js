@@ -346,6 +346,13 @@ io.on("connection", socket => {
                 "msg",
                 utils.generateWarningMessage(utils.MSG_PREFIX + utils.MUTED)
             );
+        } else if (time - user.lastMessageTimestamp < utils.MESSAGE_COOLDOWN) {
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage(
+                    "Bro chill you sending message too fast"
+                )
+            );
         } else {
             msg = msg.trim();
             console.log(`${user.displayName}: ${msg}`);

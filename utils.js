@@ -13,6 +13,7 @@ export const NOT_IN_ROOM = "You are not a member of this room";
 export const MUTED = "You are muted";
 export const NO_SELECT_VISIBILITY = "Please select a PUBLIC | PRIVATE";
 export const NO_PERM = "You don't have the permission";
+export const MESSAGE_COOLDOWN = 200;
 
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -386,6 +387,7 @@ export async function removeUser(userId, roomId) {
 export async function insertMessage(roomId, username, content, time, id = "") {
     try {
         const rooms = client.db("db").collection("rooms");
+        const users = client.db("db").collection("users");
 
         let room = await findRoom(roomId);
         id += room._id.toString() + (room.msgId + 1);
@@ -405,6 +407,17 @@ export async function insertMessage(roomId, username, content, time, id = "") {
                 },
                 $inc: {
                     msgId: 1
+                }
+            }
+        );
+
+        await users.updateOne(
+            {
+                username: username
+            },
+            {
+                $set: {
+                    lastMessageTimestamp: time
                 }
             }
         );
