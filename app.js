@@ -324,12 +324,12 @@ io.on("connection", socket => {
         if (!user) {
             socket.emit(
                 "msg",
-                utils.MSG_PREFIX + utils.generateWarningMessage(utils.NO_USER)
+                utils.generateWarningMessage(utils.MSG_PREFIX + utils.NO_USER)
             );
         } else if (!room) {
             socket.emit(
                 "msg",
-                utils.MSG_PREFIX + utils.generateWarningMessage(utils.NO_ROOM)
+                utils.generateWarningMessage(utils.MSG_PREFIX + utils.NO_ROOM)
             );
         } else if (
             room.visibility == "private" &&
@@ -337,13 +337,14 @@ io.on("connection", socket => {
         ) {
             socket.emit(
                 "msg",
-                utils.MSG_PREFIX +
-                    utils.generateWarningMessage(utils.NOT_IN_ROOM)
+                utils.generateWarningMessage(
+                    utils.MSG_PREFIX + utils.NOT_IN_ROOM
+                )
             );
         } else if (room.muted.includes(user.username)) {
             socket.emit(
                 "msg",
-                utils.MSG_PREFIX + utils.generateWarningMessage(utils.MUTED)
+                utils.generateWarningMessage(utils.MSG_PREFIX + utils.MUTED)
             );
         } else {
             msg = msg.trim();
