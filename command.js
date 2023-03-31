@@ -1,7 +1,7 @@
 import * as utils from "./utils.js";
 
 const prefix = ">";
-const superUsers = ["Bob", "Mortis_666", "ddddddddrrdd3"];
+const superUsers = ["Mortis_666", "ddddddddrrdd3"];
 const roleValue = ["member", "co-admin", "admin"];
 
 class Command {
