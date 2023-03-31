@@ -257,7 +257,7 @@ function createTopicContextMenu(room) {
     wrapper.appendChild(menuContent);
     //#endregion
 
-    settingsItem.onclick = () => {
+    settingsItem.onclick = e => {
         //TODO open settings
         wrapper.classList.remove("active");
         e.stopPropagation();
