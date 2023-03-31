@@ -360,7 +360,8 @@ io.on("connection", socket => {
                 roomId,
                 user.username,
                 msg,
-                time
+                time,
+                1
             );
 
             io.emit("msg", {
@@ -388,6 +389,7 @@ io.on("connection", socket => {
                         "system",
                         response,
                         now,
+                        0,
                         systemMsgId
                     );
                 io.emit("msg", {
