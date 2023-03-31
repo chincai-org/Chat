@@ -177,6 +177,8 @@ app.post("/signup_validator", async (req, res) => {
     let { name, username, password, confirmpassword, birthday } = req.body;
     let bday = new Date(birthday);
 
+    return res.send("Signup disabled until exploit fixed");
+
     if (!name) {
         res.cookie("e", "1");
         res.redirect("/signup");
