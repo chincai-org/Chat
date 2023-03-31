@@ -5,13 +5,15 @@ config();
 const uri = process.env.uri;
 const client = new MongoClient(uri);
 const colors = ["blue", "green", "purple", "red", "yellow"];
-const MSG_PREFIX = "Message failed to send: ";
-export const NO_USER = MSG_PREFIX + "User not found";
-export const NO_ROOM = MSG_PREFIX + "Room not found";
-export const NOT_IN_ROOM = MSG_PREFIX + "You are not a member of this room";
-export const MUTED = MSG_PREFIX + "You are muted";
+export const MSG_PREFIX = "Message failed to send: ";
+export const NO_USER = "User not found";
+export const NO_ROOM = "Room not found";
+export const NO_MESESAGE = "Message not found";
+export const NOT_IN_ROOM = "You are not a member of this room";
+export const MUTED = "You are muted";
 export const NO_SELECT_VISIBILITY = "Please select a PUBLIC | PRIVATE";
 export const NO_PERM = "You don't have the permission";
+export const MESSAGE_COOLDOWN = 200;
 
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -62,6 +64,33 @@ export async function findHashtagTopic(msg) {
     }
 }
 
+export async function findDevice(ipAddress) {
+    try {
+        const ip = client.db("db").collection("ip");
+        return await ip.findOne({ ipAddress: ipAddress });
+    } finally {
+    }
+}
+
+async function addDeviceToIp(ipAddress, amount = 1) {
+    try {
+        const ip = client.db("db").collection("ip");
+
+        await ip.updateOne(
+            { ipAddress: ipAddress },
+            {
+                $inc: {
+                    amount: amount
+                }
+            },
+            {
+                upsert: true
+            }
+        );
+    } finally {
+    }
+}
+
 /**
  * @constructor
  * @param {string} displayName - Display name of user, can be duplicated, no rules
@@ -69,16 +98,20 @@ export async function findHashtagTopic(msg) {
  * @param {string} password - Can be anything
  * @param {number} birthday - Birthday as unix time format
  * @param {string} cookieId - The cookieId of the user
+ * @param {string} ipAddress - Ip of client
  */
 export async function createUser(
     displayName,
     username,
     password,
     birthday,
-    cookieId
+    cookieId,
+    ipAddress
 ) {
     try {
         const users = client.db("db").collection("users");
+
+        await addDeviceToIp(ipAddress);
 
         return await users.insertOne({
             displayName: displayName,
@@ -106,7 +139,7 @@ export async function createUser(
  * @param {string} visibility - "public" | "private"
  * @param {string} creater: Username of creater
  */
-export async function createRoom(name, visibility, creater) {
+export async function createRoom(name, visibility, creater, nsfw) {
     try {
         const rooms = client.db("db").collection("rooms");
 
@@ -116,7 +149,8 @@ export async function createRoom(name, visibility, creater) {
             msgId: 0,
             messages: [],
             members: visibility == "public" ? [] : [creater],
-            muted: []
+            muted: [],
+            nsfw: nsfw
         });
 
         if (visibility == "private") {
@@ -353,6 +387,7 @@ export async function removeUser(userId, roomId) {
 export async function insertMessage(roomId, username, content, time, id = "") {
     try {
         const rooms = client.db("db").collection("rooms");
+        const users = client.db("db").collection("users");
 
         let room = await findRoom(roomId);
         id += room._id.toString() + (room.msgId + 1);
@@ -376,6 +411,17 @@ export async function insertMessage(roomId, username, content, time, id = "") {
             }
         );
 
+        await users.updateOne(
+            {
+                username: username
+            },
+            {
+                $set: {
+                    lastMessageTimestamp: time
+                }
+            }
+        );
+
         return id;
     } catch (e) {
         return null;
@@ -387,7 +433,7 @@ export async function deleteMessage(roomId, msgId) {
     try {
         const rooms = client.db("db").collection("rooms");
 
-        return await rooms.updateOne(
+        let result = await rooms.updateOne(
             {
                 _id: new ObjectId(roomId)
             },
@@ -399,6 +445,8 @@ export async function deleteMessage(roomId, msgId) {
                 }
             }
         );
+
+        return result;
     } finally {
     }
 }

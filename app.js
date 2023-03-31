@@ -174,8 +174,16 @@ app.post("/login_validator", async (req, res) => {
 });
 
 app.post("/signup_validator", async (req, res) => {
+    let ipAddress = req.ip;
+    let device = await utils.findDevice(ipAddress);
+    if (device && device.amount >= 2) {
+        return res.send("You created to many account");
+    }
+
     let { name, username, password, confirmpassword, birthday } = req.body;
     let bday = new Date(birthday);
+
+    // return res.send("Signup disabled until exploit fixed");
 
     if (!name) {
         res.cookie("e", "1");
@@ -224,7 +232,7 @@ app.post("/signup_validator", async (req, res) => {
                 id = id;
             }
         }
-        await utils.createUser(name, username, password, bday, id);
+        await utils.createUser(name, username, password, bday, id, ipAddress);
         res.cookie("id", id);
         res.redirect("/chat");
     }
@@ -314,16 +322,37 @@ io.on("connection", socket => {
         let room = await utils.findRoom(roomId);
 
         if (!user) {
-            socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage(utils.MSG_PREFIX + utils.NO_USER)
+            );
         } else if (!room) {
-            socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage(utils.MSG_PREFIX + utils.NO_ROOM)
+            );
         } else if (
             room.visibility == "private" &&
             !room.members.includes(user.username)
         ) {
-            socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage(
+                    utils.MSG_PREFIX + utils.NOT_IN_ROOM
+                )
+            );
         } else if (room.muted.includes(user.username)) {
-            socket.emit("msg", utils.generateWarningMessage(utils.MUTED));
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage(utils.MSG_PREFIX + utils.MUTED)
+            );
+        } else if (time - user.lastMessageTimestamp < utils.MESSAGE_COOLDOWN) {
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage(
+                    "Bro chill you sending message too fast"
+                )
+            );
         } else {
             msg = msg.trim();
             console.log(`${user.displayName}: ${msg}`);
@@ -420,7 +449,7 @@ io.on("connection", socket => {
         }
     });
 
-    socket.on("new-room", async (name, visibility, cookieId) => {
+    socket.on("new-room", async (cookieId, name, visibility, nsfw = false) => {
         let user = await utils.findUserByCookie(cookieId);
 
         if (!user) {
@@ -431,19 +460,30 @@ io.on("connection", socket => {
                 utils.generateWarningMessage(utils.NO_SELECT_VISIBILITY)
             );
         } else if (!name) {
-            // TODO handle no type name
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage("Please type room name")
+            );
         } else if (!name.match(/\S/)) {
-            // TODO handle empty topic name
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage("No empty room name")
+            );
         } else if (
             visibility == "public" &&
             (await utils.findRoomByName(name))
         ) {
-            // TODO handle duplicated name
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage("Room name already exist")
+            );
         } else {
+            console.log(nsfw);
             let result = await utils.createRoom(
                 name,
                 visibility,
-                user.username
+                user.username,
+                nsfw
             );
 
             if (visibility == "public")
@@ -512,7 +552,9 @@ io.on("connection", socket => {
         ) {
             socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
         } else {
-            socket.emit("typings", usersTyping[roomId] || {});
+            let result = Object.assign({}, usersTyping[roomId] || {});
+            delete result[user.username];
+            socket.emit("typings", result);
         }
     });
 
@@ -533,6 +575,89 @@ io.on("connection", socket => {
             socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
         } else {
             typingKill(user.username, roomId, socket);
+        }
+    });
+
+    socket.on("leave", async (cookieId, roomId) => {
+        let user = await utils.findUserByCookie(cookieId);
+        let room = await utils.findRoom(roomId);
+
+        if (!user) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
+        } else if (!room) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
+        } else if (room.visibility == "public") {
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage("Can't leave public room!")
+            );
+        } else if (!room.members.includes(user.username)) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
+        } else {
+            await utils.removeUser(cookieId, roomId);
+        }
+    });
+
+    socket.on("delete-msg", async (cookieId, roomId, messageId) => {
+        let user = await utils.findUserByCookie(cookieId);
+        let room = await utils.findRoom(roomId);
+
+        if (!user) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
+        } else if (!room) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
+        } else if (
+            room.visibility == "private" &&
+            !room.members.includes(user.username)
+        ) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
+        } else {
+            let result = await utils.deleteMessage(roomId, messageId);
+
+            if (result.modifiedCount) {
+                socket.emit("delete", messageId);
+            } else {
+                socket.emit(
+                    "msg",
+                    utils.generateWarningMessage(utils.NO_MESESAGE)
+                );
+            }
+        }
+    });
+
+    socket.on("pin", async (cookieId, roomId) => {
+        let user = await utils.findUserByCookie(cookieId);
+        let room = await utils.findRoom(roomId);
+
+        if (!user) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
+        } else if (!room) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
+        } else if (
+            room.visibility == "private" &&
+            !room.members.includes(user.username)
+        ) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
+        } else {
+            await utils.pinRoom(user._id.toString(), roomId);
+        }
+    });
+
+    socket.on("unpin", async (cookieId, roomId) => {
+        let user = await utils.findUserByCookie(cookieId);
+        let room = await utils.findRoom(roomId);
+
+        if (!user) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
+        } else if (!room) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
+        } else if (
+            room.visibility == "private" &&
+            !room.members.includes(user.username)
+        ) {
+            socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
+        } else {
+            await utils.unpinRoom(user._id.toString(), roomId);
         }
     });
 });

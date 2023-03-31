@@ -7,6 +7,7 @@ const createNewTopic = document.getElementById("create-new");
 const newTopicCancel = document.getElementById("new-topic-btn-cancel");
 const newTopicConfirm = document.getElementById("new-topic-btn-create");
 const check18 = document.getElementById("check18");
+const topics = document.getElementById("rooms");
 
 // Changable global variable
 let activeRoom = null;
@@ -28,10 +29,18 @@ newTopicCancel.onclick = () => {
 
 // Confirm create new topic
 newTopicConfirm.onclick = () => {
-    if (!/\S/.test(textbox.innerText)) {
+    if (!/\S/.test(newTopicName.innerText)) {
         return;
     }
-    socket.emit("new-room", newTopicName.innerText, visible, cookieId);
+
+    socket.emit(
+        "new-room",
+        cookieId,
+        newTopicName.innerText,
+        visible,
+        check18.checked
+    );
+
     newTopic.classList.add("hide");
     newTopicName.innerHTML = "";
     check18.checked = false;
@@ -203,6 +212,7 @@ function createTopic(room) {
 }
 
 function createTopicContextMenu(room) {
+    //#region createtopic
     let wrapper = document.createElement("div");
     wrapper.className = "wrapper";
 
@@ -225,7 +235,7 @@ function createTopicContextMenu(room) {
 
     if (visible == "private") {
         menu.appendChild(settingsItem);
-    };
+    }
 
     let pinItem = document.createElement("li");
     pinItem.classList.add("item");
@@ -275,20 +285,79 @@ function createTopicContextMenu(room) {
 
     menuContent.appendChild(copyId);
     wrapper.appendChild(menuContent);
+    //#endregion
 
-    settingsItem.onclick = () => {
+    settingsItem.onclick = e => {
         //TODO open settings
-    }; 
-    pinItem.onclick = () => {
-        //TODO pin
+        wrapper.classList.remove("active");
+        e.stopPropagation();
     };
+
+    pinItem.onclick = e => {
+        let topic = document.getElementById(room._id);
+        let textPin = document.getElementsByClassName("text-pin");
+
+        if (pinText.textContent == "Pin") {
+            pinText.textContent = "Unpin";
+            socket.emit("pin", cookieId, room._id);
+
+            if (textPin.length) {
+                for (let i = 0; i < textPin.length; i++) {
+                    let textPinElement = textPin[i];
+
+                    if (!textPinElement.innerText) {
+                        topics.removeChild(topic);
+                        topics.insertBefore(topic, textPinElement);
+                        break;
+                    }
+                }
+            } else {
+                topics.removeChild(topic);
+
+                let textPin2 = document.createElement("p");
+                textPin2.className = "text-pin";
+                topics.insertBefore(textPin2, topics.firstChild);
+
+                topics.insertBefore(topic, topics.firstChild);
+
+                let textPin = document.createElement("p");
+                textPin.className = "text-pin";
+                textPin.innerText = "pin";
+                topics.insertBefore(textPin, topics.firstChild);
+            }
+        } else if (pinText.textContent == "Unpin") {
+            pinText.textContent = "Pin";
+            let textPin = document.getElementsByClassName("text-pin");
+            let topic = document.getElementById(room._id);
+            if (textPin) {
+                topics.removeChild(topic);
+                topics.appendChild(topic);
+            }
+            socket.emit("unpin", cookieId, room._id);
+            if (
+                topics.children[0].className == "text-pin" &&
+                topics.children[1].className == "text-pin"
+            ) {
+                topics.removeChild(textPin[0]);
+                topics.removeChild(textPin[0]);
+            }
+        }
+
+        wrapper.classList.remove("active");
+        e.stopPropagation();
+    };
+
     copyIdItem.onclick = e => {
         navigator.clipboard.writeText(room._id);
-        e.stopPropagation()
+        wrapper.classList.remove("active");
+        e.stopPropagation();
     };
+
     leaveItem.onclick = () => {
-        //TODO leave
-    }; 
+        socket.emit("leave", cookieId, room._id);
+        wrapper.classList.remove("active");
+        e.stopPropagation();
+    };
 
     return wrapper;
 }
