@@ -63,6 +63,33 @@ export async function findHashtagTopic(msg) {
     }
 }
 
+export async function findDevice(ipAddress) {
+    try {
+        const ip = client.db("db").collection("ip");
+        return await ip.findOne({ ipAddress: ipAddress });
+    } finally {
+    }
+}
+
+async function addDeviceToIp(ipAddress, amount = 1) {
+    try {
+        const ip = client.db("db").collection("ip");
+
+        await ip.updateOne(
+            { ipAddress: ipAddress },
+            {
+                $inc: {
+                    amount: amount
+                }
+            },
+            {
+                upsert: true
+            }
+        );
+    } finally {
+    }
+}
+
 /**
  * @constructor
  * @param {string} displayName - Display name of user, can be duplicated, no rules
@@ -70,16 +97,20 @@ export async function findHashtagTopic(msg) {
  * @param {string} password - Can be anything
  * @param {number} birthday - Birthday as unix time format
  * @param {string} cookieId - The cookieId of the user
+ * @param {string} ipAddress - Ip of client
  */
 export async function createUser(
     displayName,
     username,
     password,
     birthday,
-    cookieId
+    cookieId,
+    ipAddress
 ) {
     try {
         const users = client.db("db").collection("users");
+
+        await addDeviceToIp(ipAddress);
 
         return await users.insertOne({
             displayName: displayName,
