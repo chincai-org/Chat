@@ -270,7 +270,8 @@ export async function findRoomWithUser(username, visibility, limit) {
                 }
             )
             .sort({
-                name: 1
+                lastWeekMessageAmount: -1,
+                weeklyMessageAmount: -1
             })
             .limit(limit)
             .toArray();
@@ -384,7 +385,14 @@ export async function removeUser(userId, roomId) {
     }
 }
 
-export async function insertMessage(roomId, username, content, time, id = "") {
+export async function insertMessage(
+    roomId,
+    username,
+    content,
+    time,
+    isHuman,
+    id = ""
+) {
     try {
         const rooms = client.db("db").collection("rooms");
         const users = client.db("db").collection("users");
@@ -406,7 +414,8 @@ export async function insertMessage(roomId, username, content, time, id = "") {
                     }
                 },
                 $inc: {
-                    msgId: 1
+                    msgId: 1,
+                    weeklyMessageAmount: isHuman
                 }
             }
         );
