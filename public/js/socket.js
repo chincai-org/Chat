@@ -9,8 +9,8 @@ socket.on("msg", async message => {
         roomId,
         content,
         time,
-        pings,
-        topicIds
+        pings = [],
+        topicIds = []
     } = message;
 
     if (currentRoom === roomId || roomId == "$") {
@@ -21,8 +21,8 @@ socket.on("msg", async message => {
             avatar,
             content,
             time,
-            pings || [],
-            topicIds || [],
+            pings,
+            topicIds,
             false
         );
 
@@ -42,7 +42,6 @@ socket.on("rooms", (rooms, pins) => {
     console.table(rooms);
     console.table(pins);
 
-    const topics = document.getElementById("rooms");
     let pinList = [];
 
     if (pins.length) {
@@ -72,6 +71,7 @@ socket.on("room", room => {
 });
 
 socket.on("delete", msgId => {
+    console.log("hi");
     outerWrap.removeChild(document.getElementById(msgId));
 });
 
@@ -82,7 +82,7 @@ socket.on("change-name", (roomId, newName) => {
 });
 
 socket.on("typing", (username, roomId, timeStart) => {
-    if (roomId === currentRoom) {
+    if (roomId === currentRoom && Date.now() - timeStart <= timeoutPreference) {
         usersTyping[username] = timeStart;
         updateTypingUsers();
     }
