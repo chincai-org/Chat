@@ -170,6 +170,7 @@ body {
 }
 
 .topics {
+    display: block;
     position: absolute;
     top: 0.5vh;
     left: 0.5vh;
