@@ -174,10 +174,16 @@ app.post("/login_validator", async (req, res) => {
 });
 
 app.post("/signup_validator", async (req, res) => {
+    let ipAddress = req.ip;
+    let device = await utils.findDevice(ipAddress);
+    if (device && device.amount >= 2) {
+        return res.send("You created to many account");
+    }
+
     let { name, username, password, confirmpassword, birthday } = req.body;
     let bday = new Date(birthday);
 
-    return res.send("Signup disabled until exploit fixed");
+    // return res.send("Signup disabled until exploit fixed");
 
     if (!name) {
         res.cookie("e", "1");
@@ -226,7 +232,7 @@ app.post("/signup_validator", async (req, res) => {
                 id = id;
             }
         }
-        await utils.createUser(name, username, password, bday, id);
+        await utils.createUser(name, username, password, bday, id, ipAddress);
         res.cookie("id", id);
         res.redirect("/chat");
     }
