@@ -141,6 +141,7 @@ export async function createUser(
  */
 export async function createRoom(name, visibility, creater, nsfw) {
     try {
+        const users = client.db("db").collection("users");
         const rooms = client.db("db").collection("rooms");
 
         let result = await rooms.insertOne({
@@ -150,8 +151,21 @@ export async function createRoom(name, visibility, creater, nsfw) {
             messages: [],
             members: visibility == "public" ? [] : [creater],
             muted: [],
-            nsfw: nsfw
+            nsfw: nsfw,
+            weeklyMessageAmount: 0,
+            lastWeekMessageAmount: 0
         });
+
+        await users.updateOne(
+            {
+                username: creater
+            },
+            {
+                $inc: {
+                    topicCreated: 1
+                }
+            }
+        );
 
         if (visibility == "private") {
             await assignRole(creater, result.insertedId, "admin");
