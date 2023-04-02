@@ -111,7 +111,7 @@ command.on("kick", async (io, user, room, username) => {
     }
 });
 
-command.on("mute", async (io, user, room, username) => {
+command.on("mute", async (io, user, room, username, reason = "no reason") => {
     if (!username) return [2000, `Syntax: ${prefix}mute <username>`];
     username = username.replace(/^@/, "");
     let target = await utils.findUserByUsername(username);
@@ -124,7 +124,7 @@ command.on("mute", async (io, user, room, username) => {
     if (roleValue.indexOf(authorRole) <= roleValue.indexOf(targetRole)) {
         return [2000, "You don't have the permission!"];
     } else {
-        await utils.mute(room._id.toString(), username);
+        await utils.mute(room._id.toString(), username, reason);
         return [2000, `Muted user ${username}`];
     }
 });
@@ -360,12 +360,16 @@ command.on("showcase", (io, user, room, arg1, arg2, arg3) => {
 
 command.on("generate", (io, user, room) => {
     let consonant = "bcdfghjklmnpqrstvwxyz";
-    let consonantArray = consonant.split(""); 
-    let vowelArray = ["a","e","i","o","u"]
-    let randWord = ""
+    let consonantArray = consonant.split("");
+    let vowelArray = ["a", "e", "i", "o", "u"];
+    let randWord = "";
     for (let i = 0; i < 10; i++) {
-        randWord += String(consonantArray[Math.floor(Math.random() * consonant.length)])
-        randWord += String(vowelArray[Math.floor(Math.random() * vowelArray.length)])
+        randWord += String(
+            consonantArray[Math.floor(Math.random() * consonant.length)]
+        );
+        randWord += String(
+            vowelArray[Math.floor(Math.random() * vowelArray.length)]
+        );
     }
     return [0, randWord];
 });

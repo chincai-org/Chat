@@ -320,6 +320,9 @@ io.on("connection", socket => {
     socket.on("msg", async (cookieId, roomId, msg, time) => {
         let user = await utils.findUserByCookie(cookieId);
         let room = await utils.findRoom(roomId);
+        let muteObject = room.muted.find(
+            mute => mute.username === user.username
+        );
 
         if (!user) {
             socket.emit(
@@ -341,10 +344,12 @@ io.on("connection", socket => {
                     utils.MSG_PREFIX + utils.NOT_IN_ROOM
                 )
             );
-        } else if (room.muted.includes(user.username)) {
+        } else if (muteObject) {
             socket.emit(
                 "msg",
-                utils.generateWarningMessage(utils.MSG_PREFIX + utils.MUTED)
+                utils.generateWarningMessage(
+                    utils.MSG_PREFIX + utils.MUTED + " for " + muteObject.reason
+                )
             );
         } else if (time - user.lastMessageTimestamp < utils.MESSAGE_COOLDOWN) {
             socket.emit(
