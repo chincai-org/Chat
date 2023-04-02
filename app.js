@@ -174,8 +174,16 @@ app.post("/login_validator", async (req, res) => {
 });
 
 app.post("/signup_validator", async (req, res) => {
+    let ipAddress = req.ip;
+    let device = await utils.findDevice(ipAddress);
+    if (device && device.amount >= 2) {
+        return res.send("You created to many account");
+    }
+
     let { name, username, password, confirmpassword, birthday } = req.body;
     let bday = new Date(birthday);
+
+    // return res.send("Signup disabled until exploit fixed");
 
     if (!name) {
         res.cookie("e", "1");
@@ -224,7 +232,7 @@ app.post("/signup_validator", async (req, res) => {
                 id = id;
             }
         }
-        await utils.createUser(name, username, password, bday, id);
+        await utils.createUser(name, username, password, bday, id, ipAddress);
         res.cookie("id", id);
         res.redirect("/chat");
     }
@@ -316,12 +324,12 @@ io.on("connection", socket => {
         if (!user) {
             socket.emit(
                 "msg",
-                utils.MSG_PREFIX + utils.generateWarningMessage(utils.NO_USER)
+                utils.generateWarningMessage(utils.MSG_PREFIX + utils.NO_USER)
             );
         } else if (!room) {
             socket.emit(
                 "msg",
-                utils.MSG_PREFIX + utils.generateWarningMessage(utils.NO_ROOM)
+                utils.generateWarningMessage(utils.MSG_PREFIX + utils.NO_ROOM)
             );
         } else if (
             room.visibility == "private" &&
@@ -329,13 +337,21 @@ io.on("connection", socket => {
         ) {
             socket.emit(
                 "msg",
-                utils.MSG_PREFIX +
-                    utils.generateWarningMessage(utils.NOT_IN_ROOM)
+                utils.generateWarningMessage(
+                    utils.MSG_PREFIX + utils.NOT_IN_ROOM
+                )
             );
         } else if (room.muted.includes(user.username)) {
             socket.emit(
                 "msg",
-                utils.MSG_PREFIX + utils.generateWarningMessage(utils.MUTED)
+                utils.generateWarningMessage(utils.MSG_PREFIX + utils.MUTED)
+            );
+        } else if (time - user.lastMessageTimestamp < utils.MESSAGE_COOLDOWN) {
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage(
+                    "Bro chill you sending message too fast"
+                )
             );
         } else {
             msg = msg.trim();
@@ -344,7 +360,8 @@ io.on("connection", socket => {
                 roomId,
                 user.username,
                 msg,
-                time
+                time,
+                1
             );
 
             io.emit("msg", {
@@ -372,6 +389,7 @@ io.on("connection", socket => {
                         "system",
                         response,
                         now,
+                        0,
                         systemMsgId
                     );
                 io.emit("msg", {
@@ -461,8 +479,14 @@ io.on("connection", socket => {
                 "msg",
                 utils.generateWarningMessage("Room name already exist")
             );
+        } else if (user.topicCreated >= 3) {
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage(
+                    "Max limit for topic creation reached"
+                )
+            );
         } else {
-            console.log(nsfw);
             let result = await utils.createRoom(
                 name,
                 visibility,

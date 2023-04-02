@@ -181,6 +181,21 @@ async function isValid(username) {
     ).json();
 }
 
+function topicStatus(d) {
+    if (d == 1) {
+        document.getElementById("topics").style.display = "block";
+    } else {
+        document.getElementById("topics").style.display = "none";
+    }
+}
+function sizeOfChat(d) {
+    document.getElementById("chatting").style.width = d;
+}
+
+function lengthOfText(d) {
+    document.getElementById("text").style.width = d;
+}
+
 async function autoComplete(nameQuery) {
     return (
         await postData("/auto_complete", "POST", {

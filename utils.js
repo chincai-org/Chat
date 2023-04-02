@@ -13,6 +13,7 @@ export const NOT_IN_ROOM = "You are not a member of this room";
 export const MUTED = "You are muted";
 export const NO_SELECT_VISIBILITY = "Please select a PUBLIC | PRIVATE";
 export const NO_PERM = "You don't have the permission";
+export const MESSAGE_COOLDOWN = 200;
 
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -63,6 +64,33 @@ export async function findHashtagTopic(msg) {
     }
 }
 
+export async function findDevice(ipAddress) {
+    try {
+        const ip = client.db("db").collection("ip");
+        return await ip.findOne({ ipAddress: ipAddress });
+    } finally {
+    }
+}
+
+async function addDeviceToIp(ipAddress, amount = 1) {
+    try {
+        const ip = client.db("db").collection("ip");
+
+        await ip.updateOne(
+            { ipAddress: ipAddress },
+            {
+                $inc: {
+                    amount: amount
+                }
+            },
+            {
+                upsert: true
+            }
+        );
+    } finally {
+    }
+}
+
 /**
  * @constructor
  * @param {string} displayName - Display name of user, can be duplicated, no rules
@@ -70,16 +98,20 @@ export async function findHashtagTopic(msg) {
  * @param {string} password - Can be anything
  * @param {number} birthday - Birthday as unix time format
  * @param {string} cookieId - The cookieId of the user
+ * @param {string} ipAddress - Ip of client
  */
 export async function createUser(
     displayName,
     username,
     password,
     birthday,
-    cookieId
+    cookieId,
+    ipAddress
 ) {
     try {
         const users = client.db("db").collection("users");
+
+        await addDeviceToIp(ipAddress);
 
         return await users.insertOne({
             displayName: displayName,
@@ -109,6 +141,7 @@ export async function createUser(
  */
 export async function createRoom(name, visibility, creater, nsfw) {
     try {
+        const users = client.db("db").collection("users");
         const rooms = client.db("db").collection("rooms");
 
         let result = await rooms.insertOne({
@@ -118,8 +151,21 @@ export async function createRoom(name, visibility, creater, nsfw) {
             messages: [],
             members: visibility == "public" ? [] : [creater],
             muted: [],
-            nsfw: nsfw
+            nsfw: nsfw,
+            weeklyMessageAmount: 0,
+            lastWeekMessageAmount: 0
         });
+
+        await users.updateOne(
+            {
+                username: creater
+            },
+            {
+                $inc: {
+                    topicCreated: 1
+                }
+            }
+        );
 
         if (visibility == "private") {
             await assignRole(creater, result.insertedId, "admin");
@@ -238,7 +284,8 @@ export async function findRoomWithUser(username, visibility, limit) {
                 }
             )
             .sort({
-                name: 1
+                lastWeekMessageAmount: -1,
+                weeklyMessageAmount: -1
             })
             .limit(limit)
             .toArray();
@@ -352,9 +399,17 @@ export async function removeUser(userId, roomId) {
     }
 }
 
-export async function insertMessage(roomId, username, content, time, id = "") {
+export async function insertMessage(
+    roomId,
+    username,
+    content,
+    time,
+    isHuman,
+    id = ""
+) {
     try {
         const rooms = client.db("db").collection("rooms");
+        const users = client.db("db").collection("users");
 
         let room = await findRoom(roomId);
         id += room._id.toString() + (room.msgId + 1);
@@ -373,7 +428,19 @@ export async function insertMessage(roomId, username, content, time, id = "") {
                     }
                 },
                 $inc: {
-                    msgId: 1
+                    msgId: 1,
+                    weeklyMessageAmount: isHuman
+                }
+            }
+        );
+
+        await users.updateOne(
+            {
+                username: username
+            },
+            {
+                $set: {
+                    lastMessageTimestamp: time
                 }
             }
         );
