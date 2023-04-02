@@ -479,8 +479,14 @@ io.on("connection", socket => {
                 "msg",
                 utils.generateWarningMessage("Room name already exist")
             );
+        } else if (user.topicCreated >= 3) {
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage(
+                    "Max limit for topic creation reached"
+                )
+            );
         } else {
-            console.log(nsfw);
             let result = await utils.createRoom(
                 name,
                 visibility,
