@@ -150,10 +150,10 @@ export async function createRoom(name, visibility, creater, nsfw) {
             msgId: 0,
             messages: [],
             members: visibility == "public" ? [] : [creater],
-            muted: [],
             nsfw: nsfw,
             weeklyMessageAmount: 0,
-            lastWeekMessageAmount: 0
+            lastWeekMessageAmount: 0,
+            muted: []
         });
 
         await users.updateOne(
@@ -582,7 +582,7 @@ export async function changeRoomName(roomId, newName) {
     }
 }
 
-export async function mute(roomId, username) {
+export async function mute(roomId, username, reason = "") {
     try {
         const rooms = client.db("db").collection("rooms");
 
@@ -592,7 +592,10 @@ export async function mute(roomId, username) {
             },
             {
                 $push: {
-                    muted: username
+                    muted: {
+                        username: username,
+                        reason: reason
+                    }
                 }
             }
         );
@@ -610,7 +613,9 @@ export async function unmute(roomId, username) {
             },
             {
                 $pull: {
-                    muted: username
+                    muted: {
+                        username: username
+                    }
                 }
             }
         );
