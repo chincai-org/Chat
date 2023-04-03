@@ -51,11 +51,7 @@ export const command = new Command();
 command.on("delete", async (io, user, room, msgId) => {
     if (msgId) {
         let role = getRole(user, room);
-        let message;
-
-        for (let msg of room.messages) {
-            if (msg.id == msgId) message = msg;
-        }
+        let message = room.messages.find(msg => msg.id == msgId);
 
         if (!message) {
             return [2000, `Message id ${msgId} doesn't exist`];
