@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { config } from "dotenv";
+import crypto from "crypto";
 
 config();
 const uri = process.env.uri;
@@ -17,6 +18,10 @@ export const MESSAGE_COOLDOWN = 200;
 
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export async function sha256(plain) {
+    return crypto.createHash("sha256").update(plain).digest("hex");
 }
 
 export function generateWarningMessage(msg) {
@@ -120,7 +125,7 @@ export async function createUser(
                 "assets/default_" +
                 colors[randint(1, colors.length - 1)] +
                 ".png",
-            password: password,
+            password: await sha256(password),
             birthday: birthday,
             cookieId: cookieId,
             rooms: {},

@@ -154,7 +154,8 @@ app.get("/signup", (req, res) => {
 
 app.post("/login_validator", async (req, res) => {
     let { username, password } = req.body;
-    var user = await utils.findUserByUsername(username);
+    let user = await utils.findUserByUsername(username);
+
     if (!username) {
         res.cookie("e", "1");
         res.redirect("/login");
@@ -164,7 +165,7 @@ app.post("/login_validator", async (req, res) => {
     } else if (!user) {
         res.cookie("e", "3");
         res.redirect("/login");
-    } else if (!(user.password == password)) {
+    } else if (user.password != (await utils.sha256(password))) {
         res.cookie("e", "3");
         res.redirect("/login");
     } else {
