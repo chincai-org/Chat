@@ -1,0 +1,7 @@
+use("db");
+
+ROOM = "test-here";
+
+db.rooms.findOne({
+    name: ROOM
+});

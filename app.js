@@ -345,6 +345,11 @@ io.on("connection", socket => {
                     utils.MSG_PREFIX + utils.NOT_IN_ROOM
                 )
             );
+        } else if (room.locked && getRole(user, room) == "member") {
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage(utils.MSG_PREFIX + "Topic locked")
+            );
         } else if (muteObject) {
             socket.emit(
                 "msg",

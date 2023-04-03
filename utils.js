@@ -8,9 +8,9 @@ const client = new MongoClient(uri);
 const colors = ["blue", "green", "purple", "red", "yellow"];
 export const MSG_PREFIX = "Message failed to send: ";
 export const NO_USER = "User not found";
-export const NO_ROOM = "Room not found";
+export const NO_ROOM = "Topic not found";
 export const NO_MESESAGE = "Message not found";
-export const NOT_IN_ROOM = "You are not a member of this room";
+export const NOT_IN_ROOM = "You are not a member of this topic";
 export const MUTED = "You are muted";
 export const NO_SELECT_VISIBILITY = "Please select a PUBLIC | PRIVATE";
 export const NO_PERM = "You don't have the permission";
@@ -672,6 +672,42 @@ export async function unban(userId) {
             {
                 $set: {
                     banned: false
+                }
+            }
+        );
+    } finally {
+    }
+}
+
+export async function lock(roomId) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+
+        await rooms.updateOne(
+            {
+                _id: new ObjectId(roomId)
+            },
+            {
+                $set: {
+                    locked: true
+                }
+            }
+        );
+    } finally {
+    }
+}
+
+export async function unlock(roomId) {
+    try {
+        const rooms = client.db("db").collection("rooms");
+
+        await rooms.updateOne(
+            {
+                _id: new ObjectId(roomId)
+            },
+            {
+                $set: {
+                    locked: false
                 }
             }
         );
