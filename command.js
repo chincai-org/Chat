@@ -56,7 +56,7 @@ command.on("delete", async (io, user, room, msgId) => {
         if (!message) {
             return [2000, `Message id ${msgId} doesn't exist`];
         } else if (role == "member" && message.author != user.username) {
-            return [2000, "You don't have the permission!"];
+            return [2000, utils.NO_PERM];
         } else {
             await utils.deleteMessage(room._id, msgId);
             io.emit("delete", msgId);
@@ -69,7 +69,7 @@ command.on("delete", async (io, user, room, msgId) => {
 
 command.on("purge", async (io, user, room, amt) => {
     let role = getRole(user, room);
-    if (role == "member") return [2000, "You don't have the permission!"];
+    if (role == "member") return [2000, utils.NO_PERM];
 
     if (amt && (!amt.match(/[^0-9]/g) || amt.toLowerCase() == "all")) {
         if (amt.toLowerCase() == "all") amt = room.messages.length + 1;
@@ -100,7 +100,7 @@ command.on("kick", async (io, user, room, username) => {
     let targetRole = getRole(target, room);
 
     if (roleValue.indexOf(authorRole) < roleValue.indexOf(targetRole)) {
-        return [2000, "You don't have the permission!"];
+        return [2000, utils.NO_PERM];
     } else {
         await utils.removeUser(target._id, room._id.toString());
         return [2000, `Kicked user ${username}`];
@@ -119,7 +119,7 @@ command.on("mute", async (io, user, room, username, ...reason) => {
     let targetRole = getRole(target, room);
 
     if (roleValue.indexOf(authorRole) <= roleValue.indexOf(targetRole)) {
-        return [2000, "You don't have the permission!"];
+        return [2000, utils.NO_PERM];
     } else {
         await utils.mute(
             room._id.toString(),
@@ -141,7 +141,7 @@ command.on("unmute", async (io, user, room, username) => {
     let targetRole = getRole(target, room);
 
     if (roleValue.indexOf(authorRole) <= roleValue.indexOf(targetRole)) {
-        return [2000, "You don't have the permission!"];
+        return [2000, utils.NO_PERM];
     } else {
         await utils.unmute(room._id.toString(), username);
         return [2000, `Unmuted user ${username}`];
@@ -157,7 +157,7 @@ command.on("ban", async (io, user, room, username, ...reason) => {
     if (!target) return [2000, `User ${username} doesn't exist`];
 
     if (!superUsers.includes(user.username)) {
-        return [2000, "You don't have the permission!"];
+        return [2000, utils.NO_PERM];
     } else {
         await utils.ban(target._id.toString(), reason.join(" ") || "no reason");
         return [2000, `Banned user ${username}`];
@@ -173,10 +173,28 @@ command.on("unban", async (io, user, room, username) => {
     if (!target) return [2000, `User ${username} doesn't exist`];
 
     if (!superUsers.includes(user.username)) {
-        return [2000, "You don't have the permission!"];
+        return [2000, utils.NO_PERM];
     } else {
         await utils.unban(target._id.toString());
         return [2000, `Unbanned user ${username}`];
+    }
+});
+
+command.on("lock", async (io, user, room) => {
+    if (getRole(user, room) == "member") {
+        return [2000, utils.NO_PERM];
+    } else {
+        await utils.lock(room._id.toString());
+        return [2000, "Topic locked"];
+    }
+});
+
+command.on("unlock", async (io, user, room) => {
+    if (getRole(user, room) == "member") {
+        return [2000, utils.NO_PERM];
+    } else {
+        await utils.unlock(room._id.toString());
+        return [2000, "Topic unlocked"];
     }
 });
 
@@ -194,7 +212,7 @@ command.on("promote", async (io, user, room, username) => {
     let targetRole = getRole(target, room);
 
     if (authorRole != "admin") {
-        return [2000, "You don't have the permission!"];
+        return [2000, utils.NO_PERM];
     } else if (targetRole != "member") {
         return [2000, `You can't promote a ${targetRole}!`];
     } else {
@@ -217,7 +235,7 @@ command.on("demote", async (io, user, room, username) => {
     let targetRole = getRole(target, room);
 
     if (authorRole != "admin") {
-        return [2000, "You don't have the permission!"];
+        return [2000, utils.NO_PERM];
     } else if (targetRole != "co-admin") {
         return [2000, `You can't demote a ${targetRole}!`];
     } else {
