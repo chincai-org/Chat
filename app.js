@@ -626,15 +626,19 @@ io.on("connection", socket => {
         ) {
             socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
         } else {
-            let result = await utils.deleteMessage(roomId, messageId);
+            let role = getRole(user, room);
+            let message = room.messages.find(msg => msg.id == messageId);
 
-            if (result.modifiedCount) {
-                socket.emit("delete", messageId);
-            } else {
+            if (!message) {
                 socket.emit(
                     "msg",
                     utils.generateWarningMessage(utils.NO_MESESAGE)
                 );
+            } else if (role == "member" && message.author != user.username) {
+                socket.emit("msg", utils.generateWarningMessage(utils.NO_PERM));
+            } else {
+                await utils.deleteMessage(roomId, messageId);
+                io.emit("delete", messageId);
             }
         }
     });
