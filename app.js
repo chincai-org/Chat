@@ -37,7 +37,7 @@ app.get("/about", (req, res) => {
     res.render("about.ejs");
 });
 
-app.get("/chat", async (req, res) => {
+app.get("/chat", utils.checkBan, async (req, res) => {
     let user = await utils.findUserByCookie(req.cookies.id);
     if (user) {
         console.log(`User @${user.username} logged in`);
@@ -178,7 +178,7 @@ app.post("/signup_validator", async (req, res) => {
     let ipAddress = req.ip;
     let device = await utils.findDevice(ipAddress);
     if (device && device.amount >= 2) {
-        return res.send("You created to many account");
+        return res.send("You created to many account"); // TODO better display
     }
 
     let { name, username, password, confirmpassword, birthday } = req.body;

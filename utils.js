@@ -24,6 +24,21 @@ export async function sha256(plain) {
     return crypto.createHash("sha256").update(plain).digest("hex");
 }
 
+/**
+ *
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ */
+export async function checkBan(req, res, next) {
+    let user = await findUserByCookie(req.cookies.id);
+    if (user.banned) {
+        return res.send(`You are banned for ${user.banned}`);
+    }
+
+    next();
+}
+
 export function generateWarningMessage(msg) {
     return {
         id: "SYSTEM0",
@@ -621,6 +636,42 @@ export async function unmute(roomId, username) {
                     muted: {
                         username: username
                     }
+                }
+            }
+        );
+    } finally {
+    }
+}
+
+export async function ban(userId, reason) {
+    try {
+        const users = client.db("db").collection("users");
+
+        await users.updateOne(
+            {
+                _id: new ObjectId(userId)
+            },
+            {
+                $set: {
+                    banned: reason
+                }
+            }
+        );
+    } finally {
+    }
+}
+
+export async function unban(userId) {
+    try {
+        const users = client.db("db").collection("users");
+
+        await users.updateOne(
+            {
+                _id: new ObjectId(userId)
+            },
+            {
+                $set: {
+                    banned: false
                 }
             }
         );

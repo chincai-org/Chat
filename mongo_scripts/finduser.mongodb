@@ -1,0 +1,7 @@
+use("db");
+
+USERNAME = "alice";
+
+db.users.findOne({
+    username: USERNAME
+});

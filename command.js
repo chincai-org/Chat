@@ -107,8 +107,9 @@ command.on("kick", async (io, user, room, username) => {
     }
 });
 
-command.on("mute", async (io, user, room, username, reason = "no reason") => {
-    if (!username) return [2000, `Syntax: ${prefix}mute <username>`];
+command.on("mute", async (io, user, room, username, ...reason) => {
+    if (!username)
+        return [2000, `Syntax: ${prefix}mute <username> [reason="no reason"]`];
     username = username.replace(/^@/, "");
     let target = await utils.findUserByUsername(username);
 
@@ -120,7 +121,11 @@ command.on("mute", async (io, user, room, username, reason = "no reason") => {
     if (roleValue.indexOf(authorRole) <= roleValue.indexOf(targetRole)) {
         return [2000, "You don't have the permission!"];
     } else {
-        await utils.mute(room._id.toString(), username, reason);
+        await utils.mute(
+            room._id.toString(),
+            username,
+            reason.join(" ") || "no reason"
+        );
         return [2000, `Muted user ${username}`];
     }
 });
@@ -140,6 +145,38 @@ command.on("unmute", async (io, user, room, username) => {
     } else {
         await utils.unmute(room._id.toString(), username);
         return [2000, `Unmuted user ${username}`];
+    }
+});
+
+command.on("ban", async (io, user, room, username, ...reason) => {
+    if (!username)
+        return [2000, `Syntax: ${prefix}ban <username> [reason="no reason"]`];
+    username = username.replace(/^@/, "");
+
+    let target = await utils.findUserByUsername(username);
+    if (!target) return [2000, `User ${username} doesn't exist`];
+
+    if (!superUsers.includes(user.username)) {
+        return [2000, "You don't have the permission!"];
+    } else {
+        await utils.ban(target._id.toString(), reason.join(" ") || "no reason");
+        return [2000, `Banned user ${username}`];
+    }
+});
+
+command.on("unban", async (io, user, room, username) => {
+    if (!username)
+        return [2000, `Syntax: ${prefix}unban <username> [reason="no reason"]`];
+    username = username.replace(/^@/, "");
+
+    let target = await utils.findUserByUsername(username);
+    if (!target) return [2000, `User ${username} doesn't exist`];
+
+    if (!superUsers.includes(user.username)) {
+        return [2000, "You don't have the permission!"];
+    } else {
+        await utils.unban(target._id.toString());
+        return [2000, `Unbanned user ${username}`];
     }
 });
 
