@@ -46,10 +46,8 @@ class Command {
 }
 
 export function getRole(user, room) {
-    if (superUsers.includes(ctx.user.username)) return "admin";
-    return ctx.room.visibility == "public"
-        ? "member"
-        : ctx.user.rooms[ctx.room._id];
+    if (superUsers.includes(user.username)) return "admin";
+    return room.visibility == "public" ? "member" : user.rooms[room._id];
 }
 
 export const command = new Command();
