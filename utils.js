@@ -24,6 +24,15 @@ export async function sha256(plain) {
     return crypto.createHash("sha256").update(plain).digest("hex");
 }
 
+export async function checkLogin(req, res, next) {
+    let user = await findUserByCookie(req.cookies.id);
+    if (!user) {
+        return res.redirect("/login");
+    }
+
+    next();
+}
+
 /**
  *
  * @param {import("express").Request} req
