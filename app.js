@@ -385,7 +385,10 @@ io.on("connection", socket => {
             typingKill(user.username, roomId, socket);
 
             // Handle system reponse
-            let [del, response] = await command.parse(io, user, room, msg);
+            let [del, response] = await command.parse(
+                { io: io, socket: socket, user: user, room: room },
+                msg
+            );
 
             if (response) {
                 let now = Date.now();
