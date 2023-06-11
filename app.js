@@ -37,17 +37,13 @@ app.get("/about", (req, res) => {
     res.render("about.ejs");
 });
 
-app.get("/chat", utils.checkBan, async (req, res) => {
+app.get("/chat", utils.checkLogin, utils.checkBan, async (req, res) => {
     let user = await utils.findUserByCookie(req.cookies.id);
-    if (user) {
-        console.log(`User @${user.username} logged in`);
-        res.render("main.ejs", {
-            displayName: user.displayName,
-            username: user.username
-        });
-    } else {
-        res.redirect("/login");
-    }
+    console.log(`User @${user.username} logged in`);
+    res.render("main.ejs", {
+        displayName: user.displayName,
+        username: user.username
+    });
 });
 
 app.get("/login", (req, res) => {
@@ -345,6 +341,11 @@ io.on("connection", socket => {
                     utils.MSG_PREFIX + utils.NOT_IN_ROOM
                 )
             );
+        } else if (room.locked && getRole(user, room) == "member") {
+            socket.emit(
+                "msg",
+                utils.generateWarningMessage(utils.MSG_PREFIX + "Topic locked")
+            );
         } else if (muteObject) {
             socket.emit(
                 "msg",
@@ -384,7 +385,10 @@ io.on("connection", socket => {
             typingKill(user.username, roomId, socket);
 
             // Handle system reponse
-            let [del, response] = await command.parse(io, user, room, msg);
+            let [del, response] = await command.parse(
+                { io: io, socket: socket, user: user, room: room },
+                msg
+            );
 
             if (response) {
                 let now = Date.now();

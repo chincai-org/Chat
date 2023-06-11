@@ -1,0 +1,7 @@
+use("db");
+
+ROOM = "";
+
+db.rooms.find({
+    name: ROOM
+});
