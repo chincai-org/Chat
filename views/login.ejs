@@ -10,19 +10,20 @@
     <script src="/js/start.js" defer></script>
 </head>
 <body>
-    <div class="loginbox">
-        <h1>Log In</h1>
-        <form action="/login_validator" method="POST">
-            <p>Username</p>
-            <p class="warning"><%= username %></p>
-            <input type="text" maxlength="15" name="username" placeholder="Enter a username" required>
-            <p>Password</p>
-            <p class="warning"><%= password %></p>
-            <input type="password" maxlength="20" name="password" placeholder="Enter a password" required>
-            <br><br>
-            <input type="submit" id="loginbtn" value="Log in">
-            <p>Don't have an account? <a href="/signup">Register</a></p>
-        </form>
+    <div class="center">
+        <div class="loginbox">
+            <h1>Log In</h1>
+            <form action="/login_validator" method="POST">
+                <h2>Username</h2>
+                <p class="warning"><%= username %></p>
+                <input type="text" maxlength="15" name="username" placeholder="Enter username" required>
+                <h2>Password</h2>
+                <p class="warning"><%= password %></p>
+                <input type="password" maxlength="20" name="password" placeholder="Enter password" required>
+                <input type="submit" id="loginbtn" value="Log in">
+                <h2>Don't have an account? <a href="/signup">Register</a></h2>
+            </form>
+        </div>
     </div>
 </body>
 </html>
