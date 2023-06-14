@@ -98,3 +98,8 @@ socket.on("typing-kill", username => {
     delete usersTyping[username];
     updateTypingUsers();
 });
+
+socket.on("ban", () => {
+    location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+    // TODO actual ban
+});
