@@ -251,6 +251,9 @@ function updateHeight() {
 }
 
 function sendMessage(msg) {
+    if (msg.length > 700) {
+        return
+    }
     textbox.innerText = "";
     updateHeight();
     socket.emit("msg", cookieId, currentRoom, msg, Date.now());
