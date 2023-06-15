@@ -287,7 +287,7 @@ export async function findRoomByName(name) {
     }
 }
 
-export async function findRoomWithUser(username, visibility, limit) {
+export async function findRoomWithUser(username, visibility, limit = 20) {
     try {
         const rooms = client.db("db").collection("rooms");
         return await rooms
@@ -298,9 +298,7 @@ export async function findRoomWithUser(username, visibility, limit) {
                             visibility: "public"
                         },
                         {
-                            members: {
-                                $all: [username]
-                            }
+                            "members.username": username
                         }
                     ],
                     visibility: visibility
@@ -308,7 +306,8 @@ export async function findRoomWithUser(username, visibility, limit) {
                 {
                     projection: {
                         _id: 1,
-                        name: 1
+                        name: 1,
+                        members: 1
                     }
                 }
             )
@@ -334,7 +333,7 @@ export async function findRoomWithUserAndQuery(username, visibility, query) {
                         },
                         {
                             members: {
-                                $all: [username]
+                                username: username
                             }
                         }
                     ],
@@ -347,7 +346,8 @@ export async function findRoomWithUserAndQuery(username, visibility, query) {
                 {
                     projection: {
                         _id: 1,
-                        name: 1
+                        name: 1,
+                        members: 1
                     }
                 }
             )
