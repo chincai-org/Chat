@@ -107,8 +107,8 @@ function clearRoom() {
 }
 
 window.onresize = () => {
-    ilvtopic(null); 
-}
+    ilvtopic(null);
+};
 
 function ilvtopic(d) {
     if (window.innerWidth > 700) {
@@ -149,11 +149,12 @@ function redirectTopic(id) {
         topicStatus(0);
         sizeOfChat("100%");
         lengthOfText("90%");
-        
     }
 }
 
 function createTopic(room) {
+    console.log("bruh");
+    console.table(room);
     let topic = document.createElement("div");
     let contextMenu = createTopicContextMenu(room);
     topic.id = room._id;

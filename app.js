@@ -251,7 +251,7 @@ app.post("/get_message", async (req, res) => {
         socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
     } else if (
         room.visibility == "private" &&
-        !room.members.includes(user.username)
+        !room.members.find(roomMember => roomMember.username == user.username)
     ) {
         socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
     } else {
@@ -333,7 +333,9 @@ io.on("connection", socket => {
             );
         } else if (
             room.visibility == "private" &&
-            !room.members.includes(user.username)
+            !room.members.find(
+                roomMember => roomMember.username == user.username
+            )
         ) {
             socket.emit(
                 "msg",
@@ -429,6 +431,12 @@ io.on("connection", socket => {
             );
         } else {
             let pins = user.pins[visibility];
+
+            for (let i = 0; i < pins.length; i++) {
+                let pin = pins[i];
+                pins[i].members = (await utils.findRoom(pin._id)).members;
+            }
+
             let rooms = await utils.findRoomWithUser(
                 user.username,
                 visibility,
@@ -525,7 +533,9 @@ io.on("connection", socket => {
             );
         } else if (
             room.visibility == "private" &&
-            !room.members.includes(user.username)
+            !room.members.find(
+                roomMember => roomMember.username == user.username
+            )
         ) {
             socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
         } else if (getRole(user, room) == "member") {
@@ -546,7 +556,9 @@ io.on("connection", socket => {
             socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
         } else if (
             room.visibility == "private" &&
-            !room.members.includes(user.username)
+            !room.members.find(
+                roomMember => roomMember.username == user.username
+            )
         ) {
             socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
         } else {
@@ -566,7 +578,9 @@ io.on("connection", socket => {
             socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
         } else if (
             room.visibility == "private" &&
-            !room.members.includes(user.username)
+            !room.members.find(
+                roomMember => roomMember.username == user.username
+            )
         ) {
             socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
         } else {
@@ -588,7 +602,9 @@ io.on("connection", socket => {
             socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
         } else if (
             room.visibility == "private" &&
-            !room.members.includes(user.username)
+            !room.members.find(
+                roomMember => roomMember.username == user.username
+            )
         ) {
             socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
         } else {
@@ -609,7 +625,11 @@ io.on("connection", socket => {
                 "msg",
                 utils.generateWarningMessage("Can't leave public room!")
             );
-        } else if (!room.members.includes(user.username)) {
+        } else if (
+            !room.members.find(
+                roomMember => roomMember.username == user.username
+            )
+        ) {
             socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
         } else {
             await utils.removeUser(cookieId, roomId);
@@ -626,7 +646,9 @@ io.on("connection", socket => {
             socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
         } else if (
             room.visibility == "private" &&
-            !room.members.includes(user.username)
+            !room.members.find(
+                roomMember => roomMember.username == user.username
+            )
         ) {
             socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
         } else {
@@ -657,7 +679,9 @@ io.on("connection", socket => {
             socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
         } else if (
             room.visibility == "private" &&
-            !room.members.includes(user.username)
+            !room.members.find(
+                roomMember => roomMember.username == user.username
+            )
         ) {
             socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
         } else {
@@ -675,7 +699,9 @@ io.on("connection", socket => {
             socket.emit("msg", utils.generateWarningMessage(utils.NO_ROOM));
         } else if (
             room.visibility == "private" &&
-            !room.members.includes(user.username)
+            !room.members.find(
+                roomMember => roomMember.username == user.username
+            )
         ) {
             socket.emit("msg", utils.generateWarningMessage(utils.NOT_IN_ROOM));
         } else {
