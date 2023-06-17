@@ -383,23 +383,38 @@ body {
 
 @keyframes focus-textbox {
     0% {
-        background: linear-gradient(hsla(0, 100%, 100%, 0), hsla(0, 0%, 100%, 0.6));
+        background: linear-gradient(
+            hsla(0, 100%, 100%, 0),
+            hsla(0, 0%, 100%, 0.6)
+        );
     }
 
     25% {
-        background: linear-gradient(hsla(0, 100%, 100%, 0.3), hsla(0, 0%, 100%, 0.9));
+        background: linear-gradient(
+            hsla(0, 100%, 100%, 0.3),
+            hsla(0, 0%, 100%, 0.9)
+        );
     }
 
     50% {
-        background: linear-gradient(hsla(0, 100%, 100%, 0.5), hsla(0, 0%, 100%, 1));
+        background: linear-gradient(
+            hsla(0, 100%, 100%, 0.5),
+            hsla(0, 0%, 100%, 1)
+        );
     }
 
     75% {
-        background: linear-gradient(hsla(0, 100%, 100%, 0.8), hsla(0, 0%, 100%, 1));
+        background: linear-gradient(
+            hsla(0, 100%, 100%, 0.8),
+            hsla(0, 0%, 100%, 1)
+        );
     }
 
     100% {
-        background: linear-gradient(hsla(0, 100%, 100%, 1), hsla(0, 0%, 100%, 1));
+        background: linear-gradient(
+            hsla(0, 100%, 100%, 1),
+            hsla(0, 0%, 100%, 1)
+        );
     }
 }
 
@@ -456,7 +471,7 @@ body {
     right: 0;
     bottom: 0;
     background-color: #ccc;
-    transition: .4s;
+    transition: 0.4s;
 }
 
 .slider:before {
@@ -467,18 +482,18 @@ body {
     left: 0.2vw;
     bottom: 0.2vw;
     background-color: white;
-    transition: .4s;
+    transition: 0.4s;
 }
 
-input:checked+.slider {
-    background-color: #2196F3;
+input:checked + .slider {
+    background-color: #2196f3;
 }
 
-input:focus+.slider {
-    box-shadow: 0 0 0.1vw #2196F3;
+input:focus + .slider {
+    box-shadow: 0 0 0.1vw #2196f3;
 }
 
-input:checked+.slider:before {
+input:checked + .slider:before {
     transform: translateX(2vw);
 }
 
