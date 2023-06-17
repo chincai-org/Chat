@@ -96,7 +96,7 @@ export async function findHashtagTopic(msg) {
 export async function findDevice(ipAddress) {
     try {
         const ip = client.db("db").collection("ip");
-        return await ip.findOne({ ipAddress: ipAddress });
+        return await ip.findOne({ ipAddress: await sha256(ipAddress) });
     } finally {
     }
 }
@@ -106,7 +106,7 @@ async function addDeviceToIp(ipAddress, amount = 1) {
         const ip = client.db("db").collection("ip");
 
         await ip.updateOne(
-            { ipAddress: ipAddress },
+            { ipAddress: await sha256(ipAddress) },
             {
                 $inc: {
                     amount: amount
