@@ -51,7 +51,7 @@ textbox.onkeydown = e => {
             return;
         }
         e.preventDefault();
-        sendMessage(textbox.innerText)
+        sendMessage(textbox.innerText);
     }
 
     if (e.keyCode == 9) {
@@ -252,7 +252,7 @@ function updateHeight() {
 
 function sendMessage(msg) {
     if (msg.length > 700) {
-        return
+        return;
     }
     textbox.innerText = "";
     updateHeight();
@@ -462,13 +462,13 @@ function createMsgContextMenu(id) {
     itemCopyId.onclick = e => {
         wrapper.classList.remove("active");
         navigator.clipboard.writeText(id);
-        e.stopPropagation()
+        e.stopPropagation();
     };
 
     itemTrash.onclick = e => {
-        socket.emit("delete-msg", cookieId, currentRoom, id)
+        socket.emit("delete-msg", cookieId, currentRoom, id);
         wrapper.classList.remove("active");
-        e.stopPropagation()
+        e.stopPropagation();
     };
 
     return wrapper;

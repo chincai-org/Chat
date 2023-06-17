@@ -1,10 +1,14 @@
-&, body {
-    margin: 0;
-    padding: 0;
+&,
+body {
     background: rgb(50, 50, 50) url("/assets/login2.jpg") top/100%;
     font-family: sans-serif;
     font-size: 62.5%;
     height: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
 }
 
 :root {
@@ -26,7 +30,7 @@
     color: aqua;
 
     & a {
-        text-decoration: none;
+        text-decoration: underline;
         line-height: 20px;
         color: wheat;
 
@@ -34,7 +38,7 @@
             color: white;
         }
     }
-    
+
     & h1 {
         display: flex;
         justify-content: center;
@@ -46,10 +50,12 @@
 
     & h2 {
         font-weight: bold;
+        margin-top: 1rem;
     }
 
-    & input{
-        &[type="text"], &[type="password"] {
+    & input {
+        &[type="text"],
+        &[type="password"] {
             height: 40px;
             width: 100%;
             border: none;
@@ -66,6 +72,7 @@
 
         &[type="submit"] {
             margin-top: 1rem;
+            margin-bottom: 1rem;
             width: 100%;
             border: none;
             outline-color: transparent;
