@@ -98,7 +98,10 @@ Rooms:
             "createdAt": 1676542330844
         }
     ],
-    "members": ["Alice", "Bob"],
+    "members": [
+        { "username": "Alice", "role": "admin" },
+        { "username": "Bob", "role": "member" }
+    ],
     "muted": [],
     "msgId": 2
 }
