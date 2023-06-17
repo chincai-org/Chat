@@ -24,13 +24,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.set("view engine", "ejs");
-
+    
 app.get("/", (req, res) => {
     res.redirect("/home");
 });
 
 app.get("/home", (req, res) => {
     res.render("home.ejs");
+});
+
+app.get("/tac", (req, res) => {
+    res.render("tac.ejs");
 });
 
 app.get("/about", (req, res) => {
