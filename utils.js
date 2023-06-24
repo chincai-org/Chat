@@ -120,6 +120,15 @@ async function addDeviceToIp(ipAddress, amount = 1) {
     }
 }
 
+export async function isValidApiKey(apiKey) {
+    try {
+        const apiKeys = client.db("db").collection("apiKeys");
+
+        return await apiKeys.findOne({ apiKey: apiKey });
+    } finally {
+    }
+}
+
 /**
  * @constructor
  * @param {string} displayName - Display name of user, can be duplicated, no rules
