@@ -1,6 +1,6 @@
 use("db");
 
-USERNAME = "";
+USERNAME = "bob";
 
 db.users.findOne({
     username: USERNAME
