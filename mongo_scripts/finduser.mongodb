@@ -2,6 +2,9 @@ use("db");
 
 USERNAME = "bob";
 
-db.users.findOne({
-    username: USERNAME
+db.users.find({
+    username: {
+        $regex: USERNAME,
+        $options: "i"
+    }
 });

@@ -1,0 +1,6 @@
+use("db");
+
+db.apiKeys.insertOne({
+    apiKey: "tYRgxonjaDHfIbGqn9qt7moA-C?ge4pTo6q1k4QpGGxnedwZN=p8O!r9Vkib0Wxs",
+    creator: "XL"
+});
