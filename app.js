@@ -7,7 +7,12 @@ import { command, getRole } from "./command.js";
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
 const port = process.env.PORT || 3000;
 const usersTyping = {};
 
@@ -23,8 +28,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+io.use(async (socket, next) => {
+    const handshake = socket.handshake;
+
+    if (!handshake.xdomain) {
+        return next();
+    }
+
+    const apiKey = handshake.auth.apiKey;
+    // Perform API key validation here
+    // Example: Check if the apiKey is valid and authorized
+
+    if (await utils.isValidApiKey(apiKey)) {
+        next(); // API key is valid, continue to Socket.IO routes
+    } else {
+        next(new Error("Invalid api key"));
+    }
+});
+
 app.set("view engine", "ejs");
-    
+
 app.get("/", (req, res) => {
     res.redirect("/home");
 });
