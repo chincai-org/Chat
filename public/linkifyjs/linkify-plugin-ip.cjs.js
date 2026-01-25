@@ -11,7 +11,7 @@ const IPv4Token = linkifyjs.createTokenClass("ipv4", {
             scheme = linkifyjs.options.defaults.defaultProtocol;
         }
         return `${scheme}://${this.v}`;
-    }
+    },
 });
 
 /**
@@ -22,7 +22,7 @@ function ipv4Tokens(_ref) {
     const { start } = scanner;
     const flags = {
         byte: true,
-        numeric: true
+        numeric: true,
     };
 
     // States for [0, 9]

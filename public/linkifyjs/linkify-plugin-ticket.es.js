@@ -1,7 +1,7 @@
 import { createTokenClass, State, registerPlugin } from "linkifyjs";
 
 const TicketToken = createTokenClass("ticket", {
-    isLink: true
+    isLink: true,
 });
 
 /**

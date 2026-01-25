@@ -18,8 +18,8 @@ function stringToElements(str, opts, meta) {
             const key = `__linkify-el-${meta.elementId++}`;
             elements.push(
                 React.createElement("br", {
-                    key
-                })
+                    key,
+                }),
             );
         } else if (!token.isLink || !opts.check(token)) {
             // Regular text
@@ -31,9 +31,9 @@ function stringToElements(str, opts, meta) {
                 const key = `__linkify-el-${meta.elementId++}`;
                 const props = options.assign(
                     {
-                        key
+                        key,
                     },
-                    rendered.props
+                    rendered.props,
                 );
                 rendered = React.cloneElement(rendered, props);
             }
@@ -82,9 +82,9 @@ function linkifyReactElement(element, opts, meta) {
     const key = `__linkify-el-${meta.elementId++}`;
     const newProps = options.assign(
         {
-            key
+            key,
         },
-        element.props
+        element.props,
     );
     return React.cloneElement(element, newProps, children);
 }
@@ -108,7 +108,7 @@ const Linkify = props => {
         return React.createElement(tagName, attributes, content);
     };
     const newProps = {
-        key: "__linkify-wrapper"
+        key: "__linkify-wrapper",
     };
     for (const prop in props) {
         if (
@@ -125,7 +125,7 @@ const Linkify = props => {
     const children = props.children;
     const element = React.createElement(as, newProps, children);
     return linkifyReactElement(element, opts, {
-        elementId: 0
+        elementId: 0,
     });
 };
 

@@ -14,7 +14,7 @@ var linkifyHtml = (function (linkifyjs) {
         gt: ">",
         lt: "<",
         nbsp: " ",
-        quot: '"'
+        quot: '"',
     };
     var HEXCHARCODE = /^#[xX]([A-Fa-f0-9]+)$/;
     var CHARCODE = /^#([0-9]+)$/;
@@ -101,7 +101,7 @@ var linkifyHtml = (function (linkifyjs) {
                     ) {
                         this.consume();
                         this.delegate.appendToData(
-                            this.consumeCharRef() || "&"
+                            this.consumeCharRef() || "&",
                         );
                     } else {
                         this.consume();
@@ -112,7 +112,7 @@ var linkifyHtml = (function (linkifyjs) {
                     var char = this.consume();
                     if (char === "!") {
                         this.transitionTo(
-                            "markupDeclarationOpen" /* markupDeclarationOpen */
+                            "markupDeclarationOpen" /* markupDeclarationOpen */,
                         );
                     } else if (char === "/") {
                         this.transitionTo("endTagOpen" /* endTagOpen */);
@@ -152,7 +152,7 @@ var linkifyHtml = (function (linkifyjs) {
                     var char = this.consume();
                     if (isSpace(char)) {
                         this.transitionTo(
-                            "beforeDoctypeName" /* beforeDoctypeName */
+                            "beforeDoctypeName" /* beforeDoctypeName */,
                         );
                     }
                 },
@@ -165,7 +165,7 @@ var linkifyHtml = (function (linkifyjs) {
                         this.transitionTo("doctypeName" /* doctypeName */);
                         if (this.delegate.appendToDoctypeName)
                             this.delegate.appendToDoctypeName(
-                                char.toLowerCase()
+                                char.toLowerCase(),
                             );
                     }
                 },
@@ -173,7 +173,7 @@ var linkifyHtml = (function (linkifyjs) {
                     var char = this.consume();
                     if (isSpace(char)) {
                         this.transitionTo(
-                            "afterDoctypeName" /* afterDoctypeName */
+                            "afterDoctypeName" /* afterDoctypeName */,
                         );
                     } else if (char === ">") {
                         if (this.delegate.endDoctype)
@@ -182,7 +182,7 @@ var linkifyHtml = (function (linkifyjs) {
                     } else {
                         if (this.delegate.appendToDoctypeName)
                             this.delegate.appendToDoctypeName(
-                                char.toLowerCase()
+                                char.toLowerCase(),
                             );
                     }
                 },
@@ -212,11 +212,11 @@ var linkifyHtml = (function (linkifyjs) {
                         }
                         if (isPublic) {
                             this.transitionTo(
-                                "afterDoctypePublicKeyword" /* afterDoctypePublicKeyword */
+                                "afterDoctypePublicKeyword" /* afterDoctypePublicKeyword */,
                             );
                         } else if (isSystem) {
                             this.transitionTo(
-                                "afterDoctypeSystemKeyword" /* afterDoctypeSystemKeyword */
+                                "afterDoctypeSystemKeyword" /* afterDoctypeSystemKeyword */,
                             );
                         }
                     }
@@ -226,17 +226,17 @@ var linkifyHtml = (function (linkifyjs) {
                     var char = this.peek();
                     if (isSpace(char)) {
                         this.transitionTo(
-                            "beforeDoctypePublicIdentifier" /* beforeDoctypePublicIdentifier */
+                            "beforeDoctypePublicIdentifier" /* beforeDoctypePublicIdentifier */,
                         );
                         this.consume();
                     } else if (char === '"') {
                         this.transitionTo(
-                            "doctypePublicIdentifierDoubleQuoted" /* doctypePublicIdentifierDoubleQuoted */
+                            "doctypePublicIdentifierDoubleQuoted" /* doctypePublicIdentifierDoubleQuoted */,
                         );
                         this.consume();
                     } else if (char === "'") {
                         this.transitionTo(
-                            "doctypePublicIdentifierSingleQuoted" /* doctypePublicIdentifierSingleQuoted */
+                            "doctypePublicIdentifierSingleQuoted" /* doctypePublicIdentifierSingleQuoted */,
                         );
                         this.consume();
                     } else if (char === ">") {
@@ -251,7 +251,7 @@ var linkifyHtml = (function (linkifyjs) {
                     var char = this.consume();
                     if (char === '"') {
                         this.transitionTo(
-                            "afterDoctypePublicIdentifier" /* afterDoctypePublicIdentifier */
+                            "afterDoctypePublicIdentifier" /* afterDoctypePublicIdentifier */,
                         );
                     } else if (char === ">") {
                         if (this.delegate.endDoctype)
@@ -266,7 +266,7 @@ var linkifyHtml = (function (linkifyjs) {
                     var char = this.consume();
                     if (char === "'") {
                         this.transitionTo(
-                            "afterDoctypePublicIdentifier" /* afterDoctypePublicIdentifier */
+                            "afterDoctypePublicIdentifier" /* afterDoctypePublicIdentifier */,
                         );
                     } else if (char === ">") {
                         if (this.delegate.endDoctype)
@@ -281,7 +281,7 @@ var linkifyHtml = (function (linkifyjs) {
                     var char = this.consume();
                     if (isSpace(char)) {
                         this.transitionTo(
-                            "betweenDoctypePublicAndSystemIdentifiers" /* betweenDoctypePublicAndSystemIdentifiers */
+                            "betweenDoctypePublicAndSystemIdentifiers" /* betweenDoctypePublicAndSystemIdentifiers */,
                         );
                     } else if (char === ">") {
                         if (this.delegate.endDoctype)
@@ -289,11 +289,11 @@ var linkifyHtml = (function (linkifyjs) {
                         this.transitionTo("beforeData" /* beforeData */);
                     } else if (char === '"') {
                         this.transitionTo(
-                            "doctypeSystemIdentifierDoubleQuoted" /* doctypeSystemIdentifierDoubleQuoted */
+                            "doctypeSystemIdentifierDoubleQuoted" /* doctypeSystemIdentifierDoubleQuoted */,
                         );
                     } else if (char === "'") {
                         this.transitionTo(
-                            "doctypeSystemIdentifierSingleQuoted" /* doctypeSystemIdentifierSingleQuoted */
+                            "doctypeSystemIdentifierSingleQuoted" /* doctypeSystemIdentifierSingleQuoted */,
                         );
                     }
                 },
@@ -308,11 +308,11 @@ var linkifyHtml = (function (linkifyjs) {
                         this.transitionTo("beforeData" /* beforeData */);
                     } else if (char === '"') {
                         this.transitionTo(
-                            "doctypeSystemIdentifierDoubleQuoted" /* doctypeSystemIdentifierDoubleQuoted */
+                            "doctypeSystemIdentifierDoubleQuoted" /* doctypeSystemIdentifierDoubleQuoted */,
                         );
                     } else if (char === "'") {
                         this.transitionTo(
-                            "doctypeSystemIdentifierSingleQuoted" /* doctypeSystemIdentifierSingleQuoted */
+                            "doctypeSystemIdentifierSingleQuoted" /* doctypeSystemIdentifierSingleQuoted */,
                         );
                     }
                 },
@@ -321,7 +321,7 @@ var linkifyHtml = (function (linkifyjs) {
                     var char = this.consume();
                     if (char === '"') {
                         this.transitionTo(
-                            "afterDoctypeSystemIdentifier" /* afterDoctypeSystemIdentifier */
+                            "afterDoctypeSystemIdentifier" /* afterDoctypeSystemIdentifier */,
                         );
                     } else if (char === ">") {
                         if (this.delegate.endDoctype)
@@ -336,7 +336,7 @@ var linkifyHtml = (function (linkifyjs) {
                     var char = this.consume();
                     if (char === "'") {
                         this.transitionTo(
-                            "afterDoctypeSystemIdentifier" /* afterDoctypeSystemIdentifier */
+                            "afterDoctypeSystemIdentifier" /* afterDoctypeSystemIdentifier */,
                         );
                     } else if (char === ">") {
                         if (this.delegate.endDoctype)
@@ -362,7 +362,7 @@ var linkifyHtml = (function (linkifyjs) {
                     var char = this.consume();
                     if (char === "-") {
                         this.transitionTo(
-                            "commentStartDash" /* commentStartDash */
+                            "commentStartDash" /* commentStartDash */,
                         );
                     } else if (char === ">") {
                         this.delegate.finishComment();
@@ -390,7 +390,7 @@ var linkifyHtml = (function (linkifyjs) {
                     var char = this.consume();
                     if (char === "-") {
                         this.transitionTo(
-                            "commentEndDash" /* commentEndDash */
+                            "commentEndDash" /* commentEndDash */,
                         );
                     } else {
                         this.delegate.appendToCommentData(char);
@@ -421,11 +421,11 @@ var linkifyHtml = (function (linkifyjs) {
                     var char = this.consume();
                     if (isSpace(char)) {
                         this.transitionTo(
-                            "beforeAttributeName" /* beforeAttributeName */
+                            "beforeAttributeName" /* beforeAttributeName */,
                         );
                     } else if (char === "/") {
                         this.transitionTo(
-                            "selfClosingStartTag" /* selfClosingStartTag */
+                            "selfClosingStartTag" /* selfClosingStartTag */,
                         );
                     } else if (char === ">") {
                         this.delegate.finishTag();
@@ -438,12 +438,12 @@ var linkifyHtml = (function (linkifyjs) {
                     var char = this.consume();
                     if (isSpace(char)) {
                         this.transitionTo(
-                            "beforeAttributeName" /* beforeAttributeName */
+                            "beforeAttributeName" /* beforeAttributeName */,
                         );
                         this.tagNameBuffer = "";
                     } else if (char === "/") {
                         this.transitionTo(
-                            "selfClosingStartTag" /* selfClosingStartTag */
+                            "selfClosingStartTag" /* selfClosingStartTag */,
                         );
                         this.tagNameBuffer = "";
                     } else if (char === ">") {
@@ -461,7 +461,7 @@ var linkifyHtml = (function (linkifyjs) {
                         return;
                     } else if (char === "/") {
                         this.transitionTo(
-                            "selfClosingStartTag" /* selfClosingStartTag */
+                            "selfClosingStartTag" /* selfClosingStartTag */,
                         );
                         this.consume();
                     } else if (char === ">") {
@@ -470,7 +470,7 @@ var linkifyHtml = (function (linkifyjs) {
                         this.transitionTo("beforeData" /* beforeData */);
                     } else if (char === "=") {
                         this.delegate.reportSyntaxError(
-                            "attribute name cannot start with equals sign"
+                            "attribute name cannot start with equals sign",
                         );
                         this.transitionTo("attributeName" /* attributeName */);
                         this.delegate.beginAttribute();
@@ -485,7 +485,7 @@ var linkifyHtml = (function (linkifyjs) {
                     var char = this.peek();
                     if (isSpace(char)) {
                         this.transitionTo(
-                            "afterAttributeName" /* afterAttributeName */
+                            "afterAttributeName" /* afterAttributeName */,
                         );
                         this.consume();
                     } else if (char === "/") {
@@ -493,11 +493,11 @@ var linkifyHtml = (function (linkifyjs) {
                         this.delegate.finishAttributeValue();
                         this.consume();
                         this.transitionTo(
-                            "selfClosingStartTag" /* selfClosingStartTag */
+                            "selfClosingStartTag" /* selfClosingStartTag */,
                         );
                     } else if (char === "=") {
                         this.transitionTo(
-                            "beforeAttributeValue" /* beforeAttributeValue */
+                            "beforeAttributeValue" /* beforeAttributeValue */,
                         );
                         this.consume();
                     } else if (char === ">") {
@@ -509,7 +509,7 @@ var linkifyHtml = (function (linkifyjs) {
                     } else if (char === '"' || char === "'" || char === "<") {
                         this.delegate.reportSyntaxError(
                             char +
-                                " is not a valid character within attribute names"
+                                " is not a valid character within attribute names",
                         );
                         this.consume();
                         this.delegate.appendToAttributeName(char);
@@ -528,12 +528,12 @@ var linkifyHtml = (function (linkifyjs) {
                         this.delegate.finishAttributeValue();
                         this.consume();
                         this.transitionTo(
-                            "selfClosingStartTag" /* selfClosingStartTag */
+                            "selfClosingStartTag" /* selfClosingStartTag */,
                         );
                     } else if (char === "=") {
                         this.consume();
                         this.transitionTo(
-                            "beforeAttributeValue" /* beforeAttributeValue */
+                            "beforeAttributeValue" /* beforeAttributeValue */,
                         );
                     } else if (char === ">") {
                         this.delegate.beginAttributeValue(false);
@@ -556,13 +556,13 @@ var linkifyHtml = (function (linkifyjs) {
                         this.consume();
                     } else if (char === '"') {
                         this.transitionTo(
-                            "attributeValueDoubleQuoted" /* attributeValueDoubleQuoted */
+                            "attributeValueDoubleQuoted" /* attributeValueDoubleQuoted */,
                         );
                         this.delegate.beginAttributeValue(true);
                         this.consume();
                     } else if (char === "'") {
                         this.transitionTo(
-                            "attributeValueSingleQuoted" /* attributeValueSingleQuoted */
+                            "attributeValueSingleQuoted" /* attributeValueSingleQuoted */,
                         );
                         this.delegate.beginAttributeValue(true);
                         this.consume();
@@ -574,7 +574,7 @@ var linkifyHtml = (function (linkifyjs) {
                         this.transitionTo("beforeData" /* beforeData */);
                     } else {
                         this.transitionTo(
-                            "attributeValueUnquoted" /* attributeValueUnquoted */
+                            "attributeValueUnquoted" /* attributeValueUnquoted */,
                         );
                         this.delegate.beginAttributeValue(false);
                         this.consume();
@@ -586,11 +586,11 @@ var linkifyHtml = (function (linkifyjs) {
                     if (char === '"') {
                         this.delegate.finishAttributeValue();
                         this.transitionTo(
-                            "afterAttributeValueQuoted" /* afterAttributeValueQuoted */
+                            "afterAttributeValueQuoted" /* afterAttributeValueQuoted */,
                         );
                     } else if (char === "&") {
                         this.delegate.appendToAttributeValue(
-                            this.consumeCharRef() || "&"
+                            this.consumeCharRef() || "&",
                         );
                     } else {
                         this.delegate.appendToAttributeValue(char);
@@ -601,11 +601,11 @@ var linkifyHtml = (function (linkifyjs) {
                     if (char === "'") {
                         this.delegate.finishAttributeValue();
                         this.transitionTo(
-                            "afterAttributeValueQuoted" /* afterAttributeValueQuoted */
+                            "afterAttributeValueQuoted" /* afterAttributeValueQuoted */,
                         );
                     } else if (char === "&") {
                         this.delegate.appendToAttributeValue(
-                            this.consumeCharRef() || "&"
+                            this.consumeCharRef() || "&",
                         );
                     } else {
                         this.delegate.appendToAttributeValue(char);
@@ -617,18 +617,18 @@ var linkifyHtml = (function (linkifyjs) {
                         this.delegate.finishAttributeValue();
                         this.consume();
                         this.transitionTo(
-                            "beforeAttributeName" /* beforeAttributeName */
+                            "beforeAttributeName" /* beforeAttributeName */,
                         );
                     } else if (char === "/") {
                         this.delegate.finishAttributeValue();
                         this.consume();
                         this.transitionTo(
-                            "selfClosingStartTag" /* selfClosingStartTag */
+                            "selfClosingStartTag" /* selfClosingStartTag */,
                         );
                     } else if (char === "&") {
                         this.consume();
                         this.delegate.appendToAttributeValue(
-                            this.consumeCharRef() || "&"
+                            this.consumeCharRef() || "&",
                         );
                     } else if (char === ">") {
                         this.delegate.finishAttributeValue();
@@ -645,12 +645,12 @@ var linkifyHtml = (function (linkifyjs) {
                     if (isSpace(char)) {
                         this.consume();
                         this.transitionTo(
-                            "beforeAttributeName" /* beforeAttributeName */
+                            "beforeAttributeName" /* beforeAttributeName */,
                         );
                     } else if (char === "/") {
                         this.consume();
                         this.transitionTo(
-                            "selfClosingStartTag" /* selfClosingStartTag */
+                            "selfClosingStartTag" /* selfClosingStartTag */,
                         );
                     } else if (char === ">") {
                         this.consume();
@@ -658,7 +658,7 @@ var linkifyHtml = (function (linkifyjs) {
                         this.transitionTo("beforeData" /* beforeData */);
                     } else {
                         this.transitionTo(
-                            "beforeAttributeName" /* beforeAttributeName */
+                            "beforeAttributeName" /* beforeAttributeName */,
                         );
                     }
                 },
@@ -672,7 +672,7 @@ var linkifyHtml = (function (linkifyjs) {
                         this.transitionTo("beforeData" /* beforeData */);
                     } else {
                         this.transitionTo(
-                            "beforeAttributeName" /* beforeAttributeName */
+                            "beforeAttributeName" /* beforeAttributeName */,
                         );
                     }
                 },
@@ -685,7 +685,7 @@ var linkifyHtml = (function (linkifyjs) {
                         this.delegate.beginEndTag();
                         this.appendToTagName(char);
                     }
-                }
+                },
             };
             this.reset();
         }
@@ -796,7 +796,7 @@ var linkifyHtml = (function (linkifyjs) {
             this.tokenizer = new EventedTokenizer(
                 this,
                 entityParser,
-                options.mode
+                options.mode,
             );
             this._currentAttribute = undefined;
         }
@@ -847,12 +847,12 @@ var linkifyHtml = (function (linkifyjs) {
                 this.current().loc = {
                     start: {
                         line: this.startLine,
-                        column: this.startColumn
+                        column: this.startColumn,
                     },
                     end: {
                         line: this.tokenizer.line,
-                        column: this.tokenizer.column
-                    }
+                        column: this.tokenizer.column,
+                    },
                 };
             }
             this.startLine = this.tokenizer.line;
@@ -862,7 +862,7 @@ var linkifyHtml = (function (linkifyjs) {
         Tokenizer.prototype.beginDoctype = function () {
             this.push({
                 type: "Doctype" /* Doctype */,
-                name: ""
+                name: "",
             });
         };
         Tokenizer.prototype.appendToDoctypeName = function (char) {
@@ -890,7 +890,7 @@ var linkifyHtml = (function (linkifyjs) {
         Tokenizer.prototype.beginData = function () {
             this.push({
                 type: "Chars" /* Chars */,
-                chars: ""
+                chars: "",
             });
         };
         Tokenizer.prototype.appendToData = function (char) {
@@ -903,7 +903,7 @@ var linkifyHtml = (function (linkifyjs) {
         Tokenizer.prototype.beginComment = function () {
             this.push({
                 type: "Comment" /* Comment */,
-                chars: ""
+                chars: "",
             });
         };
         Tokenizer.prototype.appendToCommentData = function (char) {
@@ -919,13 +919,13 @@ var linkifyHtml = (function (linkifyjs) {
                 type: "StartTag" /* StartTag */,
                 tagName: "",
                 attributes: [],
-                selfClosing: false
+                selfClosing: false,
             });
         };
         Tokenizer.prototype.beginEndTag = function () {
             this.push({
                 type: "EndTag" /* EndTag */,
-                tagName: ""
+                tagName: "",
             });
         };
         Tokenizer.prototype.finishTag = function () {
@@ -938,7 +938,7 @@ var linkifyHtml = (function (linkifyjs) {
         Tokenizer.prototype.appendToTagName = function (char) {
             this.current(
                 "StartTag" /* StartTag */,
-                "EndTag" /* EndTag */
+                "EndTag" /* EndTag */,
             ).tagName += char;
         };
         // Tags - attributes
@@ -956,7 +956,7 @@ var linkifyHtml = (function (linkifyjs) {
         };
         Tokenizer.prototype.finishAttributeValue = function () {
             this.current("StartTag" /* StartTag */).attributes.push(
-                this._currentAttribute
+                this._currentAttribute,
             );
         };
         Tokenizer.prototype.reportSyntaxError = function (message) {
@@ -967,7 +967,7 @@ var linkifyHtml = (function (linkifyjs) {
     function tokenize(input, options) {
         var tokenizer = new Tokenizer(
             new EntityParser(HTML5NamedCharRefs),
-            options
+            options,
         );
         return tokenizer.tokenize(input);
     }
@@ -1084,17 +1084,17 @@ var linkifyHtml = (function (linkifyjs) {
                     type: StartTag,
                     tagName: "br",
                     attributes: [],
-                    selfClosing: true
+                    selfClosing: true,
                 });
             } else if (!token.isLink || !options.check(token)) {
                 result.push({
                     type: Chars,
-                    chars: token.toString()
+                    chars: token.toString(),
                 });
             } else {
                 result.push({
                     type: LinkifyResult,
-                    rendered: options.render(token)
+                    rendered: options.render(token),
                 });
             }
         }
@@ -1143,7 +1143,7 @@ var linkifyHtml = (function (linkifyjs) {
     function defaultRender(_ref) {
         let { tagName, attributes, content } = _ref;
         return `<${tagName} ${attributesToString(attributes)}>${escapeText(
-            content
+            content,
         )}</${tagName}>`;
     }
     function escapeText(text) {

@@ -4,7 +4,7 @@ import {
     State,
     multi,
     registerTokenPlugin,
-    registerPlugin
+    registerPlugin,
 } from "linkifyjs";
 
 const B_IPV6_B = "B_IPV6_B"; // 'bracket [', IPV6, '] bracket'
@@ -16,7 +16,7 @@ const IPv4Token = createTokenClass("ipv4", {
             scheme = options.defaults.defaultProtocol;
         }
         return `${scheme}://${this.v}`;
-    }
+    },
 });
 
 /**
@@ -27,7 +27,7 @@ function ipv4Tokens(_ref) {
     const { start } = scanner;
     const flags = {
         byte: true,
-        numeric: true
+        numeric: true,
     };
 
     // States for [0, 9]

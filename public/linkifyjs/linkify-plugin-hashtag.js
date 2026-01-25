@@ -3,7 +3,7 @@
 
     // Create a new token that class that the parser emits when it finds a hashtag
     const HashtagToken = linkifyjs.createTokenClass("hashtag", {
-        isLink: true
+        isLink: true,
     });
 
     /**

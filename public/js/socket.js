@@ -10,7 +10,7 @@ socket.on("msg", async message => {
         content,
         time,
         pings = [],
-        topicIds = []
+        topicIds = [],
     } = message;
 
     if (currentRoom === roomId || roomId == "$") {
@@ -23,7 +23,7 @@ socket.on("msg", async message => {
             time,
             pings,
             topicIds,
-            false
+            false,
         );
 
         if (!isAtBottomMost) {

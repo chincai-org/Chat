@@ -20,12 +20,12 @@ $.ajax({
     url: "/get_user_by_cookie_id",
     type: "POST",
     data: {
-        id: cookieId
+        id: cookieId,
     },
     success: response => {
         // document.getElementById("username").innerText = response.displayName;
     },
     error: (xhr, status, error) => {
         console.log("Error: " + error);
-    }
+    },
 });

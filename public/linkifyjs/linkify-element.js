@@ -50,7 +50,7 @@ var linkifyElement = (function (linkifyjs) {
         // Can the element be linkified?
         if (!element || element.nodeType !== HTML_NODE) {
             throw new Error(
-                `Cannot linkify ${element} - Invalid DOM Node type`
+                `Cannot linkify ${element} - Invalid DOM Node type`,
             );
         }
 
@@ -143,7 +143,7 @@ var linkifyElement = (function (linkifyjs) {
             throw new Error(
                 "Cannot find document implementation. " +
                     "If you are in a non-browser environment like Node.js, " +
-                    "pass the document implementation as the third argument to linkifyElement."
+                    "pass the document implementation as the third argument to linkifyElement.",
             );
         }
         const options = new linkifyjs.Options(opts, getDefaultRender(doc));

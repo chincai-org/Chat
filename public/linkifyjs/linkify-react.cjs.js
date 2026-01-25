@@ -19,8 +19,8 @@ function _interopNamespace(e) {
                               enumerable: true,
                               get: function () {
                                   return e[k];
-                              }
-                          }
+                              },
+                          },
                 );
             }
         });
@@ -48,8 +48,8 @@ function stringToElements(str, opts, meta) {
             const key = `__linkify-el-${meta.elementId++}`;
             elements.push(
                 React__namespace.createElement("br", {
-                    key
-                })
+                    key,
+                }),
             );
         } else if (!token.isLink || !opts.check(token)) {
             // Regular text
@@ -61,9 +61,9 @@ function stringToElements(str, opts, meta) {
                 const key = `__linkify-el-${meta.elementId++}`;
                 const props = linkifyjs.options.assign(
                     {
-                        key
+                        key,
                     },
-                    rendered.props
+                    rendered.props,
                 );
                 rendered = React__namespace.cloneElement(rendered, props);
             }
@@ -112,9 +112,9 @@ function linkifyReactElement(element, opts, meta) {
     const key = `__linkify-el-${meta.elementId++}`;
     const newProps = linkifyjs.options.assign(
         {
-            key
+            key,
         },
-        element.props
+        element.props,
     );
     return React__namespace.cloneElement(element, newProps, children);
 }
@@ -138,7 +138,7 @@ const Linkify = props => {
         return React__namespace.createElement(tagName, attributes, content);
     };
     const newProps = {
-        key: "__linkify-wrapper"
+        key: "__linkify-wrapper",
     };
     for (const prop in props) {
         if (
@@ -155,7 +155,7 @@ const Linkify = props => {
     const children = props.children;
     const element = React__namespace.createElement(as, newProps, children);
     return linkifyReactElement(element, opts, {
-        elementId: 0
+        elementId: 0,
     });
 };
 

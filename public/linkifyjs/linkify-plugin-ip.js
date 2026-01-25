@@ -10,7 +10,7 @@
                 scheme = linkifyjs.options.defaults.defaultProtocol;
             }
             return `${scheme}://${this.v}`;
-        }
+        },
     });
 
     /**
@@ -21,7 +21,7 @@
         const { start } = scanner;
         const flags = {
             byte: true,
-            numeric: true
+            numeric: true,
         };
 
         // States for [0, 9]

@@ -56,7 +56,7 @@ export function generateWarningMessage(msg) {
         avatar: "/assets/system.png",
         roomId: "$",
         content: msg,
-        time: Date.now()
+        time: Date.now(),
     };
 }
 
@@ -79,7 +79,7 @@ export async function findHashtagTopic(msg) {
         for (let topicId of new Set(msg.match(/(?<=#)[a-z\d]+/g) || [])) {
             console.log(
                 "🚀 ~ file: utils.js:49 ~ findHashtagTopic ~ topicId:",
-                topicId
+                topicId,
             );
 
             let topic = await findRoom(topicId);
@@ -109,12 +109,12 @@ async function addDeviceToIp(ipAddress, amount = 1) {
             { ipAddress: await sha256(ipAddress) },
             {
                 $inc: {
-                    amount: amount
-                }
+                    amount: amount,
+                },
             },
             {
-                upsert: true
-            }
+                upsert: true,
+            },
         );
     } finally {
     }
@@ -144,7 +144,7 @@ export async function createUser(
     password,
     birthday,
     cookieId,
-    ipAddress
+    ipAddress,
 ) {
     try {
         const users = client.db("db").collection("users");
@@ -164,8 +164,8 @@ export async function createUser(
             rooms: {},
             pins: {
                 public: [],
-                private: []
-            }
+                private: [],
+            },
         });
     } finally {
     }
@@ -191,18 +191,18 @@ export async function createRoom(name, visibility, creater, nsfw) {
             nsfw: nsfw,
             weeklyMessageAmount: 0,
             lastWeekMessageAmount: 0,
-            muted: []
+            muted: [],
         });
 
         await users.updateOne(
             {
-                username: creater
+                username: creater,
             },
             {
                 $inc: {
-                    topicCreated: 1
-                }
-            }
+                    topicCreated: 1,
+                },
+            },
         );
 
         if (visibility == "private") {
@@ -240,8 +240,8 @@ export async function findUserByUsernameQuery(roomId, username) {
         let query = {
             username: {
                 $regex: new RegExp("^" + username),
-                $options: "i"
-            }
+                $options: "i",
+            },
         };
 
         if (room.visibility == "private") {
@@ -250,7 +250,7 @@ export async function findUserByUsernameQuery(roomId, username) {
 
         console.log(
             "🚀 ~ file: utils.js:135 ~ findUserByUsernameQuery ~ query:",
-            query
+            query,
         );
 
         return await users.findOne(query);
@@ -290,7 +290,7 @@ export async function findRoomByName(name) {
 
         return await rooms.findOne({
             name: name,
-            visibility: "public"
+            visibility: "public",
         });
     } finally {
     }
@@ -304,25 +304,25 @@ export async function findRoomWithUser(username, visibility, limit = 20) {
                 {
                     $or: [
                         {
-                            visibility: "public"
+                            visibility: "public",
                         },
                         {
-                            "members.username": username
-                        }
+                            "members.username": username,
+                        },
                     ],
-                    visibility: visibility
+                    visibility: visibility,
                 },
                 {
                     projection: {
                         _id: 1,
                         name: 1,
-                        members: 1
-                    }
-                }
+                        members: 1,
+                    },
+                },
             )
             .sort({
                 lastWeekMessageAmount: -1,
-                weeklyMessageAmount: -1
+                weeklyMessageAmount: -1,
             })
             .limit(limit)
             .toArray();
@@ -338,27 +338,27 @@ export async function findRoomWithUserAndQuery(username, visibility, query) {
                 {
                     $or: [
                         {
-                            visibility: "public"
+                            visibility: "public",
                         },
                         {
                             members: {
-                                username: username
-                            }
-                        }
+                                username: username,
+                            },
+                        },
                     ],
                     name: {
                         $regex: query,
-                        $options: "i"
+                        $options: "i",
                     },
-                    visibility: visibility
+                    visibility: visibility,
                 },
                 {
                     projection: {
                         _id: 1,
                         name: 1,
-                        members: 1
-                    }
-                }
+                        members: 1,
+                    },
+                },
             )
             .toArray();
     } finally {
@@ -379,13 +379,13 @@ export async function addUser(userId, roomId) {
 
         await rooms.updateOne(
             {
-                _id: new ObjectId(roomId)
+                _id: new ObjectId(roomId),
             },
             {
                 $push: {
-                    members: user.username
-                }
-            }
+                    members: user.username,
+                },
+            },
         );
 
         await assignRole(user.username, roomId, "member");
@@ -405,31 +405,31 @@ export async function removeUser(userId, roomId) {
 
         await rooms.updateOne(
             {
-                _id: new ObjectId(roomId)
+                _id: new ObjectId(roomId),
             },
             {
                 $pull: {
                     members: {
-                        $eq: user.username
-                    }
-                }
-            }
+                        $eq: user.username,
+                    },
+                },
+            },
         );
 
         await users.updateOne(
             {
-                _id: new ObjectId(userId)
+                _id: new ObjectId(userId),
             },
             {
                 $pull: {
                     ["pins." + room.visibility]: {
-                        _id: roomId
-                    }
+                        _id: roomId,
+                    },
                 },
                 $unset: {
-                    ["rooms." + roomId]: ""
-                }
-            }
+                    ["rooms." + roomId]: "",
+                },
+            },
         );
     } catch (e) {
         return null;
@@ -443,7 +443,7 @@ export async function insertMessage(
     content,
     time,
     isHuman,
-    id = ""
+    id = "",
 ) {
     try {
         const rooms = client.db("db").collection("rooms");
@@ -454,7 +454,7 @@ export async function insertMessage(
 
         await rooms.updateOne(
             {
-                _id: new ObjectId(roomId)
+                _id: new ObjectId(roomId),
             },
             {
                 $push: {
@@ -462,25 +462,25 @@ export async function insertMessage(
                         id: id,
                         author: username,
                         content: content,
-                        createdAt: time
-                    }
+                        createdAt: time,
+                    },
                 },
                 $inc: {
                     msgId: 1,
-                    weeklyMessageAmount: isHuman
-                }
-            }
+                    weeklyMessageAmount: isHuman,
+                },
+            },
         );
 
         await users.updateOne(
             {
-                username: username
+                username: username,
             },
             {
                 $set: {
-                    lastMessageTimestamp: time
-                }
-            }
+                    lastMessageTimestamp: time,
+                },
+            },
         );
 
         return id;
@@ -496,15 +496,15 @@ export async function deleteMessage(roomId, msgId) {
 
         let result = await rooms.updateOne(
             {
-                _id: new ObjectId(roomId)
+                _id: new ObjectId(roomId),
             },
             {
                 $pull: {
                     messages: {
-                        id: msgId
-                    }
-                }
-            }
+                        id: msgId,
+                    },
+                },
+            },
         );
 
         return result;
@@ -521,13 +521,13 @@ export async function deleteLastMessages(roomId, amount) {
 
         await rooms.updateOne(
             {
-                _id: new ObjectId(roomId)
+                _id: new ObjectId(roomId),
             },
             {
                 $set: {
-                    messages: messages.slice(0, messages.length - amount)
-                }
-            }
+                    messages: messages.slice(0, messages.length - amount),
+                },
+            },
         );
 
         return messages.slice(messages.length - amount, messages.length);
@@ -541,13 +541,13 @@ export async function assignRole(username, roomId, role) {
 
         await users.updateOne(
             {
-                username: username
+                username: username,
             },
             {
                 $set: {
-                    ["rooms." + roomId]: role
-                }
-            }
+                    ["rooms." + roomId]: role,
+                },
+            },
         );
     } finally {
     }
@@ -561,16 +561,16 @@ export async function pinRoom(userId, roomId) {
 
         await users.updateOne(
             {
-                _id: new ObjectId(userId)
+                _id: new ObjectId(userId),
             },
             {
                 $push: {
                     ["pins." + room.visibility]: {
                         _id: roomId,
-                        name: room.name
-                    }
-                }
-            }
+                        name: room.name,
+                    },
+                },
+            },
         );
     } catch (e) {
         return null;
@@ -586,15 +586,15 @@ export async function unpinRoom(userId, roomId) {
 
         await users.updateOne(
             {
-                _id: new ObjectId(userId)
+                _id: new ObjectId(userId),
             },
             {
                 $pull: {
                     ["pins." + room.visibility]: {
-                        _id: roomId
-                    }
-                }
-            }
+                        _id: roomId,
+                    },
+                },
+            },
         );
     } catch (e) {
         return null;
@@ -608,13 +608,13 @@ export async function changeRoomName(roomId, newName) {
 
         await rooms.updateOne(
             {
-                _id: new ObjectId(roomId)
+                _id: new ObjectId(roomId),
             },
             {
                 $set: {
-                    name: newName
-                }
-            }
+                    name: newName,
+                },
+            },
         );
     } finally {
     }
@@ -626,16 +626,16 @@ export async function mute(roomId, username, reason = "") {
 
         await rooms.updateOne(
             {
-                _id: new ObjectId(roomId)
+                _id: new ObjectId(roomId),
             },
             {
                 $push: {
                     muted: {
                         username: username,
-                        reason: reason
-                    }
-                }
-            }
+                        reason: reason,
+                    },
+                },
+            },
         );
     } finally {
     }
@@ -647,15 +647,15 @@ export async function unmute(roomId, username) {
 
         await rooms.updateOne(
             {
-                _id: new ObjectId(roomId)
+                _id: new ObjectId(roomId),
             },
             {
                 $pull: {
                     muted: {
-                        username: username
-                    }
-                }
-            }
+                        username: username,
+                    },
+                },
+            },
         );
     } finally {
     }
@@ -667,13 +667,13 @@ export async function ban(userId, reason) {
 
         await users.updateOne(
             {
-                _id: new ObjectId(userId)
+                _id: new ObjectId(userId),
             },
             {
                 $set: {
-                    banned: reason
-                }
-            }
+                    banned: reason,
+                },
+            },
         );
     } finally {
     }
@@ -685,13 +685,13 @@ export async function unban(userId) {
 
         await users.updateOne(
             {
-                _id: new ObjectId(userId)
+                _id: new ObjectId(userId),
             },
             {
                 $set: {
-                    banned: false
-                }
-            }
+                    banned: false,
+                },
+            },
         );
     } finally {
     }
@@ -703,13 +703,13 @@ export async function lock(roomId) {
 
         await rooms.updateOne(
             {
-                _id: new ObjectId(roomId)
+                _id: new ObjectId(roomId),
             },
             {
                 $set: {
-                    locked: true
-                }
-            }
+                    locked: true,
+                },
+            },
         );
     } finally {
     }
@@ -721,13 +721,13 @@ export async function unlock(roomId) {
 
         await rooms.updateOne(
             {
-                _id: new ObjectId(roomId)
+                _id: new ObjectId(roomId),
             },
             {
                 $set: {
-                    locked: false
-                }
-            }
+                    locked: false,
+                },
+            },
         );
     } finally {
     }
@@ -739,13 +739,13 @@ export async function defineWord(roomId, word, definition) {
 
         await rooms.updateOne(
             {
-                _id: new ObjectId(roomId)
+                _id: new ObjectId(roomId),
             },
             {
                 $set: {
-                    ["dictionary." + word]: definition
-                }
-            }
+                    ["dictionary." + word]: definition,
+                },
+            },
         );
     } finally {
     }
@@ -757,13 +757,13 @@ export async function undefineWord(roomId, word) {
 
         await rooms.updateOne(
             {
-                _id: new ObjectId(roomId)
+                _id: new ObjectId(roomId),
             },
             {
                 $unset: {
-                    ["dictionary." + word]: 1
-                }
-            }
+                    ["dictionary." + word]: 1,
+                },
+            },
         );
     } finally {
     }
@@ -774,7 +774,7 @@ export async function getWordDefinition(roomId, word) {
         const rooms = client.db("db").collection("rooms");
 
         let room = await rooms.findOne({
-            _id: new ObjectId(roomId)
+            _id: new ObjectId(roomId),
         });
 
         return room.dictionary[word];

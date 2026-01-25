@@ -25,7 +25,7 @@ function attributesToString(attributes) {
 function defaultRender(_ref) {
     let { tagName, attributes, content } = _ref;
     return `<${tagName} ${attributesToString(attributes)}>${escapeText(
-        content
+        content,
     )}</${tagName}>`;
 }
 
@@ -62,7 +62,7 @@ if (!String.prototype.linkify) {
         writable: false,
         value: function linkify(options) {
             return linkifyStr(this, options);
-        }
+        },
     });
 }
 

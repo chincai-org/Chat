@@ -5,7 +5,7 @@ var linkifyRegisterKeywords = (function (linkifyjs) {
      * Tokenize will emit token classes of this type
      */
     const Keyword = linkifyjs.createTokenClass("keyword", {
-        isLink: true
+        isLink: true,
     });
 
     /**
@@ -23,7 +23,7 @@ var linkifyRegisterKeywords = (function (linkifyjs) {
         alpha: [],
         alphanumeric: [],
         domain: [],
-        keyword: []
+        keyword: [],
     };
 
     // Additional pre-processing regular expressions
@@ -58,7 +58,7 @@ var linkifyRegisterKeywords = (function (linkifyjs) {
             const keyword = keywords[i];
             if (typeof keyword !== "string" || !keyword) {
                 throw new Error(
-                    `linkify-plugin-keyword: Invalid keyword: ${keyword}`
+                    `linkify-plugin-keyword: Invalid keyword: ${keyword}`,
                 );
             }
         }
@@ -116,7 +116,7 @@ var linkifyRegisterKeywords = (function (linkifyjs) {
                 const chars = linkifyjs.stringToArray(keywords[i]);
                 scanner.start.ts(chars, keywords[i], {
                     keyword: true,
-                    [group]: true
+                    [group]: true,
                 });
             }
         }

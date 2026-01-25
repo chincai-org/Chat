@@ -149,7 +149,7 @@ function linkifyElement(element, opts, doc) {
         throw new Error(
             "Cannot find document implementation. " +
                 "If you are in a non-browser environment like Node.js, " +
-                "pass the document implementation as the third argument to linkifyElement."
+                "pass the document implementation as the third argument to linkifyElement.",
         );
     }
     const options = new linkifyjs.Options(opts, getDefaultRender(doc));
@@ -197,7 +197,7 @@ function apply($, doc) {
         throw new Error(
             "Cannot find document implementation. " +
                 "If you are in a non-browser environment like Node.js, " +
-                "pass the document implementation as the second argument to linkify-jquery"
+                "pass the document implementation as the second argument to linkify-jquery",
         );
     }
     function jqLinkify(opts) {
@@ -214,7 +214,7 @@ function apply($, doc) {
             const target = data.linkify;
             const nl2br = data.linkifyNl2br;
             const opts = {
-                nl2br: !!nl2br && nl2br !== 0 && nl2br !== "false"
+                nl2br: !!nl2br && nl2br !== 0 && nl2br !== "false",
             };
             if ("linkifyAttributes" in data) {
                 opts.attributes = data.linkifyAttributes;

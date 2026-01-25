@@ -24,7 +24,7 @@ var linkifyStr = (function (linkifyjs) {
     function defaultRender(_ref) {
         let { tagName, attributes, content } = _ref;
         return `<${tagName} ${attributesToString(attributes)}>${escapeText(
-            content
+            content,
         )}</${tagName}>`;
     }
 
@@ -61,7 +61,7 @@ var linkifyStr = (function (linkifyjs) {
             writable: false,
             value: function linkify(options) {
                 return linkifyStr(this, options);
-            }
+            },
         });
     }
 

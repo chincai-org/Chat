@@ -38,7 +38,7 @@ newTopicConfirm.onclick = () => {
         cookieId,
         newTopicName.innerText,
         visible,
-        check18.checked
+        check18.checked,
     );
 
     newTopic.classList.add("hide");
@@ -174,7 +174,7 @@ function createTopic(room) {
                 "change-name",
                 cookieId,
                 topic.id,
-                topic.children[0].innerText
+                topic.children[0].innerText,
             );
         }
     };
@@ -191,11 +191,11 @@ function createTopic(room) {
 
         let x = Math.min(
             e.clientX,
-            window.innerWidth - contextMenu.offsetWidth
+            window.innerWidth - contextMenu.offsetWidth,
         );
         let y = Math.min(
             e.clientY,
-            window.innerHeight - contextMenu.offsetHeight
+            window.innerHeight - contextMenu.offsetHeight,
         );
 
         contextMenu.style.left = `${(x / window.innerWidth) * 100}vw`;

@@ -5,7 +5,7 @@
         isLink: true,
         toHref() {
             return "/" + this.toString().slice(1);
-        }
+        },
     });
 
     /**

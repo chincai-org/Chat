@@ -17,8 +17,8 @@ var Linkify = (function (React, linkifyjs) {
                                   enumerable: true,
                                   get: function () {
                                       return e[k];
-                                  }
-                              }
+                                  },
+                              },
                     );
                 }
             });
@@ -46,8 +46,8 @@ var Linkify = (function (React, linkifyjs) {
                 const key = `__linkify-el-${meta.elementId++}`;
                 elements.push(
                     React__namespace.createElement("br", {
-                        key
-                    })
+                        key,
+                    }),
                 );
             } else if (!token.isLink || !opts.check(token)) {
                 // Regular text
@@ -59,9 +59,9 @@ var Linkify = (function (React, linkifyjs) {
                     const key = `__linkify-el-${meta.elementId++}`;
                     const props = linkifyjs.options.assign(
                         {
-                            key
+                            key,
                         },
-                        rendered.props
+                        rendered.props,
                     );
                     rendered = React__namespace.cloneElement(rendered, props);
                 }
@@ -91,7 +91,7 @@ var Linkify = (function (React, linkifyjs) {
                 // ensure that we always generate unique element IDs for keys
                 children.push.apply(
                     children,
-                    stringToElements(child, opts, meta)
+                    stringToElements(child, opts, meta),
                 );
             } else if (React__namespace.isValidElement(child)) {
                 if (
@@ -113,9 +113,9 @@ var Linkify = (function (React, linkifyjs) {
         const key = `__linkify-el-${meta.elementId++}`;
         const newProps = linkifyjs.options.assign(
             {
-                key
+                key,
             },
-            element.props
+            element.props,
         );
         return React__namespace.cloneElement(element, newProps, children);
     }
@@ -139,7 +139,7 @@ var Linkify = (function (React, linkifyjs) {
             return React__namespace.createElement(tagName, attributes, content);
         };
         const newProps = {
-            key: "__linkify-wrapper"
+            key: "__linkify-wrapper",
         };
         for (const prop in props) {
             if (
@@ -157,7 +157,7 @@ var Linkify = (function (React, linkifyjs) {
         const children = props.children;
         const element = React__namespace.createElement(as, newProps, children);
         return linkifyReactElement(element, opts, {
-            elementId: 0
+            elementId: 0,
         });
     };
 

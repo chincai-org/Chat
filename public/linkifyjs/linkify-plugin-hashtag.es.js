@@ -2,7 +2,7 @@ import { createTokenClass, State, registerPlugin } from "linkifyjs";
 
 // Create a new token that class that the parser emits when it finds a hashtag
 const HashtagToken = createTokenClass("hashtag", {
-    isLink: true
+    isLink: true,
 });
 
 /**

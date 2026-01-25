@@ -6,7 +6,7 @@ var linkifyjs = require("linkifyjs");
  * Tokenize will emit token classes of this type
  */
 const Keyword = linkifyjs.createTokenClass("keyword", {
-    isLink: true
+    isLink: true,
 });
 
 /**
@@ -24,7 +24,7 @@ const registeredKeywordsGroups = {
     alpha: [],
     alphanumeric: [],
     domain: [],
-    keyword: []
+    keyword: [],
 };
 
 // Additional pre-processing regular expressions
@@ -59,7 +59,7 @@ function registerKeywords(keywords) {
         const keyword = keywords[i];
         if (typeof keyword !== "string" || !keyword) {
             throw new Error(
-                `linkify-plugin-keyword: Invalid keyword: ${keyword}`
+                `linkify-plugin-keyword: Invalid keyword: ${keyword}`,
             );
         }
     }
@@ -116,7 +116,7 @@ function tokens(_ref) {
             const chars = linkifyjs.stringToArray(keywords[i]);
             scanner.start.ts(chars, keywords[i], {
                 keyword: true,
-                [group]: true
+                [group]: true,
             });
         }
     }

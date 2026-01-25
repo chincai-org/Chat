@@ -69,7 +69,7 @@ textbox.onkeydown = e => {
                     if (result) {
                         textbox.innerText = textbox.innerText.replace(
                             new RegExp(nameQuery + "$"),
-                            result
+                            result,
                         );
                         let range = document.createRange();
                         let selection = window.getSelection();
@@ -97,7 +97,7 @@ textbox.onkeydown = e => {
 textbox.setAttribute(
     "style",
     `height:auto;
-    overflow-y:hidden;`
+    overflow-y:hidden;`,
 );
 
 textbox.oninput = () => {
@@ -150,7 +150,7 @@ document.onclick = e => {
             "change-name",
             cookieId,
             topicDblclick.id,
-            topicDblclick.children[0].innerText
+            topicDblclick.children[0].innerText,
         );
         topicDblclick = null;
     }
@@ -167,11 +167,11 @@ async function postData(url, method, data) {
         cache: "no-cache",
         credentials: "same-origin",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
         redirect: "follow",
         referrerPolicy: "no-referrer",
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
     });
 }
 
@@ -200,7 +200,7 @@ async function autoComplete(nameQuery) {
     return (
         await postData("/auto_complete", "POST", {
             roomId: currentRoom,
-            nameQuery: nameQuery
+            nameQuery: nameQuery,
         })
     ).json();
 }
@@ -214,7 +214,7 @@ function updateTypingUsers() {
         let toBe = users.length == 1 ? "is" : "are";
         let firstTwo = users.slice(
             0,
-            Math.max(1, Math.min(2, users.length - 1))
+            Math.max(1, Math.min(2, users.length - 1)),
         );
         let lastFew = users.slice(firstTwo.length, users.length);
         let lastFewLength = lastFew.length;
@@ -267,7 +267,7 @@ function fetchMsg(cookieId, roomId, messageId) {
         data: {
             cookieId: cookieId,
             roomId: roomId,
-            start: messageId == 0 ? "last" : messageId
+            start: messageId == 0 ? "last" : messageId,
         },
         success: response => {
             console.log(response);
@@ -286,13 +286,13 @@ function fetchMsg(cookieId, roomId, messageId) {
                     msg.time,
                     msg.pings,
                     msg.topicIds,
-                    messageId != 0
+                    messageId != 0,
                 );
             }
         },
         error: (xhr, status, error) => {
             console.log("Error: " + error);
-        }
+        },
     });
 }
 
@@ -309,7 +309,7 @@ async function createMsg(
     time,
     pings,
     topicIds,
-    isOld
+    isOld,
 ) {
     let msgContextMenu = createMsgContextMenu(id);
     let date = new Date(time);
@@ -328,11 +328,11 @@ async function createMsg(
 
         let x = Math.min(
             e.clientX,
-            window.innerWidth - msgContextMenu.offsetWidth
+            window.innerWidth - msgContextMenu.offsetWidth,
         );
         let y = Math.min(
             e.clientY,
-            window.innerHeight - msgContextMenu.offsetHeight
+            window.innerHeight - msgContextMenu.offsetHeight,
         );
 
         msgContextMenu.style.left = `${(x / window.innerWidth) * 100}vw`;
@@ -360,7 +360,7 @@ async function createMsg(
     for (let ping of pings) {
         msg.innerHTML = msg.innerHTML.replaceAll(
             `@${ping}`,
-            `<span class="mention">@${ping}</span>`
+            `<span class="mention">@${ping}</span>`,
         );
         if (ping === authorUsername) {
             containers.classList.add("mention-container");
@@ -370,7 +370,7 @@ async function createMsg(
     for (let topicId of topicIds) {
         msg.innerHTML = msg.innerHTML.replaceAll(
             `#${topicId.id}`,
-            `<span class="hashtag" onclick=redirectTopic("${topicId.id}")>#${topicId.name}</span>`
+            `<span class="hashtag" onclick=redirectTopic("${topicId.id}")>#${topicId.name}</span>`,
         );
     }
 

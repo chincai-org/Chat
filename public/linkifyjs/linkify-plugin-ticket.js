@@ -2,7 +2,7 @@
     "use strict";
 
     const TicketToken = linkifyjs.createTokenClass("ticket", {
-        isLink: true
+        isLink: true,
     });
 
     /**

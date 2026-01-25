@@ -14,7 +14,7 @@ class Command {
             if (msg.match(new RegExp("^" + prefix + command + "(\\s+)?"))) {
                 return await func(
                     ctx,
-                    ...msg.split(/\s+/).slice(1, msg.length)
+                    ...msg.split(/\s+/).slice(1, msg.length),
                 );
             }
         }
@@ -128,7 +128,7 @@ command.on("mute", async (ctx, username, ...reason) => {
         await utils.mute(
             ctx.room._id.toString(),
             username,
-            reason.join(" ") || "no reason"
+            reason.join(" ") || "no reason",
         );
         return [2000, `Muted ctx.user ${username}`];
     }
@@ -255,7 +255,7 @@ command.on("check-role", async (ctx, username) => {
     let target = await utils.findUserByUsername(username);
     return [
         0,
-        `${username} is a ${getRole(target, ctx.room)} of ${ctx.room.name}`
+        `${username} is a ${getRole(target, ctx.room)} of ${ctx.room.name}`,
     ];
 });
 
@@ -293,7 +293,7 @@ command.on("whatis", async (ctx, ...args) => {
     let phrase = args.join(" ");
     let definition = await utils.getWordDefinition(
         ctx.room._id.toString(),
-        phrase
+        phrase,
     );
 
     if (definition) {
@@ -302,7 +302,7 @@ command.on("whatis", async (ctx, ...args) => {
         return [
             0,
             `Can't find the definition of ${phrase},
-            do >define "${phrase}" <definition> to define it`
+            do >define "${phrase}" <definition> to define it`,
         ];
     }
 });
@@ -313,7 +313,7 @@ command.on("forget", async (ctx, ...args) => {
     let phrase = args.join(" ");
     let definition = await utils.getWordDefinition(
         ctx.room._id.toString(),
-        phrase
+        phrase,
     );
 
     if (definition) {
@@ -355,7 +355,7 @@ command.on("remindme", async (ctx, time, ...args) => {
                 "system",
                 msg,
                 now,
-                "SYSTEM0" + "$"
+                "SYSTEM0" + "$",
             );
 
             ctx.io.emit(
@@ -368,13 +368,13 @@ command.on("remindme", async (ctx, time, ...args) => {
                 msg,
                 now,
                 await utils.findPings(msg),
-                []
+                [],
             );
         }, total * 1000);
 
         return [
             0,
-            `Ok I will remind you after${hourMsg}${minuteMsg}${secondMsg}.`
+            `Ok I will remind you after${hourMsg}${minuteMsg}${secondMsg}.`,
         ];
     }
 });
@@ -395,7 +395,7 @@ command.on("help-cmd", async ctx => {
         ${prefix}define "<phrase>" <definition> Desc: define a word for this topic
         ${prefix}whatis "<phrase>" Desc: check definition of a word for this topic
         ${prefix}forget "<phrase>" Desc: delete definition of a word for this topic
-        ${prefix}remindme <hh:mm:ss> <content> Desc: remind you to do something`
+        ${prefix}remindme <hh:mm:ss> <content> Desc: remind you to do something`,
     ];
 });
 
@@ -430,10 +430,10 @@ command.on("generate", ctx => {
     let randWord = "";
     for (let i = 0; i < 10; i++) {
         randWord += String(
-            consonantArray[Math.floor(Math.random() * consonant.length)]
+            consonantArray[Math.floor(Math.random() * consonant.length)],
         );
         randWord += String(
-            vowelArray[Math.floor(Math.random() * vowelArray.length)]
+            vowelArray[Math.floor(Math.random() * vowelArray.length)],
         );
     }
     return [0, randWord];

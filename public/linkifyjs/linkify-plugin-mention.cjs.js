@@ -6,7 +6,7 @@ const MentionToken = linkifyjs.createTokenClass("mention", {
     isLink: true,
     toHref() {
         return "/" + this.toString().slice(1);
-    }
+    },
 });
 
 /**

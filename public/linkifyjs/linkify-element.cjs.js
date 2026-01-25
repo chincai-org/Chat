@@ -142,7 +142,7 @@ function linkifyElement(element, opts, doc) {
         throw new Error(
             "Cannot find document implementation. " +
                 "If you are in a non-browser environment like Node.js, " +
-                "pass the document implementation as the third argument to linkifyElement."
+                "pass the document implementation as the third argument to linkifyElement.",
         );
     }
     const options = new linkifyjs.Options(opts, getDefaultRender(doc));
