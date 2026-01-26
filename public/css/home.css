@@ -1,79 +1,91 @@
+:root {
+	--navbar-padding-block: .3rem;
+	--fs-400: 1rem;
+	--fs-600: 1.5rem;
+	--fs-800: 2rem;
+}
+
 body,
 html {
-    font-size: 62.5%;
-    margin: 0;
-    padding: 0;
     font-family: sans-serif;
     scroll-behavior: smooth;
-    scroll-padding: var(--scroll-padding, 5rem);
 }
 
 body {
-    background-color: rgb(50, 50, 50);
-    background-image: url("/assets/home3.jpg"), url("/assets/home4.jpg");
-    background-position: top, bottom;
-    background-repeat: no-repeat, no-repeat;
-    background-size: 100vw 104vh;
+	background-color: rgb(50, 50, 50);
 }
 
-header {
-    text-align: center;
+body #introduction {
+	background-color: rgb(50, 50, 50);
+	background-image: url("/assets/home3.jpg");
+	background-position: top, right;
+	background-repeat: no-repeat, no-repeat;
+	background-size: cover;
+	text-align: center;
+	padding: 0;
+}
+
+
+body #about {
+	background-color: rgb(50, 50, 50);
+	background-image: url("/assets/home4.jpg");
+	background-position: top, right;
+	background-repeat: no-repeat, no-repeat;
+	background-size: cover;
+	padding-top: 3.5rem;
+	padding-top: calc(var(--navbar-padding-block) + var(--fs-600) + 1rem);
+}
+
+section {
+    height: 100svh;
+	padding-left: .3rem;
 }
 
 h1 {
-    font-size: 3rem;
+    font-size: var(--fs-800);
     color: aquamarine;
 }
 
 h2 {
-    font-size: 2rem;
+    font-size: var(--fs-600);
     font-style: italic;
     color: aquamarine;
 }
 
 p {
-    font-size: 1.7rem;
+    font-size: var(--fs-400);
     color: aquamarine;
 }
 
 nav {
+	top: 0;
+	padding-inline: 1rem;
+	padding-block: var(--navbar-padding-block);
     display: flex;
     justify-content: space-between;
     text-align: center;
     color: aquamarine;
     background-color: rgba(80, 128, 8, 0.8);
     width: 100%;
+    position: sticky;
 }
 
 ul li {
-    float: left;
-    text-decoration: none;
-    padding: 1rem;
     list-style: none;
 }
 
 a {
     text-decoration: none;
-    font-size: 2rem;
+    font-size: var(--fs-600);
     color: aquamarine;
-}
 
-a:hover {
-    color: white;
-}
-
-section,
-div {
-    height: 100vh;
-}
-
-nav {
-    position: fixed;
-    top: 0vh;
+	&:hover {
+		color: white;
+	}
 }
 
 ::-webkit-scrollbar {
-    width: 2vh;
+    width: 0.5em;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -88,23 +100,4 @@ nav {
 
 ::-webkit-scrollbar-track {
     background-color: rgb(80, 80, 80);
-}
-
-.login,
-ul li {
-    color: aquamarine;
-}
-
-.login:hover,
-ul li:hover {
-    color: white;
-}
-
-.login {
-    margin-top: 2.5vh;
-    margin-right: 4vh;
-}
-
-.first {
-    margin-top: 8vh;
 }
