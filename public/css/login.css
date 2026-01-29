@@ -1,97 +1,108 @@
-&,
-body {
-    background: rgb(50, 50, 50) url("/assets/login2.jpg") top/100%;
-    font-family: sans-serif;
-    font-size: 62.5%;
-    height: 100%;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-}
-
 :root {
-    --text: rgb(0, 96, 223);
+	--fs-400: 1rem;
+	--fs-500: 1.25rem;
+	--fs-600: 1.5rem;
+	--fs-700: 1.75rem;
+	--fs-800: 2rem;
+}
+
+html,
+body {
+	background-color: rgb(50 50 50);
+	background-image: url("/assets/login2.jpg");
+	background-position: top center;
+	background-size: cover;
+	font-family: sans-serif;
+	height: 100%;
 }
 
 .center {
-    display: grid;
-    place-items: center;
-    height: 100%;
+	align-content: center;
+	height: 100%;
 }
 
 .loginbox {
-    border: white solid 0.2rem;
-    margin: 0 auto;
-    width: min(100ch, 100% - 4rem);
-    padding: 0.3rem;
-    font-size: 1rem;
-    color: aqua;
+	border: white solid 0.2rem;
+	border-radius: 1rem;
+	corner-shape: squircle;
+	background-color: hsla(0 0% 0% / .2);
+	margin-inline: auto;
+	width: min(75ch, 100%);
+	padding: 0.3rem;
+	color: aqua;
 
-    & a {
-        text-decoration: underline;
-        line-height: 20px;
-        color: wheat;
+	& a {
+		font-size: var(--fs-400);
+		text-decoration: underline;
+		line-height: 20px;
+		color: wheat;
 
-        &:hover {
-            color: white;
-        }
-    }
+		&:hover {
+			color: white;
+		}
+	}
 
-    & h1 {
-        display: flex;
-        justify-content: center;
-    }
+	& h1 {
+		font-size: var(--fs-800);
+		display: flex;
+		justify-content: center;
+	}
 
-    & form {
-        position: relative;
-    }
+	& form {
+		position: relative;
+	}
 
-    & h2 {
-        font-weight: bold;
-        margin-top: 1rem;
-    }
+	& label {
+		font-size: var(--fs-500);
+		font-weight: bold;
+		margin-top: 1rem;
+	}
 
-    & input {
-        &[type="text"],
-        &[type="password"] {
-            height: 40px;
-            width: 100%;
-            border: none;
-            border-bottom: 1px solid #fff;
-            background: transparent;
-            outline: none;
-            font-size: 16px;
-            color: white;
+	& h2 {
+		font-size: var(--fs-400);
+		font-weight: bold;
+	}
 
-            &::placeholder {
-                color: wheat;
-            }
-        }
+	& input {
 
-        &[type="submit"] {
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-            width: 100%;
-            border: none;
-            outline-color: transparent;
-            height: 40px;
-            background: aqua;
-            font-size: 18px;
-            border-radius: 20px;
+		&[type="text"],
+		&[type="password"] {
+			min-height: 40px;
+			width: 100%;
+			border: none;
+			border-bottom: 1px solid #fff;
+			background: transparent;
+			outline: none;
+			font-size: var(--fs-400);
+			color: white;
 
-            &:hover {
-                cursor: pointer;
-                background: aquamarine;
-                color: black;
-            }
-        }
-    }
+			&::placeholder {
+				color: wheat;
+			}
+		}
+
+		&[type="submit"] {
+			margin-top: 1rem;
+			margin-bottom: 1rem;
+			width: 100%;
+			border: none;
+			outline-color: transparent;
+			height: 40px;
+			background: aqua;
+			font-size: var(--fs-500);
+			border-radius: calc(Infinity * 1px);
+
+			&:hover {
+				cursor: pointer;
+				background: aquamarine;
+				color: black;
+			}
+		}
+	}
 }
 
 .warning {
-    color: rgb(255, 0, 0) !important;
-    font-weight: bold !important;
-    font-style: italic !important;
+	color: rgb(255, 0, 0) !important;
+	font-weight: bold !important;
+	font-style: italic !important;
 }

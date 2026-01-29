@@ -1,46 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panmapor | Sign Up</title>
-    <link rel="icon" href="/assets/logo.png" type="image/icon type">
-    <link rel="stylesheet" href="/css/login.css">
-    <script src="/js/start.js" defer></script>
-</head>
-<body>
-    <div class="center">
 
-        <div class="loginbox">
-            <h1>Sign Up</h1>
-            <form action="/signup_validator" method="POST">
-                <h2>Display name</h2>
-                <p class="warning"><%= name %></p>
-                <input type="text" maxlength="15" name="name" placeholder="Display name for display" required>
-                
-                <h2>Username</h2>
-                <p class="warning"><%= username %></p>
-                <input type="text" maxlength="15" name="username" placeholder="Username for login" required>
-                
-                <h2>Password</h2>
-                <p class="warning"><%= password %></p>
-                <input type="password" maxlength="20" name="password" placeholder="Password for login" required>
-                
-                <h2>Confirm Password</h2>
-                <p class="warning"><%= confirmpassword %></p>
-                <input type="password" maxlength="20" name="confirmpassword" placeholder="Repeat password" required>
-    
-                <h2>Birthday</h2>
-                <p class="warning"><%= birthday %></p>
-                <input type="date" maxlength="10" name="birthday" placeholder="dd/mm/yyyy" required>
-                
-                <input type="submit" id="loginbtn" value="Sign Up">
-                
-                <h2>By signing up, you agreed to our <a href="/tac">Term and Condition</a></h2>
-                <h2>Have an account? <a href="/login">Login</a></h2>
-            </form>
-        </div>
-    </div>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Panmapor | Sign Up</title>
+	<link rel="icon" href="/assets/logo.png" type="image/icon type">
+	<link rel="stylesheet" href="/css/login.css">
+	<script src="/js/start.js" defer></script>
+</head>
+
+<body>
+	<div class="center">
+
+		<div class="loginbox">
+			<h1>Sign Up</h1>
+			<form action="/signup_validator" method="POST">
+				<h2>Display name</h2>
+				<p class="warning">
+					<%= name %>
+				</p>
+				<input type="text" maxlength="15" name="name" placeholder="Display name for display" required>
+
+				<h2>Username</h2>
+				<p class="warning">
+					<%= username %>
+				</p>
+				<input type="text" maxlength="15" name="username" placeholder="Username for login" required>
+
+				<h2>Password</h2>
+				<p class="warning">
+					<%= password %>
+				</p>
+				<input type="password" maxlength="20" name="password" placeholder="Password for login" required>
+
+				<h2>Confirm Password</h2>
+				<p class="warning">
+					<%= confirmpassword %>
+				</p>
+				<input type="password" maxlength="20" name="confirmpassword" placeholder="Repeat password" required>
+
+				<h2>Birthday</h2>
+				<p class="warning">
+					<%= birthday %>
+				</p>
+				<input type="date" maxlength="10" name="birthday" placeholder="dd/mm/yyyy" required>
+
+				<input type="submit" id="loginbtn" value="Sign Up">
+
+				<h2>By signing up, you agreed to our <a href="/tac">Term and Condition</a></h2>
+				<h2>Have an account? <a href="/login">Login</a></h2>
+			</form>
+		</div>
+	</div>
 </body>
+
 </html>

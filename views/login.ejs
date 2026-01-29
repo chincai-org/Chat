@@ -1,29 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panmapor | Log In</title>
-    <link rel="icon" href="/assets/logo.png" type="image/icon type">
-    <link rel="stylesheet" href="/css/login.css">
-    <script src="/js/start.js" defer></script>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Panmapor | Log In</title>
+	<link rel="icon" href="/assets/logo.png" type="image/icon type">
+	<link rel="stylesheet" href="/css/_reset.css">
+	<link rel="stylesheet" href="/css/login.css">
+	<script src="/js/start.js" defer></script>
 </head>
+
 <body>
-    <div class="center">
-        <div class="loginbox">
-            <h1>Log In</h1>
-            <form action="/login_validator" method="POST">
-                <h2>Username</h2>
-                <p class="warning"><%= username %></p>
-                <input type="text" maxlength="15" name="username" placeholder="Enter username" required>
-                <h2>Password</h2>
-                <p class="warning"><%= password %></p>
-                <input type="password" maxlength="20" name="password" placeholder="Enter password" required>
-                <input type="submit" id="loginbtn" value="Log in">
-                <h2>Don't have an account? <a href="/signup">Register</a></h2>
-            </form>
-        </div>
-    </div>
+	<div class="center">
+		<div class="loginbox">
+			<h1>Log In</h1>
+			<form action="/login_validator" method="POST">
+				<label for="username">Username</label>
+				<p class="warning">
+					<%= username %>
+				</p>
+				<input type="text" maxlength="15" name="username" id="username" placeholder="Enter username" required>
+				<label for="password">Password</label>
+				<p class="warning">
+					<%= password %>
+				</p>
+				<input type="password" maxlength="20" name="password" id="password" placeholder="Enter password"
+					required>
+				<input type="submit" id="loginbtn" value="Log in">
+				<h2>Don't have an account? <a href="/signup">Register</a></h2>
+			</form>
+		</div>
+	</div>
 </body>
+
 </html>
