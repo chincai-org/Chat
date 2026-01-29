@@ -341,7 +341,9 @@ app.get("*", (req, res) => {
 io.on("connection", socket => {
     console.log("A socket connected");
 
-    socket.on("msg", async (cookieId, roomId, msg, time) => {
+    socket.on("msg", async (cookieId, roomId, msg) => {
+        let now = Date.now();
+
         let user = await utils.findUserByCookie(cookieId);
         let room = await utils.findRoom(roomId);
         let muteObject = room.muted.find(
@@ -385,7 +387,7 @@ io.on("connection", socket => {
                         muteObject.reason,
                 ),
             );
-        } else if (time - user.lastMessageTimestamp < utils.MESSAGE_COOLDOWN) {
+        } else if (now - user.lastMessageTimestamp < utils.MESSAGE_COOLDOWN) {
             socket.emit(
                 "msg",
                 utils.generateWarningMessage(
@@ -399,7 +401,7 @@ io.on("connection", socket => {
                 roomId,
                 user.username,
                 msg,
-                time,
+                now,
                 1,
             );
 
@@ -410,7 +412,7 @@ io.on("connection", socket => {
                 avatar: user.avatar,
                 roomId: roomId,
                 content: msg,
-                time: time,
+                time: now,
                 pings: await utils.findPings(msg),
                 topicIds: await utils.findHashtagTopic(msg),
             });
@@ -423,7 +425,6 @@ io.on("connection", socket => {
             );
 
             if (response) {
-                let now = Date.now();
                 let systemMsgId = "SYSTEM" + del + "$";
                 if (!del)
                     systemMsgId = await utils.insertMessage(
