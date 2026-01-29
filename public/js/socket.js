@@ -76,9 +76,18 @@ socket.on("delete", msgId => {
 });
 
 socket.on("change-name", (roomId, newName) => {
-    // TODO change name
-    document.getElementById(roomId).children[0].innerText = newName;
-    console.log(roomId, newName);
+    const roomElement = document.getElementById(roomId);
+    if (roomElement) {
+        const roomNameElement = roomElement.querySelector("h5");
+        if (roomNameElement) {
+            roomNameElement.innerText = newName;
+            console.log(`Room name updated: ${roomId} -> ${newName}`);
+        } else {
+            console.warn(`Room name element not found for room: ${roomId}`);
+        }
+    } else {
+        console.warn(`Room element not found: ${roomId}`);
+    }
 });
 
 socket.on("typing", (username, roomId, timeStart) => {
