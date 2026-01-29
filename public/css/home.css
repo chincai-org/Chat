@@ -1,8 +1,8 @@
 :root {
-	--navbar-padding-block: .3rem;
-	--fs-400: 1rem;
-	--fs-600: 1.5rem;
-	--fs-800: 2rem;
+    --navbar-padding-block: 0.3rem;
+    --fs-400: 1rem;
+    --fs-600: 1.5rem;
+    --fs-800: 2rem;
 }
 
 body,
@@ -12,33 +12,32 @@ html {
 }
 
 body {
-	background-color: rgb(50, 50, 50);
+    background-color: rgb(50, 50, 50);
 }
 
 body #introduction {
-	background-color: rgb(50, 50, 50);
-	background-image: url("/assets/home3.jpg");
-	background-position: top, right;
-	background-repeat: no-repeat, no-repeat;
-	background-size: cover;
-	text-align: center;
-	padding: 0;
+    background-color: rgb(50, 50, 50);
+    background-image: url("/assets/home3.jpg");
+    background-position: top, right;
+    background-repeat: no-repeat, no-repeat;
+    background-size: cover;
+    text-align: center;
+    padding: 0;
 }
 
-
 body #about {
-	background-color: rgb(50, 50, 50);
-	background-image: url("/assets/home4.jpg");
-	background-position: top, right;
-	background-repeat: no-repeat, no-repeat;
-	background-size: cover;
-	padding-top: 3.5rem;
-	padding-top: calc(var(--navbar-padding-block) + var(--fs-600) + 1rem);
+    background-color: rgb(50, 50, 50);
+    background-image: url("/assets/home4.jpg");
+    background-position: top, right;
+    background-repeat: no-repeat, no-repeat;
+    background-size: cover;
+    padding-top: 3.5rem;
+    padding-top: calc(var(--navbar-padding-block) + var(--fs-600) + 1rem);
 }
 
 section {
     height: 100svh;
-	padding-left: .3rem;
+    padding-left: 0.3rem;
 }
 
 h1 {
@@ -58,9 +57,9 @@ p {
 }
 
 nav {
-	top: 0;
-	padding-inline: 1rem;
-	padding-block: var(--navbar-padding-block);
+    top: 0;
+    padding-inline: 1rem;
+    padding-block: var(--navbar-padding-block);
     display: flex;
     justify-content: space-between;
     text-align: center;
@@ -79,9 +78,9 @@ a {
     font-size: var(--fs-600);
     color: aquamarine;
 
-	&:hover {
-		color: white;
-	}
+    &:hover {
+        color: white;
+    }
 }
 
 ::-webkit-scrollbar {
