@@ -7,6 +7,7 @@
   "scripts": {
     "start": "nodemon -e css,ejs,js,json",
     "test": "node test.js",
+    "dev": "nodemon -e css,ejs,js,json",
     "format": "prettier --write ."
   },
   "repository": {
