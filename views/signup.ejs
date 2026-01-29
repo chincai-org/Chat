@@ -7,6 +7,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Panmapor | Sign Up</title>
 	<link rel="icon" href="/assets/logo.png" type="image/icon type">
+	<link rel="stylesheet" href="/css/_reset.css">
+	<link rel="stylesheet" href="/css/_base.css">
 	<link rel="stylesheet" href="/css/login.css">
 	<script src="/js/start.js" defer></script>
 </head>
@@ -17,35 +19,39 @@
 		<div class="loginbox">
 			<h1>Sign Up</h1>
 			<form action="/signup_validator" method="POST">
-				<h2>Display name</h2>
+				<label for="displayname">Display name</label>
 				<p class="warning">
 					<%= name %>
 				</p>
-				<input type="text" maxlength="15" name="name" placeholder="Display name for display" required>
+				<input type="text" maxlength="15" id="displayname" name="name" placeholder="Display name for display"
+					required>
 
-				<h2>Username</h2>
+				<label for="username">Username</label>
 				<p class="warning">
 					<%= username %>
 				</p>
-				<input type="text" maxlength="15" name="username" placeholder="Username for login" required>
+				<input type="text" maxlength="15" id="username" name="username" placeholder="Username for login"
+					required>
 
-				<h2>Password</h2>
+				<label for="password">Password</label>
 				<p class="warning">
 					<%= password %>
 				</p>
-				<input type="password" maxlength="20" name="password" placeholder="Password for login" required>
+				<input type="password" maxlength="20" id="password" name="password" placeholder="Password for login"
+					required>
 
-				<h2>Confirm Password</h2>
+				<label for="confirmpassword">Confirm Password</label>
 				<p class="warning">
 					<%= confirmpassword %>
 				</p>
-				<input type="password" maxlength="20" name="confirmpassword" placeholder="Repeat password" required>
+				<input type="password" maxlength="20" id="confirmpassword" name="confirmpassword"
+					placeholder="Repeat password" required>
 
-				<h2>Birthday</h2>
+				<label for="birthday">Birthday</label>
 				<p class="warning">
 					<%= birthday %>
 				</p>
-				<input type="date" maxlength="10" name="birthday" placeholder="dd/mm/yyyy" required>
+				<input type="date" maxlength="10" id="birthday" name="birthday" placeholder="dd/mm/yyyy" required>
 
 				<input type="submit" id="loginbtn" value="Sign Up">
 
