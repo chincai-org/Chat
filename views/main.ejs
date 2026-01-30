@@ -1,69 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panmapor | Chat</title>
-    <link rel="icon" href="/assets/logo.png" type="image/icon type">
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/cookie.js" defer></script>
-    <script src="/js/main.js" defer></script>
-    <script src="/js/topic.js" defer></script>
-    <script src="/js/socket.js" defer></script>
-    <script src="/linkifyjs/linkify.min.js"></script>
-    <script src="/linkifyjs/linkify-html.min.js"></script>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Panmapor | Chat</title>
+	<link rel="icon" href="/assets/logo.png" type="image/icon type">
+	<link rel="stylesheet" href="/css/_reset.css">
+	<link rel="stylesheet" href="/css/_base.css">
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/js/cookie.js" defer></script>
+	<script src="/js/main.js" defer></script>
+	<script src="/js/topic.js" defer></script>
+	<script src="/js/socket.js" defer></script>
+	<script src="/linkifyjs/linkify.min.js"></script>
+	<script src="/linkifyjs/linkify-html.min.js"></script>
 </head>
+
 <body>
-    <section class="chat" id="chatting">
-        <div id="outer-wrap">
-        </div>
-        <div id="scroll-down" class="hide">
-            <i class="fa-solid fa-arrow-down" id="down-btn"></i>
-            <p class="hide" id="new-msg-counter">0</p>
-        </div>
-        <div contenteditable="true" id="text" class="hide" data-placeholder="Message"></div>
-    </section>
-    <div class="topics" id="topics">
-        <h2>Topics</h2>
-        <div class="choices">
-            <h5 class="choice" id="choice-1" title="Public topic">Public</h5>
-            <h5 class="choice" id="choice-2" title="Private topic">Private</h5>
-        </div>
-        <div id="room-wrapper">
-            <div>
-                <input id="search-bar" name="" placeholder="Search">
-                <i id="create-new" title="Create new topic" class="fa-solid fa-plus"></i>
-            </div>
-            <div class="topic" id="rooms"></div>
-        </div>
-    </div>
-    <div class="new-topic hide" id="new-topic">
-        <p>Start a new discussion!</p>
-        <p class="p-desc">Topic name:</p>
-        <div contenteditable="true" id="new-topic-input-name"data-placeholder="Enter topic name"></div>
-        <p class="p-desc">Allow 18+ content?</p>
-        <label class="switch">
-            <input type="checkbox" id="check18">
-            <span class="slider round"></span>
-        </label>
-        <div class="new-topic-btns">
-            <div class="new-topic-btn" id="new-topic-btn-create">Create</div>
-            <div class="new-topic-btn" id="new-topic-btn-cancel">Cancel</div>
-        </div>
-    </div>
-    <div class="bottom">
-        <p title="Left click for more info" id="username" class="font-size-2_5vh displayname-bottom">
-            <%= displayName %>
-            <br>
-            <span class="username-bottom font-size-2vh">@<%= username %></span>
-        </p>
-        <i class="fa-solid fa-users" title="Invite request"></i>
-        <p class="gap"></p>
-        <p class="typing" id="typing"></p>
-    </div>
+	<div class="grid-wrapper">
+		<div class="topics" id="topics">
+			<h2>Topics</h2>
+			<div class="choices">
+				<h5 class="choice" id="choice-1" title="Public topic">Public</h5>
+				<h5 class="choice" id="choice-2" title="Private topic">Private</h5>
+			</div>
+			<div class="room-wrapper">
+				<div>
+					<input id="search-bar" name="" placeholder="Search">
+					<i id="create-new" title="Create new topic" class="fa-solid fa-plus"></i>
+				</div>
+				<div class="topic" id="rooms"></div>
+			</div>
+		</div>
+		<section class="chat" id="chatting">
+			<div class="message-panel-wrapper">
+				<div id="outer-wrap">
+				</div>
+				<div contenteditable="true" id="text" class="hide" data-placeholder="Message"></div>
+			</div>
+			<div id="scroll-down" class="hide">
+				<i class="fa-solid fa-arrow-down" id="down-btn"></i>
+				<p class="hide" id="new-msg-counter">0</p>
+			</div>
+		</section>
+		<div class="bottom">
+			<p title="Left click for more info" id="username" class="font-size-2_5vh displayname-bottom">
+				<%= displayName %>
+					<br>
+					<span class="username-bottom font-size-2vh">@<%= username %></span>
+			</p>
+			<i class="fa-solid fa-users" title="Invite request"></i>
+			<p class="gap"></p>
+			<p class="typing" id="typing"></p>
+		</div>
+	</div>
+	<div class="new-topic hide" id="new-topic">
+		<p>Start a new discussion!</p>
+		<p class="p-desc">Topic name:</p>
+		<div contenteditable="true" id="new-topic-input-name" data-placeholder="Enter topic name"></div>
+		<p class="p-desc">Allow 18+ content?</p>
+		<label class="switch">
+			<input type="checkbox" id="check18">
+			<span class="slider round"></span>
+		</label>
+		<div class="new-topic-btns">
+			<div class="new-topic-btn" id="new-topic-btn-create">Create</div>
+			<div class="new-topic-btn" id="new-topic-btn-cancel">Cancel</div>
+		</div>
+	</div>
 </body>
+
 </html>

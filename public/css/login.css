@@ -12,7 +12,6 @@ body {
 	background-image: url("/assets/login2.jpg");
 	background-position: top center;
 	background-size: cover;
-	font-family: sans-serif;
 	height: 100%;
 }
 
@@ -20,6 +19,7 @@ body {
 	align-content: center;
 	height: 100%;
 }
+
 
 .loginbox {
 	border: white solid 0.2rem;
