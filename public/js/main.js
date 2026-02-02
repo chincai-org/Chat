@@ -94,16 +94,9 @@ textbox.onkeydown = e => {
 	// }
 };
 
-textbox.setAttribute(
-	"style",
-	`height:auto;
-    overflow-y:hidden;`,
-);
-
 textbox.oninput = () => {
 	if (textbox.innerHTML === "<br>") textbox.innerHTML = "";
 
-	requestAnimationFrame(updateHeight);
 	socket.emit("typing", cookieId, currentRoom, Date.now());
 };
 
@@ -230,35 +223,11 @@ function updateTypingUsers() {
 	}
 }
 
-function updateHeight() {
-	textbox.style.height = `auto`;
-
-	const windowHeight = window.innerHeight;
-	const textHeight = textbox.scrollHeight;
-	const textHeightPercentage = (textHeight / windowHeight) * 100;
-	// const chatHeightPercentage =
-	((windowHeight - textHeight) / windowHeight) * 100 -
-		(53 / windowHeight) * 100;
-	if (textHeightPercentage > 50) {
-		textbox.style.height = "50svh";
-		chat.style.height = "43svh";
-		textbox.style.overflowY = "scroll";
-	} else {
-		// textbox.style.height = `${textHeightPercentage}svh`;
-		// chat.style.height = `${chatHeightPercentage}svh`;
-		// textbox.style.overflowY = "hidden";
-		textbox.style.height = 'auto'
-		chat.style.height = 'auto'
-		textbox.style.overflowY = 'hidden'
-	}
-}
-
 function sendMessage(msg) {
 	if (msg.length > 700) {
 		return;
 	}
 	textbox.innerText = "";
-	updateHeight();
 	socket.emit("msg", cookieId, currentRoom, msg);
 	chat.scrollTop = chat.scrollHeight;
 }

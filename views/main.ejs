@@ -23,24 +23,10 @@
 
 <body>
 	<div class="grid-wrapper">
-		<div class="topics" id="topics">
-			<h2>Topics</h2>
-			<div class="choices">
-				<h5 class="choice" id="choice-1" title="Public topic">Public</h5>
-				<h5 class="choice" id="choice-2" title="Private topic">Private</h5>
-			</div>
-			<div class="room-wrapper">
-				<div>
-					<input id="search-bar" name="" placeholder="Search">
-					<i id="create-new" title="Create new topic" class="fa-solid fa-plus"></i>
-				</div>
-				<div class="topic" id="rooms"></div>
-			</div>
-		</div>
+		<h2 class="topics">Topics</h2>
 		<section class="chat" id="chatting">
 			<div class="message-panel-wrapper">
-				<div id="outer-wrap">
-				</div>
+				<div id="outer-wrap"></div>
 				<div contenteditable="true" id="text" class="hide" data-placeholder="Message"></div>
 			</div>
 			<div id="scroll-down" class="hide">
@@ -48,6 +34,15 @@
 				<p class="hide" id="new-msg-counter">0</p>
 			</div>
 		</section>
+		<div class="choices">
+			<h5 class="choice" id="choice-1" title="Public topic">Public</h5>
+			<h5 class="choice" id="choice-2" title="Private topic">Private</h5>
+		</div>
+		<div class="topic-maker">
+			<input id="search-bar" name="" placeholder="Search">
+			<i id="create-new" title="Create new topic" class="fa-solid fa-plus"></i>
+		</div>
+		<div class="topic" id="rooms"></div>
 		<div class="bottom">
 			<p title="Left click for more info" id="username" class="font-size-2_5vh displayname-bottom">
 				<%= displayName %>
