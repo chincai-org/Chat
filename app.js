@@ -500,54 +500,56 @@ io.on("connection", socket => {
 		}
 	});
 
-	socket.on("new-room", async (cookieId, name, visibility, nsfw = false) => {
-		let user = await utils.findUserByCookie(cookieId);
+	//TODO: change to /POST form submition
 
-		if (!user) {
-			socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
-		} else if (!visibility) {
-			socket.emit(
-				"msg",
-				utils.generateWarningMessage(utils.NO_SELECT_VISIBILITY),
-			);
-		} else if (!name) {
-			socket.emit(
-				"msg",
-				utils.generateWarningMessage("Please type room name"),
-			);
-		} else if (!name.match(/\S/)) {
-			socket.emit(
-				"msg",
-				utils.generateWarningMessage("No empty room name"),
-			);
-		} else if (
-			visibility == "public" &&
-			(await utils.findRoomByName(name))
-		) {
-			socket.emit(
-				"msg",
-				utils.generateWarningMessage("Room name already exist"),
-			);
-		} else if (user.topicCreated >= 3) {
-			socket.emit(
-				"msg",
-				utils.generateWarningMessage(
-					"Max limit for topic creation reached",
-				),
-			);
-		} else {
-			let result = await utils.createRoom(
-				name,
-				visibility,
-				user.username,
-				nsfw,
-			);
-
-			if (visibility == "public")
-				io.emit("room", { _id: result.insertedId, name: name });
-			else socket.emit("room", { _id: result.insertedId, name: name });
-		}
-	});
+	// socket.on("new-room", async (cookieId, name, visibility, nsfw = false) => {
+	// 	let user = await utils.findUserByCookie(cookieId);
+	//
+	// 	if (!user) {
+	// 		socket.emit("msg", utils.generateWarningMessage(utils.NO_USER));
+	// 	} else if (!visibility) {
+	// 		socket.emit(
+	// 			"msg",
+	// 			utils.generateWarningMessage(utils.NO_SELECT_VISIBILITY),
+	// 		);
+	// 	} else if (!name) {
+	// 		socket.emit(
+	// 			"msg",
+	// 			utils.generateWarningMessage("Please type room name"),
+	// 		);
+	// 	} else if (!name.match(/\S/)) {
+	// 		socket.emit(
+	// 			"msg",
+	// 			utils.generateWarningMessage("No empty room name"),
+	// 		);
+	// 	} else if (
+	// 		visibility == "public" &&
+	// 		(await utils.findRoomByName(name))
+	// 	) {
+	// 		socket.emit(
+	// 			"msg",
+	// 			utils.generateWarningMessage("Room name already exist"),
+	// 		);
+	// 	} else if (user.topicCreated >= 3) {
+	// 		socket.emit(
+	// 			"msg",
+	// 			utils.generateWarningMessage(
+	// 				"Max limit for topic creation reached",
+	// 			),
+	// 		);
+	// 	} else {
+	// 		let result = await utils.createRoom(
+	// 			name,
+	// 			visibility,
+	// 			user.username,
+	// 			nsfw,
+	// 		);
+	//
+	// 		if (visibility == "public")
+	// 			io.emit("room", { _id: result.insertedId, name: name });
+	// 		else socket.emit("room", { _id: result.insertedId, name: name });
+	// 	}
+	// });
 
 	socket.on("change-name", async (cookieId, roomId, newName) => {
 		let user = await utils.findUserByCookie(cookieId);

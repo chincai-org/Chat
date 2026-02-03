@@ -285,71 +285,96 @@ body {
 }
 
 .new-topic {
-	position: absolute;
-	background: url(/assets/bamboo-bg.jpg);
-	background-color: white;
-	background-size: cover;
-	background-position: top;
-	background-repeat: no-repeat;
-	width: 25%;
-	height: 30%;
+	margin: auto;
 	font-size: 1rem;
-	font-weight: bold;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	color: #220151;
-	border-radius: 5%;
-}
-
-.new-topic-btn {
-	border-radius: 1vw;
-	padding: 0.3vw;
+	padding: 2rem;
 	color: black;
-	user-select: none;
+	border-radius: 1rem;
+	corner-shape: squircle;
+	width: min(auto, stretch);
+	height: min(auto, stretch);
+	isolation: isolate;
+	background-color: white;
 
-	&[id="new-topic-btn-create"] {
-		background: linear-gradient(hsl(120, 100%, 50%), hsl(120, 98%, 20%));
-		font-weight: normal;
+	&::after {
+		content: '';
+		inset: 0;
+		z-index: -1;
+		position: absolute;
+		opacity: .7;
 
-		&:hover {
-			background: linear-gradient(hsl(120, 100%, 60%), hsl(120, 100%, 30%));
-			font-weight: normal;
+		background-image: url(/assets/bamboo-bg.jpg);
+		background-size: cover;
+		background-position: top;
+	}
+
+	&::backdrop {
+		background-color: hsl(0 0 0 / .5);
+	}
+
+	>h2 {
+		font-weight: bold;
+		font-size: 1.5rem;
+	}
+
+	>form {
+		display: grid;
+		gap: .5rem;
+
+		.new-topic-btn {
+			border: none;
+			outline: transparent;
+			border-radius: calc(1px * Infinity);
+			padding: 1rem;
+			color: black;
+			user-select: none;
+
+
+			&[id="new-topic-btn-create"] {
+				background: linear-gradient(hsl(120, 100%, 50%), hsl(120, 98%, 20%));
+
+				&:hover {
+					background: linear-gradient(hsl(120, 100%, 60%), hsl(120, 100%, 30%));
+				}
+
+				&:active {
+					background: linear-gradient(hsl(120, 100%, 50%), hsl(120, 98%, 20%));
+				}
+			}
+
+			&[id="new-topic-btn-cancel"] {
+				background: linear-gradient(hsl(0, 100%, 60%), hsl(0, 100%, 30%));
+
+				&:hover {
+					background: linear-gradient(hsl(0, 100%, 70%), hsl(0, 100%, 40%));
+				}
+
+				&:active {
+					background: linear-gradient(hsl(0, 100%, 60%), hsl(0, 100%, 30%));
+				}
+			}
 		}
 
-		&:active {
-			background: linear-gradient(hsl(120, 100%, 50%), hsl(120, 98%, 20%));
-			font-weight: normal;
+		@media (width > 960px) {
+			grid-template-columns: auto 1fr;
+
+			.new-topic-btn {
+				&[id="new-topic-btn-create"] {
+					justify-self: start;
+				}
+
+				&[id="new-topic-btn-cancel"] {
+					justify-self: end;
+				}
+			}
 		}
 	}
 
-	&[id="new-topic-btn-cancel"] {
-		background: linear-gradient(hsl(0, 100%, 60%), hsl(0, 100%, 30%));
-		font-weight: normal;
-
-		&:hover {
-			background: linear-gradient(hsl(0, 100%, 70%), hsl(0, 100%, 40%));
-			font-weight: normal;
-		}
-
-		&:active {
-			background: linear-gradient(hsl(0, 100%, 60%), hsl(0, 100%, 30%));
-			font-weight: normal;
-		}
+	>form label {
+		font-weight: bold;
 	}
 }
 
-.new-topic-btns {
-	display: flex;
-	justify-content: space-between;
-	margin: 0.5vw;
-	font-size: 1rem;
-}
-
-.p-desc {
-	font-weight: bold;
-	font-size: 1rem;
-}
 
 @keyframes focus-textbox {
 	0% {
@@ -379,12 +404,13 @@ body {
 }
 
 #new-topic-input-name {
-	margin: 0.3vw;
-	outline: none;
+	outline: transparent;
+	border: none;
 	border-bottom: black solid 0.1vw;
 	font-weight: normal;
 	font-size: 1rem;
 	background: linear-gradient(hsla(0, 100%, 100%, 0), hsla(0, 0%, 100%, 0.6));
+	color: black;
 	white-space: nowrap;
 	overflow-x: auto;
 	overflow-y: hidden;
@@ -398,13 +424,6 @@ body {
 	}
 }
 
-
-[contentEditable="true"][id="new-topic-input-name"]:empty:not(:focus)::before {
-	content: attr(data-placeholder);
-	color: var(--grey-10);
-	font-size: 1rem;
-	pointer-events: none;
-}
 
 .switch {
 	position: relative;

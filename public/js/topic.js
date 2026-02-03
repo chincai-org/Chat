@@ -2,7 +2,7 @@
 const public = document.getElementById("choice-1");
 const private = document.getElementById("choice-2");
 const newTopicName = document.getElementById("new-topic-input-name");
-const newTopic = document.getElementById("new-topic");
+const newTopicDialog = document.getElementById("new-topic");
 const createNewTopic = document.getElementById("create-new");
 const newTopicCancel = document.getElementById("new-topic-btn-cancel");
 const newTopicConfirm = document.getElementById("new-topic-btn-create");
@@ -17,34 +17,34 @@ let currentRoom = "";
 
 // Create new topic button
 createNewTopic.onclick = () => {
-	newTopic.classList.remove("hide");
+	newTopicDialog.showModal();
 };
 
 // Cancel create new topic
 newTopicCancel.onclick = () => {
-	newTopic.classList.add("hide");
-	newTopicName.innerHTML = "";
+	newTopicDialog.close();
+	newTopicName.value = "";
 	check18.checked = false;
 };
 
 // Confirm create new topic
-newTopicConfirm.onclick = () => {
-	if (!/\S/.test(newTopicName.innerText)) {
-		return;
-	}
-
-	socket.emit(
-		"new-room",
-		cookieId,
-		newTopicName.innerText,
-		visible,
-		check18.checked,
-	);
-
-	newTopic.classList.add("hide");
-	newTopicName.innerHTML = "";
-	check18.checked = false;
-};
+// newTopicConfirm.onclick = () => {
+// 	if (!/\S/.test(newTopicName.innerText)) {
+// 		return;
+// 	}
+//
+// 	socket.emit(
+// 		"new-room",
+// 		cookieId,
+// 		newTopicName.innerText,
+// 		visible,
+// 		check18.checked,
+// 	);
+//
+// newTopic.classList.add("hide");
+// newTopicName.innerHTML = "";
+// check18.checked = false;
+// };
 
 // Detect keydown on new topic name textbox
 newTopicName.onkeydown = e => {
