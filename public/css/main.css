@@ -43,13 +43,14 @@ body {
 	overflow-wrap: break-word;
 	background: var(--grey-20);
 	white-space: pre-wrap;
-	outline: none;
-	font-size: 2rem;
+	outline: transparent;
+	font-size: 1.5rem;
 	color: white;
-	border-radius: 1vh;
-	resize: none;
+	corner-shape: squircle;
+	border-radius: 1rem;
 	flex-shrink: 0;
 	max-height: 50%;
+	margin-inline: 1rem;
 
 	&:focus {
 		background-color: var(--grey-25);
@@ -62,30 +63,24 @@ body {
 	flex-direction: column;
 }
 
-[contentEditable="true"][id="text"]:empty:not(:focus):before {
+[contentEditable="true"][id="text"]:empty:not(:focus)::before {
 	content: attr(data-placeholder);
 	color: #aaa;
-	font-size: 2rem;
+	font-size: 1.5rem;
 	pointer-events: none;
 }
 
 .container {
 	filter: none;
 	background-color: var(--grey-25);
-	border-radius: 5px;
-	padding: 1vh;
-	margin-top: 1vh;
+	border-radius: 1rem;
+	corner-shape: squircle;
+	padding: 1rem;
 	color: white;
 	display: block;
 
 	&:hover {
 		background-color: var(--grey-30);
-	}
-
-	&::after {
-		content: "";
-		clear: both;
-		display: table;
 	}
 }
 
@@ -94,37 +89,50 @@ body {
 	color: #aaa;
 }
 
+#outer-wrap {
+	anchor-name: --message-view;
+	overflow-y: auto;
+	scrollbar-gutter: stable;
+	display: flex;
+	flex-direction: column;
+	padding-block: .5rem;
+	padding-inline: 1rem;
+	gap: .5rem;
+	flex-grow: 1;
+	scroll-behavior: smooth;
+	container-name: messages;
+	container-type: scroll-state;
+}
+
 #scroll-down {
 	position: absolute;
+	position-anchor: --message-view;
 	background-color: var(--grey-50);
+	user-select: none;
 	color: var(--grey-30);
-	width: 2.3vw;
 	font-size: 2rem;
+	aspect-ratio: 1 / 1;
+	height: fit-content;
+	padding-inline: 12px;
+	align-content: center;
 	border-radius: 50%;
-	display: flex;
-	justify-content: center;
-	align-self: self-end;
+	bottom: calc(anchor(bottom) + .5rem);
+	right: calc(anchor(right) + 1rem);
 
 	&:hover {
 		background-color: var(--grey-45);
 	}
 }
 
-
 #new-msg-counter {
+	position: absolute;
 	border-radius: 50%;
 	background-color: hsl(50, 100%, 55%);
-	position: absolute;
-	height: fit-content;
-	min-width: 1.5vw;
-	padding: 0.1vw;
 	font-size: 1rem;
 	color: black;
-	display: flex;
-	right: 1.3vw;
-	bottom: 1.3vw;
-	display: flex;
-	justify-content: center;
+	padding-inline: 3px;
+	top: -.5rem;
+	left: 0;
 }
 
 .topics {
@@ -147,16 +155,6 @@ body {
 	corner-shape: squircle;
 	text-align: center;
 	justify-content: center;
-}
-
-#outer-wrap {
-	overflow-y: auto;
-	scrollbar-gutter: stable;
-	display: flex;
-	flex-direction: column;
-	padding: 1rem;
-	flex-grow: 1;
-	scroll-behavior: smooth;
 }
 
 .topic {
@@ -188,39 +186,51 @@ body {
 }
 
 .bottom {
-	display: flex;
-	padding: 0.5vh;
-	font-size: 2rem;
+	display: grid;
+	grid-template-columns: 7fr 3fr;
 	color: white;
+	font-size: 1.5rem;
 	background-color: var(--grey-10);
+	place-items: stretch;
 
 	i {
-		align-self: center;
 		font-size: 2rem;
 	}
 
-	p:hover,
-	i:hover {
+	#invite-req {
+		align-content: center;
+		text-align: center;
+	}
+
+	#username {
+		display: grid;
+
+		p {
+			align-self: end;
+		}
+
+		span {
+			align-self: start;
+			font-size: 1rem;
+			color: #aaa;
+		}
+	}
+
+	#username:hover,
+	#invite-req:hover {
 		background-color: var(--grey-20);
 		cursor: pointer;
 	}
 }
 
-.displayname-bottom {
-	width: 70%;
-}
-
 .typing {
-	font-size: 2rem;
-	width: 51vh;
+	padding-left: 1rem;
+	padding-bottom: 3px;
+	width: fit-content;
+	white-space: pre;
+	font-size: 1rem;
 	pointer-events: none;
 }
-
-.gap {
-	width: 37vh;
-	pointer-events: none;
-}
-
 
 .wrapper {
 	position: fixed;
@@ -389,7 +399,7 @@ body {
 }
 
 
-[contentEditable="true"][id="new-topic-input-name"]:empty:not(:focus):before {
+[contentEditable="true"][id="new-topic-input-name"]:empty:not(:focus)::before {
 	content: attr(data-placeholder);
 	color: var(--grey-10);
 	font-size: 1rem;
@@ -420,7 +430,7 @@ body {
 	background-color: #ccc;
 	transition: 0.4s;
 
-	&:before {
+	&::before {
 		position: absolute;
 		content: "";
 		height: 1.4vw;
@@ -440,7 +450,7 @@ input:focus+.slider {
 	box-shadow: 0 0 0.1vw #2196f3;
 }
 
-input:checked+.slider:before {
+input:checked+.slider::before {
 	transform: translateX(2vw);
 }
 
@@ -470,7 +480,7 @@ input:checked+.slider:before {
 
 #search-bar {
 	width: 90%;
-	border: 3px solid #fff;
+	border: 2px solid #fff;
 	background: var(--grey-20);
 	outline: transparent;
 	font-size: 2rem;
@@ -500,7 +510,8 @@ input:checked+.slider:before {
 }
 
 .hide {
-	display: none !important;
+	opacity: 0 !important;
+	/* display: none !important; */
 }
 
 .text-pin {

@@ -25,13 +25,14 @@
 	<div class="grid-wrapper">
 		<h2 class="topics">Topics</h2>
 		<section class="chat" id="chatting">
-			<div class="message-panel-wrapper">
-				<div id="outer-wrap"></div>
-				<div contenteditable="true" id="text" class="hide" data-placeholder="Message"></div>
-			</div>
 			<div id="scroll-down" class="hide">
 				<i class="fa-solid fa-arrow-down" id="down-btn"></i>
 				<p class="hide" id="new-msg-counter">0</p>
+			</div>
+			<div class="message-panel-wrapper">
+				<div id="outer-wrap"></div>
+				<div contenteditable="true" id="text" class="hide" data-placeholder="Message"></div>
+				<p class="typing" id="typing"></p>
 			</div>
 		</section>
 		<div class="choices">
@@ -44,13 +45,15 @@
 		</div>
 		<div class="topic" id="rooms"></div>
 		<div class="bottom">
-			<p title="Left click for more info" id="username" class="displayname-bottom">
-				<%= displayName %>
-			</p>
-			<span class="username-bottom">@<%= username %></span>
-			<i class="fa-solid fa-users" title="Invite request"></i>
-			<p class="gap"></p>
-			<p class="typing" id="typing"></p>
+			<div id="username" title="Left click for more info">
+				<p>
+					<%= displayName %>
+				</p>
+				<span>@<%= username %></span>
+			</div>
+			<div id="invite-req" title="Invite request">
+				<i class="fa-solid fa-users"></i>
+			</div>
 		</div>
 	</div>
 	<div class="new-topic hide" id="new-topic">

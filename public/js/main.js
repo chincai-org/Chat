@@ -3,9 +3,8 @@ const outerWrap = document.getElementById("outer-wrap");
 const roomsElement = document.getElementById("rooms");
 const searchBar = document.getElementById("search-bar");
 const down = document.getElementById("scroll-down");
-const downbtn = document.getElementById("down-btn");
 const newMsgCounter = document.getElementById("new-msg-counter");
-const chat = document.querySelector(".chat");
+const chat = document.getElementById("outer-wrap");
 const typing = document.getElementById("typing");
 
 const options = { className: "links", target: { url: "_blank" } };
@@ -13,20 +12,17 @@ const timeoutPreference = 5000;
 const usersTyping = {};
 
 let openedContextMenu = null;
-let isAtBottomMost = true;
 let allowFetch = true;
 
 chat.onscroll = () => {
-	if (chat.scrollHeight - chat.scrollTop >= chat.scrollHeight + 1) {
-		// Not at bottom most
-		down.classList.remove("hide");
-		isAtBottomMost = false;
-	} else {
+	if (Math.ceil(chat.scrollHeight - chat.scrollTop) === chat.clientHeight) {
 		// At bottom most
 		down.classList.add("hide");
 		newMsgCounter.innerText = "0";
 		newMsgCounter.classList.add("hide");
-		isAtBottomMost = true;
+	} else {
+		// Not at bottom most
+		down.classList.remove("hide");
 	}
 
 	if (
@@ -41,7 +37,7 @@ chat.onscroll = () => {
 	}, 500);
 };
 
-downbtn.onclick = () => {
+down.onclick = () => {
 	chat.scrollTop = chat.scrollHeight;
 };
 
@@ -95,8 +91,6 @@ textbox.onkeydown = e => {
 };
 
 textbox.oninput = () => {
-	if (textbox.innerHTML === "<br>") textbox.innerHTML = "";
-
 	socket.emit("typing", cookieId, currentRoom, Date.now());
 };
 
@@ -174,13 +168,6 @@ async function isValid(username) {
 	).json();
 }
 
-function topicStatus(d) {
-	if (d == 1) {
-		document.getElementById("topics").style.display = "grid";
-	} else {
-		document.getElementById("topics").style.display = "none";
-	}
-}
 function sizeOfChat(d) {
 	document.getElementById("chatting").style.width = d;
 }
@@ -202,7 +189,7 @@ function updateTypingUsers() {
 	let users = Object.keys(usersTyping);
 	console.log("🚀 ~ file: main.js:195 ~ updateTypingUsers ~ users:", users);
 	if (users.length == 0) {
-		typing.innerText = "";
+		typing.innerText = " ";
 	} else {
 		let toBe = users.length == 1 ? "is" : "are";
 		let firstTwo = users.slice(
