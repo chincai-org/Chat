@@ -6,6 +6,7 @@ const newTopicDialog = document.getElementById("new-topic");
 const createNewTopic = document.getElementById("create-new");
 const newTopicCancel = document.getElementById("new-topic-btn-cancel");
 const newTopicConfirm = document.getElementById("new-topic-btn-create");
+const newTopicForm = document.getElementById("new-topic-form");
 const check18 = document.getElementById("check18");
 const topics = document.getElementById("rooms");
 
@@ -28,23 +29,24 @@ newTopicCancel.onclick = () => {
 };
 
 // Confirm create new topic
-// newTopicConfirm.onclick = () => {
-// 	if (!/\S/.test(newTopicName.innerText)) {
-// 		return;
-// 	}
-//
-// 	socket.emit(
-// 		"new-room",
-// 		cookieId,
-// 		newTopicName.innerText,
-// 		visible,
-// 		check18.checked,
-// 	);
-//
-// newTopic.classList.add("hide");
-// newTopicName.innerHTML = "";
-// check18.checked = false;
-// };
+newTopicForm.onsubmit = e => {
+	e.preventDefault();
+	if (!/\S/.test(newTopicName.value)) {
+		return;
+	}
+
+	socket.emit(
+		"new-room",
+		cookieId,
+		newTopicName.value,
+		visible,
+		check18.checked,
+	);
+
+	newTopicName.value = "";
+	check18.checked = false;
+	newTopicDialog.close();
+};
 
 // Detect keydown on new topic name textbox
 newTopicName.onkeydown = e => {
