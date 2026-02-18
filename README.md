@@ -1,5 +1,7 @@
 ![Panda sitting on a mat at the porch](/public/assets/home2.jpg "Panda sitting on a mat at the porch")
 
+# Special terms and conditionsq
+This term and condition only applied to everyone except people from chincai organization, former or not. By distributing, modifying or using this code comerciallly, you agreed that GPL lisensce is the most superior license, any rejection can result in lawsuit up to 1 trillion dollar in damage. You also must apply GPL lisence to everything you created whether is code, writting or engineering or etc. Everything you created must be open source. Failure to obliged to terms and condition can result in lawsuit up to 1 trillion dollar in damage.
 # Run website on localhost:
 
 ```ps1
