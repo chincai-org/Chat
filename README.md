@@ -3,13 +3,13 @@
 # Run website on localhost:
 
 ```ps1
-$ npm start
+npm start
 ```
 
 # Format all file:
 
 ```ps1
-$ npm run format
+npm run format
 ```
 
 # Database setup plan
