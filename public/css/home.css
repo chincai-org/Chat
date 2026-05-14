@@ -1,5 +1,5 @@
 :root {
-	--navbar-padding-block: .3rem;
+	--navbar-padding-block: 0.3rem;
 	--fs-400: 1rem;
 	--fs-600: 1.5rem;
 	--fs-800: 2rem;
@@ -28,7 +28,6 @@ body #introduction {
 	padding: 0;
 }
 
-
 body #about {
 	background-color: rgb(50, 50, 50);
 	background-image: url("/assets/home4.jpg");
@@ -41,7 +40,7 @@ body #about {
 
 section {
 	height: 100svh;
-	padding-left: .3rem;
+	padding-left: 0.3rem;
 }
 
 h1 {

@@ -20,10 +20,11 @@ function typingKill(username, roomId, socket) {
 	try {
 		delete usersTyping[roomId][username];
 		socket.broadcast.emit("typing-kill", username);
-	} catch { }
+	} catch {}
 }
 
 app.use(express.static("public"));
+app.use("/vendor/linkifyjs", express.static("node_modules/linkifyjs/dist"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -382,9 +383,9 @@ io.on("connection", socket => {
 				"msg",
 				utils.generateWarningMessage(
 					utils.MSG_PREFIX +
-					utils.MUTED +
-					" for " +
-					muteObject.reason,
+						utils.MUTED +
+						" for " +
+						muteObject.reason,
 				),
 			);
 		} else if (now - user.lastMessageTimestamp < utils.MESSAGE_COOLDOWN) {

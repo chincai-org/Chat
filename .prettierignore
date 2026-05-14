@@ -1,6 +1,0 @@
-package.json
-package-lock.json
-.env
-*.ejs
-_reset.css
-_base.css

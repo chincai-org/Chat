@@ -20,12 +20,11 @@ body {
 	height: 100%;
 }
 
-
 .loginbox {
 	border: white solid 0.2rem;
 	border-radius: 1rem;
 	corner-shape: squircle;
-	background-color: hsla(0 0% 0% / .2);
+	background-color: hsla(0 0% 0% / 0.2);
 	margin-inline: auto;
 	width: min(75ch, 100%);
 	padding: 0.3rem;
@@ -64,7 +63,6 @@ body {
 	}
 
 	& input {
-
 		&[type="text"],
 		&[type="password"] {
 			min-height: 40px;

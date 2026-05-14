@@ -1,6 +1,6 @@
 // Constant global variables
-const public = document.getElementById("choice-1");
-const private = document.getElementById("choice-2");
+const publicBtn = document.getElementById("choice-1");
+const privateBtn = document.getElementById("choice-2");
 const newTopicName = document.getElementById("new-topic-input-name");
 const newTopicDialog = document.getElementById("new-topic");
 const createNewTopic = document.getElementById("create-new");
@@ -57,20 +57,21 @@ newTopicName.onkeydown = e => {
 };
 
 // Detect click on Public button
-public.onclick = () => {
-	public.classList.add("clicked");
 
-	if (private.classList.contains("clicked")) {
-		private.classList.remove("clicked");
+publicBtn.onclick = () => {
+	publicBtn.classList.add("clicked");
+
+	if (privateBtn.classList.contains("clicked")) {
+		privateBtn.classList.remove("clicked");
 	}
 	switchTo("public");
 };
 
 // Detect click on Private Button
-private.onclick = () => {
-	private.classList.add("clicked");
-	if (public.classList.contains("clicked")) {
-		public.classList.remove("clicked");
+privateBtn.onclick = () => {
+	privateBtn.classList.add("clicked");
+	if (publicBtn.classList.contains("clicked")) {
+		publicBtn.classList.remove("clicked");
 	}
 	switchTo("private");
 };
