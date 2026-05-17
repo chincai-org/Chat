@@ -1,24 +1,56 @@
 ![Panda sitting on a mat at the porch](/public/assets/home2.jpg "Panda sitting on a mat at the porch")
 
-# Run website on localhost:
+# Quick Start
 
-```ps1
-bun run start
-```
+```bash
+# Install dependencies
+bun install
 
-# Format all file:
+# Development (hot reload)
+bun run dev
 
-```ps1
+# Production build + preview
+bun run build && bun run preview
+
+# Format code
 bun run format
 ```
 
-# Install dependencies:
+# Commands
 
-```ps1
-bun install
+| Command | Description |
+|---------|-------------|
+| `bun install` | Install dependencies |
+| `bun run dev` | Start dev server (hot reload) |
+| `bun run build` | Build JS/CSS for production |
+| `bun run preview` | Run production server |
+| `bun run format` | Format code with Biome |
+
+# Environment Variables
+
+Create `.env` file:
+```
+uri=mongodb://localhost:27017
+PORT=3000
+CLIENT_ORIGIN=http://localhost:3000
+NODE_ENV=development
 ```
 
-# Database setup plan
+# Project Structure
+
+```
+├── app.ts          # Express server + Socket.io
+├── build.ts        # Production build script
+├── utils.ts        # MongoDB utilities + helpers
+├── types.ts        # TypeScript types
+├── public/
+│   ├── js/         # Source JS files (main.js, topic.js, socket.js)
+│   ├── css/        # Source CSS files
+│   └── assets/     # Images, fonts
+└── dist/           # Production build output
+```
+
+# Database Schema
 
 Users:
 
