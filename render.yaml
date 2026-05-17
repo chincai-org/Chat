@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: panmapor-chat
+    env: node
+    buildCommand: bun run build
+    startCommand: NODE_ENV=production bun app.ts
+    envVars:
+      - key: NODE_ENV
+        value: production
+    autoDeploy: true
