@@ -2,6 +2,9 @@
 	"compilerOptions": {
 		"types": ["bun-types"],
 		"lib": ["ESNext", "DOM"],
-		"target": "esnext"
+		"target": "esnext",
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"noImplicitAny": false
 	}
 }

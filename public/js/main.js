@@ -1,35 +1,153 @@
 const textbox = document.getElementById("text");
 const outerWrap = document.getElementById("outer-wrap");
-const roomsElement = document.getElementById("rooms");
-const searchBar = document.getElementById("search-bar");
 const down = document.getElementById("scroll-down");
 const newMsgCounter = document.getElementById("new-msg-counter");
 const chat = document.getElementById("outer-wrap");
 const typing = document.getElementById("typing");
 
-const options = { className: "links", target: { url: "_blank" } };
-const timeoutPreference = 5000;
-const usersTyping = {};
+window.timeoutPreference = 5000;
+window.usersTyping = {};
+window._isAtBottomMost = true;
 
 let openedContextMenu = null;
 let allowFetch = true;
 
-chat.onscroll = () => {
-	if (Math.ceil(chat.scrollHeight - chat.scrollTop) === chat.clientHeight) {
-		// At bottom most
-		down.classList.add("hide");
+window.cookieId = getCookie("id");
+
+window.clearMessage = () => {
+	outerWrap.innerHTML = "";
+};
+
+function isLetter(char) {
+	const code = char.charCodeAt(0);
+	return (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
+}
+
+function isDigit(char) {
+	return char >= "0" && char <= "9";
+}
+
+function isUrlChar(char) {
+	return !/\s/.test(char);
+}
+
+function isMentionChar(char) {
+	return isLetter(char) || isDigit(char) || char === "_";
+}
+
+function isHashtagChar(char) {
+	return isLetter(char) || isDigit(char);
+}
+
+function isUrlStart(text, index) {
+	return (
+		text[index] === "h" &&
+		text[index + 1] === "t" &&
+		(text[index + 2] === "t"
+			? text[index + 3] === "p"
+			: text[index + 2] === ":")
+	);
+}
+
+function parseContent(text) {
+	const tokens = [];
+	let i = 0;
+	while (i < text.length) {
+		if (isUrlStart(text, i) || (text[i] === "h" && text[i + 1] === ":")) {
+			const start = i;
+			while (i < text.length && isUrlChar(text[i])) i++;
+			tokens.push({ type: "url", value: text.slice(start, i) });
+		} else if (text[i] === "@") {
+			const start = i++;
+			while (i < text.length && isMentionChar(text[i])) i++;
+			tokens.push({ type: "mention", value: text.slice(start, i) });
+		} else if (text[i] === "#") {
+			const start = i++;
+			while (i < text.length && isHashtagChar(text[i])) i++;
+			tokens.push({ type: "hashtag", value: text.slice(start, i) });
+		} else {
+			const start = i;
+			while (
+				i < text.length &&
+				text[i] !== "@" &&
+				text[i] !== "#" &&
+				!(
+					isUrlStart(text, i) ||
+					(text[i] === "h" && text[i + 1] === ":")
+				)
+			) {
+				i++;
+			}
+			tokens.push({ type: "text", value: text.slice(start, i) });
+		}
+	}
+	return tokens;
+}
+
+function appendMessageContent(node, content, pings, topicIds) {
+	const topicMap = new Map(topicIds.map(topic => [topic.id, topic.name]));
+	const pingSet = new Set(pings);
+	const tokens = parseContent(content);
+	for (const token of tokens) {
+		if (token.type === "url") {
+			const link = document.createElement("a");
+			link.className = "links";
+			link.target = "_blank";
+			link.rel = "noreferrer";
+			link.href = token.value;
+			link.textContent = token.value;
+			node.append(link);
+		} else if (token.type === "mention") {
+			const username = token.value.slice(1);
+			if (pingSet.has(username)) {
+				const span = document.createElement("span");
+				span.className = "mention";
+				span.textContent = token.value;
+				node.append(span);
+			} else {
+				node.append(document.createTextNode(token.value));
+			}
+		} else if (token.type === "hashtag") {
+			const topicId = token.value.slice(1);
+			const topicName = topicMap.get(topicId);
+			if (topicName) {
+				const span = document.createElement("span");
+				span.className = "hashtag";
+				span.textContent = `#${topicName}`;
+				span.onclick = () => redirectTopic(topicId);
+				node.append(span);
+			} else {
+				node.append(document.createTextNode(token.value));
+			}
+		} else {
+			node.append(document.createTextNode(token.value));
+		}
+	}
+}
+
+function setScrollState(isBottom) {
+	window._isAtBottomMost = isBottom;
+	down.classList.toggle("hide", isBottom);
+	if (isBottom) {
 		newMsgCounter.innerText = "0";
 		newMsgCounter.classList.add("hide");
+	}
+}
+
+chat.onscroll = () => {
+	if (Math.ceil(chat.scrollHeight - chat.scrollTop) === chat.clientHeight) {
+		setScrollState(true);
 	} else {
-		// Not at bottom most
-		down.classList.remove("hide");
+		setScrollState(false);
 	}
 
 	if (
 		allowFetch &&
 		chat.scrollTop - chat.clientHeight + chat.scrollHeight < 2
 	) {
-		fetchMsg(cookieId, currentRoom, outerWrap.firstChild.id);
+		if (outerWrap.firstChild) {
+			fetchMsg(window.cookieId, window.currentRoom, outerWrap.firstChild.id);
+		}
 		allowFetch = false;
 	}
 	setTimeout(() => {
@@ -50,25 +168,22 @@ textbox.onkeydown = e => {
 		sendMessage(textbox.innerText);
 	}
 
-	if (e.keyCode == 9) {
+	if (e.keyCode === 9) {
 		e.preventDefault();
-		console.log(textbox.innerText);
-		let foundResult = textbox.innerText
-			.replace()
-			.match(/(?<=@)[a-zA-Z0-9_]+$/);
+		const foundResult = textbox.innerText.match(/(?<=@)[a-zA-Z0-9_]+$/);
 
 		if (foundResult) {
-			let nameQuery = foundResult[0];
+			const nameQuery = foundResult[0];
 			autoComplete(nameQuery)
 				.then(res => {
-					let result = res.res;
+					const result = res.res;
 					if (result) {
 						textbox.innerText = textbox.innerText.replace(
-							new RegExp(nameQuery + "$"),
+							new RegExp(`${nameQuery}$`),
 							result,
 						);
-						let range = document.createRange();
-						let selection = window.getSelection();
+						const range = document.createRange();
+						const selection = window.getSelection();
 						range.selectNodeContents(textbox);
 						range.collapse(false);
 						selection.removeAllRanges();
@@ -78,55 +193,11 @@ textbox.onkeydown = e => {
 				.catch(console.error);
 		}
 	}
-
-	// for (let username of new Set(textbox.innerHTML.match(/(?<=@)[A-Za-z\d_]+/g) || [])) {
-	//     console.log(username)
-	//     if (isValid(username)) {
-	//             textbox.innerHTML = textbox.innerHTML.replaceAll(
-	//                 `@${username}`,
-	//                 `<span class="mention">@${username}</span>`
-	//             );
-	//     }
-	// }
 };
 
 textbox.oninput = () => {
-	socket.emit("typing", cookieId, currentRoom, Date.now());
+	socket.emit("typing", window.cookieId, window.currentRoom, Date.now());
 };
-
-// Convert image paste to link, doesnt work
-// textbox.onpaste = event => {
-//     let items = (event.clipboardData || event.originalEvent.clipboardData)
-//         .items;
-//     for (let item of items) {
-//         if (item.kind === "file" && item.type?.indexOf("image/") === 0) {
-//             event.preventDefault();
-//             let file = item.getAsFile();
-//             console.log("Image pasted:", file);
-//             // Do something with the image file, such as upload it to a server or display it on the page
-
-//             let formData = new FormData();
-//             formData.append("file", file);
-//             formData.append("key", "32c4dcb1bb5d6134cf83044dea7a3838");
-
-//             fetch("https://postimages.org/api.php", {
-//                 method: "POST",
-//                 body: formData
-//             })
-//                 .then(response => {
-//                     return response.text();
-//                 })
-//                 .then(result => {
-//                     let imageUrl = result.trim();
-//                     console.log("Image uploaded to Postimages:", imageUrl);
-//                     textbox.innerText += imageUrl;
-//                 })
-//                 .catch(error => {
-//                     console.error(error);
-//                 });
-//         }
-//     }
-// };
 
 document.onclick = e => {
 	openedContextMenu?.classList.remove("active");
@@ -143,10 +214,6 @@ document.onclick = e => {
 	}
 };
 
-function randint(min, max) {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 async function postData(url, method, data) {
 	return await fetch(url, {
 		method: method,
@@ -162,19 +229,15 @@ async function postData(url, method, data) {
 	});
 }
 
-async function isValid(username) {
-	return (
-		await postData("/is_username_valid", "POST", { username: username })
-	).json();
-}
-
-function sizeOfChat(d) {
+function _sizeOfChat(d) {
 	document.getElementById("chatting").style.width = d;
 }
+window.sizeOfChat = _sizeOfChat;
 
-function lengthOfText(d) {
+function _lengthOfText(d) {
 	document.getElementById("text").style.width = d;
 }
+window.lengthOfText = _lengthOfText;
 
 async function autoComplete(nameQuery) {
 	return (
@@ -186,24 +249,23 @@ async function autoComplete(nameQuery) {
 }
 
 function updateTypingUsers() {
-	let users = Object.keys(usersTyping);
-	console.log("🚀 ~ file: main.js:195 ~ updateTypingUsers ~ users:", users);
-	if (users.length == 0) {
+	const users = Object.keys(window.usersTyping);
+	if (users.length === 0) {
 		typing.innerText = " ";
 	} else {
-		let toBe = users.length == 1 ? "is" : "are";
-		let firstTwo = users.slice(
+		const toBe = users.length === 1 ? "is" : "are";
+		const firstTwo = users.slice(
 			0,
 			Math.max(1, Math.min(2, users.length - 1)),
 		);
-		let lastFew = users.slice(firstTwo.length, users.length);
-		let lastFewLength = lastFew.length;
+		const lastFew = users.slice(firstTwo.length, users.length);
+		const lastFewLength = lastFew.length;
 
-		let beforeAnd = firstTwo.join(", ");
-		let afterAnd = // The most insane ternary operator usage
+		const beforeAnd = firstTwo.join(", ");
+		const afterAnd = // The most insane ternary operator usage
 			(lastFewLength ? "and " : "") +
 			(lastFewLength > 1
-				? (lastFewLength > 99 ? "99+" : lastFewLength) + " more"
+				? `${lastFewLength > 99 ? "99+" : lastFewLength} more`
 				: lastFew.join());
 
 		typing.innerText = `${beforeAnd} ${afterAnd} ${toBe} typing...`;
@@ -215,7 +277,7 @@ function sendMessage(msg) {
 		return;
 	}
 	textbox.innerText = "";
-	socket.emit("msg", cookieId, currentRoom, msg);
+	socket.emit("msg", window.cookieId, window.currentRoom, msg);
 	chat.scrollTop = chat.scrollHeight;
 }
 
@@ -226,16 +288,14 @@ function fetchMsg(cookieId, roomId, messageId) {
 		data: {
 			cookieId: cookieId,
 			roomId: roomId,
-			start: messageId == 0 ? "last" : messageId,
+			start: messageId === 0 ? "last" : messageId,
 		},
 		success: response => {
-			console.log(response);
-
-			if (messageId != 0) {
+			if (messageId !== 0) {
 				response.reverse();
 			}
 
-			for (let msg of response) {
+			for (const msg of response) {
 				createMsg(
 					msg.id,
 					msg.authorName,
@@ -245,17 +305,17 @@ function fetchMsg(cookieId, roomId, messageId) {
 					msg.time,
 					msg.pings,
 					msg.topicIds,
-					messageId != 0,
+					messageId !== 0,
 				);
 			}
 		},
-		error: (xhr, status, error) => {
-			console.log("Error: " + error);
+		error: (_xhr, _status, error) => {
+			console.error(`Error: ${error}`);
 		},
 	});
 }
 
-function clearMessage() {
+function _clearMessage() {
 	outerWrap.innerHTML = "";
 }
 
@@ -270,10 +330,10 @@ async function createMsg(
 	topicIds,
 	isOld,
 ) {
-	let msgContextMenu = createMsgContextMenu(id);
-	let date = new Date(time);
+	const msgContextMenu = createMsgContextMenu(id);
+	const date = new Date(time);
 
-	let containers = document.createElement("div");
+	const containers = document.createElement("div");
 	containers.className = "container";
 	containers.id = id;
 
@@ -285,11 +345,11 @@ async function createMsg(
 
 		openedContextMenu = msgContextMenu;
 
-		let x = Math.min(
+		const x = Math.min(
 			e.clientX,
 			window.innerWidth - msgContextMenu.offsetWidth,
 		);
-		let y = Math.min(
+		const y = Math.min(
 			e.clientY,
 			window.innerHeight - msgContextMenu.offsetHeight,
 		);
@@ -298,13 +358,13 @@ async function createMsg(
 		msgContextMenu.style.top = `${(y / window.innerHeight) * 100}vh`;
 	};
 
-	let textContainer = document.createElement("div");
+	const textContainer = document.createElement("div");
 	textContainer.className = "text-container";
 
-	let name = document.createElement("h5");
+	const name = document.createElement("h5");
 	name.innerText = authorName;
 
-	let username = document.createElement("span");
+	const username = document.createElement("span");
 	username.innerText = `@${authorUsername}`;
 	username.className = "username";
 	username.onclick = () => {
@@ -312,30 +372,17 @@ async function createMsg(
 	};
 	// username.onclick = () => {textbox.innerHTML += `<span class="mention">@${username}</span>`};
 
-	let msg = document.createElement("p");
-	msg.innerText = content;
+	const msg = document.createElement("p");
 	msg.className = "msg";
+	appendMessageContent(msg, content, pings, topicIds);
 
-	for (let ping of pings) {
-		msg.innerHTML = msg.innerHTML.replaceAll(
-			`@${ping}`,
-			`<span class="mention">@${ping}</span>`,
-		);
+	for (const ping of pings) {
 		if (ping === authorUsername) {
 			containers.classList.add("mention-container");
 		}
 	}
 
-	for (let topicId of topicIds) {
-		msg.innerHTML = msg.innerHTML.replaceAll(
-			`#${topicId.id}`,
-			`<span class="hashtag" onclick=redirectTopic("${topicId.id}")>#${topicId.name}</span>`,
-		);
-	}
-
-	msg.innerHTML = linkifyHtml(msg.innerHTML, options);
-
-	let clock = document.createElement("span");
+	const clock = document.createElement("span");
 	clock.className = "time";
 	clock.innerText =
 		String(date.getDate()) +
@@ -347,7 +394,7 @@ async function createMsg(
 		date.toLocaleTimeString().slice(0, -6) +
 		(date.getHours() > 11 ? " PM" : " AM");
 
-	let image = document.createElement("img");
+	const image = document.createElement("img");
 	image.alt = "default";
 	image.src = avatar;
 	image.className = "image";
@@ -370,42 +417,44 @@ async function createMsg(
 		containers.classList.add("system-colour");
 		clock.classList.add("system-colour");
 
-		let deleteAfter = +id.split("$")[0].slice(6, id.length);
+		const deleteAfter = +id.split("$")[0].slice(6, id.length);
 
 		if (deleteAfter)
 			setTimeout(() => {
-				outerWrap.removeChild(containers);
+				if (containers.parentNode === outerWrap) {
+					outerWrap.removeChild(containers);
+				}
 			}, deleteAfter);
 	}
 }
 
 function createMsgContextMenu(id) {
-	let wrapper = document.createElement("div");
+	const wrapper = document.createElement("div");
 	wrapper.className = "wrapper";
 
-	let menuContent = document.createElement("div");
+	const menuContent = document.createElement("div");
 	menuContent.className = "menu-content";
 
-	let menu = document.createElement("ul");
+	const menu = document.createElement("ul");
 	menu.className = "menu";
 
-	let itemTrash = document.createElement("li");
+	const itemTrash = document.createElement("li");
 	itemTrash.className = "item";
 
-	let iTrash = document.createElement("i");
+	const iTrash = document.createElement("i");
 	iTrash.className = "fa-solid fa-trash";
-	let spanTrash = document.createElement("span");
+	const spanTrash = document.createElement("span");
 	spanTrash.innerText = "Delete";
 
-	let copyId = document.createElement("div");
+	const copyId = document.createElement("div");
 	copyId.className = "copy-id";
 
-	let itemCopyId = document.createElement("li");
+	const itemCopyId = document.createElement("li");
 	itemCopyId.className = "item";
 
-	let ICopyId = document.createElement("i");
+	const ICopyId = document.createElement("i");
 	ICopyId.className = "fa-solid fa-id-card-clip";
-	let spanCopyId = document.createElement("span");
+	const spanCopyId = document.createElement("span");
 	spanCopyId.innerText = "Copy ID";
 
 	itemTrash.appendChild(iTrash);
@@ -425,7 +474,7 @@ function createMsgContextMenu(id) {
 	};
 
 	itemTrash.onclick = e => {
-		socket.emit("delete-msg", cookieId, currentRoom, id);
+		socket.emit("delete-msg", window.cookieId, window.currentRoom, id);
 		wrapper.classList.remove("active");
 		e.stopPropagation();
 	};
@@ -436,17 +485,19 @@ function createMsgContextMenu(id) {
 // Remove typing users that reached the timeoutPreference
 setInterval(() => {
 	try {
-		let now = Date.now();
+		const now = Date.now();
 		let change = false;
-		for (let [username, startTime] of Object.entries(usersTyping)) {
-			if (now - startTime > timeoutPreference) {
-				delete usersTyping[username];
+		for (const [username, startTime] of Object.entries(
+			window.usersTyping,
+		)) {
+			if (now - startTime > window.timeoutPreference) {
+				delete window.usersTyping[username];
 				change = true;
-				socket.emit("typing-kill", username, currentRoom);
+				socket.emit("typing-kill", username, window.currentRoom);
 			}
 		}
 		if (change) updateTypingUsers();
 	} catch (e) {
-		console.log(e);
+		console.error(e);
 	}
 }, 2000);

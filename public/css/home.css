@@ -34,7 +34,6 @@ body #about {
 	background-position: top, right;
 	background-repeat: no-repeat, no-repeat;
 	background-size: cover;
-	padding-top: 3.5rem;
 	padding-top: calc(var(--navbar-padding-block) + var(--fs-600) + 1rem);
 }
 

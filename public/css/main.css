@@ -544,11 +544,11 @@ input:checked + .slider::before {
 }
 
 .clicked {
-	background-color: var(--grey-10) !important;
+	background-color: var(--grey-10);
 }
 
 .hide {
-	opacity: 0 !important;
+	opacity: 0;
 	/* display: none !important; */
 }
 

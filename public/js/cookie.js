@@ -1,31 +1,17 @@
 function getCookie(cname) {
-	let name = cname + "=";
-	let decodedCookie = decodeURIComponent(document.cookie);
-	let ca = decodedCookie.split(";");
+	const name = `${cname}=`;
+	const decodedCookie = decodeURIComponent(document.cookie);
+	const ca = decodedCookie.split(";");
 	for (let i = 0; i < ca.length; i++) {
 		let c = ca[i];
-		while (c.charAt(0) == " ") {
+		while (c.charAt(0) === " ") {
 			c = c.substring(1);
 		}
-		if (c.indexOf(name) == 0) {
-			return c.substring(name.length, c.length);
+		if (c.startsWith(name)) {
+			return c.substring(name.length);
 		}
 	}
 	return "";
 }
 
-const cookieId = getCookie("id");
-
-$.ajax({
-	url: "/get_user_by_cookie_id",
-	type: "POST",
-	data: {
-		id: cookieId,
-	},
-	success: response => {
-		// document.getElementById("username").innerText = response.displayName;
-	},
-	error: (xhr, status, error) => {
-		console.log("Error: " + error);
-	},
-});
+const _cookieId = getCookie("id");

@@ -10,5 +10,12 @@
 		"formatter": {
 			"arrowParentheses": "asNeeded"
 		}
+	},
+	"linter": {
+		"rules": {
+			"suspicious": {
+				"noConstEnum": "off"
+			}
+		}
 	}
 }

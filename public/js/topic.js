@@ -1,34 +1,34 @@
-// Constant global variables
+const _MAX_MESSAGE_LENGTH = 700;
+const MOBILE_BREAKPOINT = 700;
+
 const publicBtn = document.getElementById("choice-1");
 const privateBtn = document.getElementById("choice-2");
 const newTopicName = document.getElementById("new-topic-input-name");
 const newTopicDialog = document.getElementById("new-topic");
 const createNewTopic = document.getElementById("create-new");
 const newTopicCancel = document.getElementById("new-topic-btn-cancel");
-const newTopicConfirm = document.getElementById("new-topic-btn-create");
 const newTopicForm = document.getElementById("new-topic-form");
 const check18 = document.getElementById("check18");
 const topics = document.getElementById("rooms");
+const searchBar = document.getElementById("search-bar");
+const roomsElement = document.getElementById("rooms");
+const textbox = document.getElementById("text");
 
-// Changable global variable
 let activeRoom = null;
 let visible = null;
 let topicDblclick = null;
-let currentRoom = "";
+window.currentRoom = "";
 
-// Create new topic button
 createNewTopic.onclick = () => {
 	newTopicDialog.showModal();
 };
 
-// Cancel create new topic
 newTopicCancel.onclick = () => {
 	newTopicDialog.close();
 	newTopicName.value = "";
 	check18.checked = false;
 };
 
-// Confirm create new topic
 newTopicForm.onsubmit = e => {
 	e.preventDefault();
 	if (!/\S/.test(newTopicName.value)) {
@@ -37,7 +37,7 @@ newTopicForm.onsubmit = e => {
 
 	socket.emit(
 		"new-room",
-		cookieId,
+		window.cookieId,
 		newTopicName.value,
 		visible,
 		check18.checked,
@@ -48,15 +48,12 @@ newTopicForm.onsubmit = e => {
 	newTopicDialog.close();
 };
 
-// Detect keydown on new topic name textbox
 newTopicName.onkeydown = e => {
 	if (e.keyCode === 13) {
 		e.preventDefault();
 		newTopicName.blur();
 	}
 };
-
-// Detect click on Public button
 
 publicBtn.onclick = () => {
 	publicBtn.classList.add("clicked");
@@ -67,7 +64,6 @@ publicBtn.onclick = () => {
 	switchTo("public");
 };
 
-// Detect click on Private Button
 privateBtn.onclick = () => {
 	privateBtn.classList.add("clicked");
 	if (publicBtn.classList.contains("clicked")) {
@@ -76,18 +72,16 @@ privateBtn.onclick = () => {
 	switchTo("private");
 };
 
-// Detect input on search topic
 searchBar.oninput = () => {
-	if (searchBar.value == "") {
+	if (searchBar.value === "") {
 		clearRoom();
-		socket.emit("rooms", cookieId, visible);
+		socket.emit("rooms", window.cookieId, visible);
 	} else {
 		clearRoom();
-		socket.emit("findrooms", cookieId, visible, searchBar.value);
+		socket.emit("findrooms", window.cookieId, visible, searchBar.value);
 	}
 };
 
-// Detect keydown on search topic
 searchBar.onkeydown = e => {
 	if (e.keyCode === 13) {
 		e.preventDefault();
@@ -98,15 +92,111 @@ searchBar.onkeydown = e => {
 function switchTo(visibility) {
 	clearRoom();
 	visible = visibility;
-	socket.emit("rooms", cookieId, visible);
+	socket.emit("rooms", window.cookieId, visible);
 }
 
 function clearRoom() {
-	let remove = [];
-	for (let room of roomsElement.children) {
-		if (room.tagName != "FORM") remove.push(room);
+	const remove = [];
+	for (const room of roomsElement.children) {
+		if (room.tagName !== "FORM") remove.push(room);
 	}
-	remove.forEach(e => roomsElement.removeChild(e));
+	for (const e of remove) roomsElement.removeChild(e);
+}
+
+function createMenuItem(tag = "li") {
+	const item = document.createElement(tag);
+	item.className = "item";
+	return item;
+}
+
+function appendMenuIconLabel(parent, iconClasses, label) {
+	const icon = document.createElement("i");
+	icon.classList.add(...iconClasses);
+	parent.appendChild(icon);
+
+	const labelNode = document.createElement("span");
+	labelNode.textContent = label;
+	parent.appendChild(labelNode);
+
+	return labelNode;
+}
+
+function getTopicsPanel() {
+	return document.querySelector(".topics");
+}
+
+function getPinMarkers() {
+	return [...topics.getElementsByClassName("text-pin")];
+}
+
+function getPinHeader() {
+	return getPinMarkers().find(marker => marker.innerText.trim() === "pin");
+}
+
+function getPinDivider() {
+	return getPinMarkers().find(marker => !marker.innerText.trim());
+}
+
+function hasPinnedTopics() {
+	const header = getPinHeader();
+	const divider = getPinDivider();
+	if (!header || !divider) return false;
+
+	let node = header.nextSibling;
+	while (node && node !== divider) {
+		if (node.id) return true;
+		node = node.nextSibling;
+	}
+
+	return false;
+}
+
+function ensurePinMarkers(topic) {
+	let header = getPinHeader();
+	let divider = getPinDivider();
+
+	if (!header || !divider) {
+		header = document.createElement("p");
+		header.className = "text-pin";
+		header.innerText = "pin";
+
+		divider = document.createElement("p");
+		divider.className = "text-pin";
+
+		topics.insertBefore(divider, topics.firstChild);
+		topics.insertBefore(topic, topics.firstChild);
+		topics.insertBefore(header, topics.firstChild);
+		return { header, divider };
+	}
+
+	return { header, divider };
+}
+
+function pinTopic(topic) {
+	const { divider } = ensurePinMarkers(topic);
+	if (topic.parentNode === topics) {
+		topics.removeChild(topic);
+	}
+	topics.insertBefore(topic, divider);
+}
+
+function unpinTopic(topic) {
+	const divider = getPinDivider();
+	if (topic.parentNode === topics) {
+		topics.removeChild(topic);
+	}
+
+	if (divider?.parentNode === topics) {
+		topics.insertBefore(topic, divider.nextSibling);
+	} else {
+		topics.appendChild(topic);
+	}
+
+	if (!hasPinnedTopics()) {
+		for (const marker of getPinMarkers()) {
+			marker.remove();
+		}
+	}
 }
 
 window.onresize = () => {
@@ -114,19 +204,22 @@ window.onresize = () => {
 };
 
 function ilvtopic(d) {
-	if (window.innerWidth > 700) {
-		document.getElementById("topics").style.width = "auto";
-		document.getElementById("topics").style.backgroundColor = "transparent";
-		document.getElementById("topics").style.display = "block";
+	const topicsPanel = getTopicsPanel();
+	if (!topicsPanel) return;
+
+	if (window.innerWidth > MOBILE_BREAKPOINT) {
+		topicsPanel.style.width = "auto";
+		topicsPanel.style.backgroundColor = "transparent";
+		topicsPanel.style.display = "block";
 		sizeOfChat("69.7%");
 		lengthOfText("67.4vw");
 	} else {
-		document.getElementById("topics").style.width = "100vw";
-		document.getElementById("topics").style.backgroundColor = "gray";
-		if (d == 1) {
-			document.getElementById("topics").style.display = "block";
+		topicsPanel.style.width = "100vw";
+		topicsPanel.style.backgroundColor = "gray";
+		if (d === 1) {
+			topicsPanel.style.display = "block";
 		} else {
-			document.getElementById("topics").style.display = "none";
+			topicsPanel.style.display = "none";
 		}
 		sizeOfChat("100%");
 		lengthOfText("90%");
@@ -134,11 +227,13 @@ function ilvtopic(d) {
 }
 
 function redirectTopic(id) {
-	let topic = document.getElementById(id);
-	if (currentRoom) socket.emit("typing-kill", cookieId, currentRoom);
+	const topic = document.getElementById(id);
+	if (!topic) return;
+	if (window.currentRoom)
+		socket.emit("typing-kill", window.cookieId, window.currentRoom);
 
-	clearMessage();
-	currentRoom = id;
+	window.clearMessage();
+	window.currentRoom = id;
 
 	activeRoom?.classList.remove("topic-bg-colour");
 	topic.classList.add("topic-bg-colour");
@@ -146,21 +241,20 @@ function redirectTopic(id) {
 
 	textbox.classList.remove("hide");
 	// contextMenu.classList.remove("active");
-	socket.emit("fetch-typing", cookieId, id);
-	fetchMsg(cookieId, id, 0);
+	socket.emit("fetch-typing", window.cookieId, id);
+	fetchMsg(window.cookieId, id, 0);
 
-	if (window.innerWidth < 701) {
-		topicStatus(0);
+	if (window.innerWidth <= MOBILE_BREAKPOINT) {
+		ilvtopic(0);
 		sizeOfChat("100%");
 		lengthOfText("90%");
 	}
 }
 
-function createTopic(room) {
-	console.log("bruh");
-	console.table(room);
-	let topic = document.createElement("div");
-	let contextMenu = createTopicContextMenu(room);
+function _createTopic(room) {
+	const topic = document.createElement("div");
+	const contextMenu = createTopicContextMenu(room);
+	if (!room?._id) return topic;
 	topic.id = room._id;
 
 	topic.ondblclick = e => {
@@ -171,12 +265,12 @@ function createTopic(room) {
 	};
 
 	topic.onkeydown = e => {
-		if (topicDblclick && e.keyCode === 13) {
+		if (topicDblclick && e.key === "Enter") {
 			topicDblclick.contentEditable = "false";
 			topicDblclick = null;
 			socket.emit(
 				"change-name",
-				cookieId,
+				window.cookieId,
 				topic.id,
 				topic.children[0].innerText,
 			);
@@ -193,11 +287,11 @@ function createTopic(room) {
 
 		openedContextMenu = contextMenu;
 
-		let x = Math.min(
+		const x = Math.min(
 			e.clientX,
 			window.innerWidth - contextMenu.offsetWidth,
 		);
-		let y = Math.min(
+		const y = Math.min(
 			e.clientY,
 			window.innerHeight - contextMenu.offsetHeight,
 		);
@@ -206,7 +300,7 @@ function createTopic(room) {
 		contextMenu.style.top = `${(y / window.innerHeight) * 100}vh`;
 	};
 
-	let topicName = document.createElement("h5");
+	const topicName = document.createElement("h5");
 	topicName.title = "Right click for more info";
 	topicName.innerText = room.name;
 
@@ -217,135 +311,67 @@ function createTopic(room) {
 }
 
 function createTopicContextMenu(room) {
-	//#region createtopic
-	let wrapper = document.createElement("div");
+	const wrapper = document.createElement("div");
 	wrapper.className = "wrapper";
 
-	let menuContent = document.createElement("div");
-	menuContent.classList.add("menu-content");
+	const menuContent = document.createElement("div");
+	menuContent.className = "menu-content";
 
-	let menu = document.createElement("ul");
-	menu.classList.add("menu");
+	const menu = document.createElement("ul");
+	menu.className = "menu";
 
-	let settingsItem = document.createElement("li");
-	settingsItem.classList.add("item");
+	const settingsItem = createMenuItem();
+	appendMenuIconLabel(settingsItem, ["fa-solid", "fa-gear"], "Settings");
 
-	let settingsIcon = document.createElement("i");
-	settingsIcon.classList.add("fa-solid", "fa-gear");
-	settingsItem.appendChild(settingsIcon);
-
-	let settingsText = document.createElement("span");
-	settingsText.textContent = "Settings";
-	settingsItem.appendChild(settingsText);
-
-	if (visible == "private") {
+	if (visible === "private") {
 		menu.appendChild(settingsItem);
 	}
 
-	let pinItem = document.createElement("li");
-	pinItem.classList.add("item");
-
-	let pinIcon = document.createElement("i");
-	pinIcon.classList.add("fa-sharp", "fa-solid", "fa-map-pin");
-	pinItem.appendChild(pinIcon);
-
-	let pinText = document.createElement("span");
-	pinText.textContent = "Pin";
-	pinItem.appendChild(pinText);
+	const pinItem = createMenuItem();
+	const pinText = appendMenuIconLabel(
+		pinItem,
+		["fa-sharp", "fa-solid", "fa-map-pin"],
+		"Pin",
+	);
 
 	menu.appendChild(pinItem);
 
 	menuContent.appendChild(menu);
 
-	let copyId = document.createElement("div");
-	copyId.classList.add("copy-id");
+	const copyId = document.createElement("div");
+	copyId.className = "copy-id";
 
-	let copyIdItem = document.createElement("li");
-	copyIdItem.classList.add("item");
-
-	let copyIdIcon = document.createElement("i");
-	copyIdIcon.classList.add("fa-solid", "fa-id-card-clip");
-	copyIdItem.appendChild(copyIdIcon);
-
-	let copyIdText = document.createElement("span");
-	copyIdText.textContent = "Copy ID";
-	copyIdItem.appendChild(copyIdText);
+	const copyIdItem = createMenuItem();
+	appendMenuIconLabel(copyIdItem, ["fa-solid", "fa-id-card-clip"], "Copy ID");
 
 	copyId.appendChild(copyIdItem);
 
-	let leaveItem = document.createElement("li");
-	leaveItem.classList.add("item");
+	const leaveItem = createMenuItem();
+	appendMenuIconLabel(leaveItem, ["fa-solid", "fa-door-open"], "Leave");
 
-	let leaveIcon = document.createElement("i");
-	leaveIcon.classList.add("fa-solid", "fa-door-open");
-	leaveItem.appendChild(leaveIcon);
-
-	let leaveText = document.createElement("span");
-	leaveText.textContent = "Leave";
-	leaveItem.appendChild(leaveText);
-
-	if (visible == "private") {
+	if (visible === "private") {
 		copyId.appendChild(leaveItem);
 	}
 
 	menuContent.appendChild(copyId);
 	wrapper.appendChild(menuContent);
-	//#endregion
-
 	settingsItem.onclick = e => {
-		//TODO open settings
 		wrapper.classList.remove("active");
 		e.stopPropagation();
 	};
 
 	pinItem.onclick = e => {
-		let topic = document.getElementById(room._id);
-		let textPin = document.getElementsByClassName("text-pin");
+		const topic = document.getElementById(room._id);
+		if (!topic) return;
 
-		if (pinText.textContent == "Pin") {
+		if (pinText.textContent === "Pin") {
 			pinText.textContent = "Unpin";
-			socket.emit("pin", cookieId, room._id);
-
-			if (textPin.length) {
-				for (let i = 0; i < textPin.length; i++) {
-					let textPinElement = textPin[i];
-
-					if (!textPinElement.innerText) {
-						topics.removeChild(topic);
-						topics.insertBefore(topic, textPinElement);
-						break;
-					}
-				}
-			} else {
-				topics.removeChild(topic);
-
-				let textPin2 = document.createElement("p");
-				textPin2.className = "text-pin";
-				topics.insertBefore(textPin2, topics.firstChild);
-
-				topics.insertBefore(topic, topics.firstChild);
-
-				let textPin = document.createElement("p");
-				textPin.className = "text-pin";
-				textPin.innerText = "pin";
-				topics.insertBefore(textPin, topics.firstChild);
-			}
-		} else if (pinText.textContent == "Unpin") {
+			socket.emit("pin", window.cookieId, room._id);
+			pinTopic(topic);
+		} else if (pinText.textContent === "Unpin") {
 			pinText.textContent = "Pin";
-			let textPin = document.getElementsByClassName("text-pin");
-			let topic = document.getElementById(room._id);
-			if (textPin) {
-				topics.removeChild(topic);
-				topics.appendChild(topic);
-			}
-			socket.emit("unpin", cookieId, room._id);
-			if (
-				topics.children[0].className == "text-pin" &&
-				topics.children[1].className == "text-pin"
-			) {
-				topics.removeChild(textPin[0]);
-				topics.removeChild(textPin[0]);
-			}
+			socket.emit("unpin", window.cookieId, room._id);
+			unpinTopic(topic);
 		}
 
 		wrapper.classList.remove("active");
@@ -358,8 +384,8 @@ function createTopicContextMenu(room) {
 		e.stopPropagation();
 	};
 
-	leaveItem.onclick = () => {
-		socket.emit("leave", cookieId, room._id);
+	leaveItem.onclick = e => {
+		socket.emit("leave", window.cookieId, room._id);
 		wrapper.classList.remove("active");
 		e.stopPropagation();
 	};

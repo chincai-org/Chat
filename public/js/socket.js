@@ -1,7 +1,19 @@
 const socket = io();
 
+function incrementNewMessageCounter() {
+	if (!window._isAtBottomMost) {
+		const el = document.getElementById("new-msg-counter");
+		const current = el.innerText;
+		if (current !== "99+") {
+			const next = +current + 1;
+			el.innerText = next === 100 ? "99+" : next;
+			el.classList.remove("hide");
+		}
+	}
+}
+
 socket.on("msg", async message => {
-	let {
+	const {
 		id,
 		authorName,
 		authorUsername,
@@ -13,7 +25,8 @@ socket.on("msg", async message => {
 		topicIds = [],
 	} = message;
 
-	if (currentRoom === roomId || roomId == "$") {
+	const currentRoom = window.currentRoom;
+	if (currentRoom === roomId || roomId === "$") {
 		await createMsg(
 			id,
 			authorName,
@@ -26,80 +39,80 @@ socket.on("msg", async message => {
 			false,
 		);
 
-		if (!isAtBottomMost) {
-			let counter = newMsgCounter.innerText;
-			if (counter != "99+") {
-				let newCounter = +newMsgCounter.innerText + 1;
-				newMsgCounter.innerText =
-					newCounter == 100 ? "99+" : newCounter;
-			}
-			newMsgCounter.classList.remove("hide");
+		if (!window._isAtBottomMost) {
+			incrementNewMessageCounter();
 		}
 	}
 });
 
 socket.on("rooms", (rooms, pins) => {
-	console.table(rooms);
-	console.table(pins);
+	const topics = document.getElementById("rooms");
+	const pinList = [];
 
-	let pinList = [];
-
-	if (pins.length) {
-		let textPin = document.createElement("p");
+	if (pins?.length) {
+		const textPin = document.createElement("p");
 		textPin.className = "text-pin";
 		textPin.innerText = "pin";
 		topics.appendChild(textPin);
 
-		for (let pin of pins) {
-			topics.appendChild(createTopic(pin));
+		for (const pin of pins) {
+			topics.appendChild(_createTopic(pin));
 			pinList.push(pin.name);
 		}
 
-		let textPin2 = document.createElement("p");
+		const textPin2 = document.createElement("p");
 		textPin2.className = "text-pin";
 		topics.appendChild(textPin2);
 	}
 
-	for (let room of rooms) {
-		if (!pinList.includes(room.name)) topics.appendChild(createTopic(room));
+	for (const room of rooms) {
+		if (!pinList.includes(room.name))
+			topics.appendChild(_createTopic(room));
 	}
 });
 
 socket.on("room", room => {
-	console.log("🚀 ~ file: socket.js:69 ~ room:", room);
-	document.getElementById("rooms").appendChild(createTopic(room));
+	document.getElementById("rooms").appendChild(_createTopic(room));
 });
 
 socket.on("delete", msgId => {
-	console.log("hi");
-	outerWrap.removeChild(document.getElementById(msgId));
+	const outerWrap = document.getElementById("outer-wrap");
+	const target = document.getElementById(msgId);
+	if (target?.parentNode === outerWrap) {
+		outerWrap.removeChild(target);
+	}
 });
 
 socket.on("change-name", (roomId, newName) => {
-	// TODO change name
-	document.getElementById(roomId).children[0].innerText = newName;
-	console.log(roomId, newName);
+	const topic = document.getElementById(roomId);
+	if (topic?.children[0]) {
+		topic.children[0].innerText = newName;
+	}
 });
 
 socket.on("typing", (username, roomId, timeStart) => {
-	if (roomId === currentRoom && Date.now() - timeStart <= timeoutPreference) {
-		usersTyping[username] = timeStart;
+	const currentRoom = window.currentRoom;
+	if (
+		roomId === currentRoom &&
+		Date.now() - timeStart <= window.timeoutPreference
+	) {
+		window.usersTyping[username] = timeStart;
 		updateTypingUsers();
 	}
 });
 
 socket.on("typings", _usersTyping => {
-	for (let username in usersTyping) delete usersTyping[username];
+	const usersTyping = window.usersTyping;
+	for (const username in usersTyping) delete usersTyping[username];
 	Object.assign(usersTyping, _usersTyping);
 	updateTypingUsers();
 });
 
 socket.on("typing-kill", username => {
-	delete usersTyping[username];
+	delete window.usersTyping[username];
 	updateTypingUsers();
 });
 
 socket.on("ban", () => {
 	location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-	// TODO actual ban
 });
