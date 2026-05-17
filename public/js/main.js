@@ -1,4 +1,20 @@
-const textbox = document.getElementById("text");
+function getCookie(cname) {
+	const name = `${cname}=`;
+	const decodedCookie = decodeURIComponent(document.cookie);
+	const ca = decodedCookie.split(";");
+	for (let i = 0; i < ca.length; i++) {
+		let c = ca[i];
+		while (c.charAt(0) === " ") {
+			c = c.substring(1);
+		}
+		if (c.startsWith(name)) {
+			return c.substring(name.length);
+		}
+	}
+	return "";
+}
+
+window.textbox = document.getElementById("text");
 const outerWrap = document.getElementById("outer-wrap");
 const down = document.getElementById("scroll-down");
 const newMsgCounter = document.getElementById("new-msg-counter");
@@ -13,9 +29,67 @@ let openedContextMenu = null;
 let allowFetch = true;
 
 window.cookieId = getCookie("id");
+window.topicDblclick = null;
 
 window.clearMessage = () => {
 	outerWrap.innerHTML = "";
+};
+
+window.topicMaker = () => ({
+	search: "",
+	visible: "public",
+	init() {
+		this.visible = window._visible;
+		if (window.socket) {
+			window.socket.emit("rooms", window.cookieId, this.visible);
+		}
+	},
+	onSearch() {
+		window.clearRoom();
+		this.visible = window._visible;
+		if (window.socket) {
+			if (this.search) {
+				window.socket.emit(
+					"findrooms",
+					window.cookieId,
+					this.visible,
+					this.search,
+				);
+			} else {
+				window.socket.emit("rooms", window.cookieId, this.visible);
+			}
+		}
+	},
+	switchTo(v) {
+		this.search = "";
+		this.visible = v;
+		window._visible = v;
+		window.clearRoom();
+		if (window.socket) {
+			window.socket.emit("rooms", window.cookieId, v);
+		}
+	},
+});
+window._visible = "public";
+
+window.onSearch = value => {
+	if (!window.socket) return;
+	const visible = window._visible;
+	window.clearRoom();
+	if (value) {
+		window.socket.emit("findrooms", window.cookieId, visible, value);
+	} else {
+		window.socket.emit("rooms", window.cookieId, visible);
+	}
+};
+
+window.clearRoom = () => {
+	const roomsElement = document.getElementById("rooms");
+	const remove = [];
+	for (const room of roomsElement.children) {
+		if (room.tagName !== "FORM") remove.push(room);
+	}
+	for (const e of remove) roomsElement.removeChild(e);
 };
 
 function isLetter(char) {
@@ -146,7 +220,11 @@ chat.onscroll = () => {
 		chat.scrollTop - chat.clientHeight + chat.scrollHeight < 2
 	) {
 		if (outerWrap.firstChild) {
-			fetchMsg(window.cookieId, window.currentRoom, outerWrap.firstChild.id);
+			fetchMsg(
+				window.cookieId,
+				window.currentRoom,
+				outerWrap.firstChild.id,
+			);
 		}
 		allowFetch = false;
 	}
@@ -196,21 +274,41 @@ textbox.onkeydown = e => {
 };
 
 textbox.oninput = () => {
-	socket.emit("typing", window.cookieId, window.currentRoom, Date.now());
+	window.socket?.emit(
+		"typing",
+		window.cookieId,
+		window.currentRoom,
+		Date.now(),
+	);
+
+	document.onclick = e => {
+		openedContextMenu?.classList.remove("active");
+		openedContextMenu = null;
+		if (window.topicDblclick && !window.topicDblclick.contains(e.target)) {
+			window.topicDblclick.contentEditable = "false";
+			window.socket?.emit(
+				"change-name",
+				window.cookieId,
+				window.topicDblclick.id,
+				window.topicDblclick.children[0].innerText,
+			);
+			window.topicDblclick = null;
+		}
+	};
 };
 
 document.onclick = e => {
 	openedContextMenu?.classList.remove("active");
 	openedContextMenu = null;
-	if (topicDblclick && !topicDblclick.contains(e.target)) {
-		topicDblclick.contentEditable = "false";
+	if (window.topicDblclick && !window.topicDblclick.contains(e.target)) {
+		window.topicDblclick.contentEditable = "false";
 		socket.emit(
 			"change-name",
-			cookieId,
-			topicDblclick.id,
-			topicDblclick.children[0].innerText,
+			window.cookieId,
+			window.topicDblclick.id,
+			window.topicDblclick.children[0].innerText,
 		);
-		topicDblclick = null;
+		window.topicDblclick = null;
 	}
 };
 
@@ -277,24 +375,25 @@ function sendMessage(msg) {
 		return;
 	}
 	textbox.innerText = "";
-	socket.emit("msg", window.cookieId, window.currentRoom, msg);
+	window.socket?.emit("msg", window.cookieId, window.currentRoom, msg);
 	chat.scrollTop = chat.scrollHeight;
 }
 
 function fetchMsg(cookieId, roomId, messageId) {
-	$.ajax({
-		url: "/get_message",
-		type: "POST",
-		data: {
-			cookieId: cookieId,
-			roomId: roomId,
+	fetch("/get_message", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({
+			cookieId,
+			roomId,
 			start: messageId === 0 ? "last" : messageId,
-		},
-		success: response => {
+		}),
+	})
+		.then(res => res.json())
+		.then(response => {
 			if (messageId !== 0) {
 				response.reverse();
 			}
-
 			for (const msg of response) {
 				createMsg(
 					msg.id,
@@ -308,15 +407,10 @@ function fetchMsg(cookieId, roomId, messageId) {
 					messageId !== 0,
 				);
 			}
-		},
-		error: (_xhr, _status, error) => {
+		})
+		.catch(error => {
 			console.error(`Error: ${error}`);
-		},
-	});
-}
-
-function _clearMessage() {
-	outerWrap.innerHTML = "";
+		});
 }
 
 async function createMsg(
@@ -474,7 +568,12 @@ function createMsgContextMenu(id) {
 	};
 
 	itemTrash.onclick = e => {
-		socket.emit("delete-msg", window.cookieId, window.currentRoom, id);
+		window.socket?.emit(
+			"delete-msg",
+			window.cookieId,
+			window.currentRoom,
+			id,
+		);
 		wrapper.classList.remove("active");
 		e.stopPropagation();
 	};
@@ -493,7 +592,11 @@ setInterval(() => {
 			if (now - startTime > window.timeoutPreference) {
 				delete window.usersTyping[username];
 				change = true;
-				socket.emit("typing-kill", username, window.currentRoom);
+				window.socket?.emit(
+					"typing-kill",
+					username,
+					window.currentRoom,
+				);
 			}
 		}
 		if (change) updateTypingUsers();
@@ -501,3 +604,7 @@ setInterval(() => {
 		console.error(e);
 	}
 }, 2000);
+
+window.fetchMsg = fetchMsg;
+window.updateTypingUsers = updateTypingUsers;
+window.createMsg = createMsg;

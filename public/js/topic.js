@@ -1,107 +1,16 @@
-const _MAX_MESSAGE_LENGTH = 700;
 const MOBILE_BREAKPOINT = 700;
 
-const publicBtn = document.getElementById("choice-1");
-const privateBtn = document.getElementById("choice-2");
-const newTopicName = document.getElementById("new-topic-input-name");
-const newTopicDialog = document.getElementById("new-topic");
-const createNewTopic = document.getElementById("create-new");
-const newTopicCancel = document.getElementById("new-topic-btn-cancel");
-const newTopicForm = document.getElementById("new-topic-form");
-const check18 = document.getElementById("check18");
 const topics = document.getElementById("rooms");
-const searchBar = document.getElementById("search-bar");
-const roomsElement = document.getElementById("rooms");
-const textbox = document.getElementById("text");
 
 let activeRoom = null;
-let visible = null;
-let topicDblclick = null;
+window.topicDblclick = null;
 window.currentRoom = "";
+window.openedContextMenu = null;
 
-createNewTopic.onclick = () => {
-	newTopicDialog.showModal();
-};
+// Alpine.js handles: createNewTopic, newTopicCancel, newTopicForm, publicBtn, privateBtn
 
-newTopicCancel.onclick = () => {
-	newTopicDialog.close();
-	newTopicName.value = "";
-	check18.checked = false;
-};
-
-newTopicForm.onsubmit = e => {
-	e.preventDefault();
-	if (!/\S/.test(newTopicName.value)) {
-		return;
-	}
-
-	socket.emit(
-		"new-room",
-		window.cookieId,
-		newTopicName.value,
-		visible,
-		check18.checked,
-	);
-
-	newTopicName.value = "";
-	check18.checked = false;
-	newTopicDialog.close();
-};
-
-newTopicName.onkeydown = e => {
-	if (e.keyCode === 13) {
-		e.preventDefault();
-		newTopicName.blur();
-	}
-};
-
-publicBtn.onclick = () => {
-	publicBtn.classList.add("clicked");
-
-	if (privateBtn.classList.contains("clicked")) {
-		privateBtn.classList.remove("clicked");
-	}
-	switchTo("public");
-};
-
-privateBtn.onclick = () => {
-	privateBtn.classList.add("clicked");
-	if (publicBtn.classList.contains("clicked")) {
-		publicBtn.classList.remove("clicked");
-	}
-	switchTo("private");
-};
-
-searchBar.oninput = () => {
-	if (searchBar.value === "") {
-		clearRoom();
-		socket.emit("rooms", window.cookieId, visible);
-	} else {
-		clearRoom();
-		socket.emit("findrooms", window.cookieId, visible, searchBar.value);
-	}
-};
-
-searchBar.onkeydown = e => {
-	if (e.keyCode === 13) {
-		e.preventDefault();
-		searchBar.blur();
-	}
-};
-
-function switchTo(visibility) {
-	clearRoom();
-	visible = visibility;
-	socket.emit("rooms", window.cookieId, visible);
-}
-
-function clearRoom() {
-	const remove = [];
-	for (const room of roomsElement.children) {
-		if (room.tagName !== "FORM") remove.push(room);
-	}
-	for (const e of remove) roomsElement.removeChild(e);
-}
+// Alpine.js handles: visibility, search, new topic dialog
+// clearRoom is defined in main.js and exposed on window
 
 function createMenuItem(tag = "li") {
 	const item = document.createElement(tag);
@@ -230,7 +139,7 @@ function redirectTopic(id) {
 	const topic = document.getElementById(id);
 	if (!topic) return;
 	if (window.currentRoom)
-		socket.emit("typing-kill", window.cookieId, window.currentRoom);
+		window.socket?.emit("typing-kill", window.cookieId, window.currentRoom);
 
 	window.clearMessage();
 	window.currentRoom = id;
@@ -239,9 +148,9 @@ function redirectTopic(id) {
 	topic.classList.add("topic-bg-colour");
 	activeRoom = topic;
 
-	textbox.classList.remove("hide");
+	window.textbox.classList.remove("hide");
 	// contextMenu.classList.remove("active");
-	socket.emit("fetch-typing", window.cookieId, id);
+	window.socket?.emit("fetch-typing", window.cookieId, id);
 	fetchMsg(window.cookieId, id, 0);
 
 	if (window.innerWidth <= MOBILE_BREAKPOINT) {
@@ -268,7 +177,7 @@ function _createTopic(room) {
 		if (topicDblclick && e.key === "Enter") {
 			topicDblclick.contentEditable = "false";
 			topicDblclick = null;
-			socket.emit(
+			window.socket?.emit(
 				"change-name",
 				window.cookieId,
 				topic.id,
@@ -323,7 +232,7 @@ function createTopicContextMenu(room) {
 	const settingsItem = createMenuItem();
 	appendMenuIconLabel(settingsItem, ["fa-solid", "fa-gear"], "Settings");
 
-	if (visible === "private") {
+	if (window._visible === "private") {
 		menu.appendChild(settingsItem);
 	}
 
@@ -349,7 +258,7 @@ function createTopicContextMenu(room) {
 	const leaveItem = createMenuItem();
 	appendMenuIconLabel(leaveItem, ["fa-solid", "fa-door-open"], "Leave");
 
-	if (visible === "private") {
+	if (window._visible === "private") {
 		copyId.appendChild(leaveItem);
 	}
 
@@ -366,11 +275,11 @@ function createTopicContextMenu(room) {
 
 		if (pinText.textContent === "Pin") {
 			pinText.textContent = "Unpin";
-			socket.emit("pin", window.cookieId, room._id);
+			window.socket?.emit("pin", window.cookieId, room._id);
 			pinTopic(topic);
 		} else if (pinText.textContent === "Unpin") {
 			pinText.textContent = "Pin";
-			socket.emit("unpin", window.cookieId, room._id);
+			window.socket?.emit("unpin", window.cookieId, room._id);
 			unpinTopic(topic);
 		}
 
@@ -385,10 +294,12 @@ function createTopicContextMenu(room) {
 	};
 
 	leaveItem.onclick = e => {
-		socket.emit("leave", window.cookieId, room._id);
+		window.socket?.emit("leave", window.cookieId, room._id);
 		wrapper.classList.remove("active");
 		e.stopPropagation();
 	};
 
 	return wrapper;
 }
+
+window._createTopic = _createTopic;

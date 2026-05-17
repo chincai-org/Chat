@@ -7,9 +7,15 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Panmapor | Sign Up</title>
 	<link rel="icon" href="/assets/logo.png" type="image/icon type">
+	<% if (env === 'production') { %>
+	<link rel="stylesheet" href="/dist/_reset.css">
+	<link rel="stylesheet" href="/dist/_base.css">
+	<link rel="stylesheet" href="/dist/login.css">
+	<% } else { %>
 	<link rel="stylesheet" href="/css/_reset.css">
 	<link rel="stylesheet" href="/css/_base.css">
 	<link rel="stylesheet" href="/css/login.css">
+	<% } %>
 </head>
 
 <body>

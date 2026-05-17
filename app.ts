@@ -1,6 +1,8 @@
 import cookieParser from "cookie-parser";
 import type { Request, Response } from "express";
 import express from "express";
+import compression from "compression";
+import rateLimit from "express-rate-limit";
 import http from "http";
 import { Server } from "socket.io";
 import { command, getRole } from "./command.ts";
@@ -54,6 +56,14 @@ const enum SIGNUP_ERROR {
 const MAX_ROOMS_FETCH = 50;
 const MAX_TOPIC_CREATE = 3;
 const MESSAGE_COOLDOWN_MS = 200;
+
+const authLimiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	max: 5,
+	message: "Too many attempts. Please try again in 15 minutes.",
+	standardHeaders: true,
+	legacyHeaders: false,
+});
 
 const errors: {
 	login: Record<number, string>;
@@ -259,6 +269,12 @@ function typingKill(
 }
 
 app.use(express.static("public"));
+app.use(compression());
+
+if (process.env.NODE_ENV === "production") {
+	app.use("/dist", express.static("dist"));
+}
+
 app.use("/vendor/linkifyjs", express.static("node_modules/linkifyjs/dist"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -275,7 +291,7 @@ io.use(async (socket, next) => {
 app.set("view engine", "ejs");
 
 app.get("/", (_req: Request, res: Response) => res.redirect("/home"));
-app.get("/home", (_req: Request, res: Response) => res.render("home.ejs"));
+app.get("/home", (_req: Request, res: Response) => res.render("home.ejs", { env: process.env.NODE_ENV || "development" }));
 app.get("/tac", (_req: Request, res: Response) => res.render("tac.ejs"));
 app.get("/about", (_req: Request, res: Response) => res.render("about.ejs"));
 
@@ -289,6 +305,7 @@ app.get(
 		res.render("main.ejs", {
 			displayName: user.displayName,
 			username: user.username,
+			env: process.env.NODE_ENV || "development",
 		});
 	},
 );
@@ -296,16 +313,16 @@ app.get(
 app.get("/login", (req: Request, res: Response) => {
 	const errorCode = req.cookies.e ? +req.cookies.e : -1;
 	res.clearCookie("e");
-	res.render("login.ejs", getLoginError(errorCode));
+	res.render("login.ejs", { ...getLoginError(errorCode), env: process.env.NODE_ENV || "development" });
 });
 
 app.get("/signup", (req: Request, res: Response) => {
 	const errorCode = req.cookies.e ? +req.cookies.e : -1;
 	res.clearCookie("e");
-	res.render("signup.ejs", getSignupErrors(errorCode));
+	res.render("signup.ejs", { ...getSignupErrors(errorCode), env: process.env.NODE_ENV || "development" });
 });
 
-app.post("/login_validator", async (req: Request, res: Response) => {
+app.post("/login_validator", authLimiter, async (req: Request, res: Response) => {
 	const { username, password } = req.body;
 	const user = await utils.findUserByUsername(username);
 	let errorCode = 0;
@@ -318,7 +335,7 @@ app.post("/login_validator", async (req: Request, res: Response) => {
 	res.redirect("/chat");
 });
 
-app.post("/signup_validator", async (req: Request, res: Response) => {
+app.post("/signup_validator", authLimiter, async (req: Request, res: Response) => {
 	const ipAddress = req.ip;
 	const device = await utils.findDevice(ipAddress);
 	if (device && device.amount >= 2)
@@ -410,7 +427,7 @@ app.post("/auto_complete", async (req: Request, res: Response) => {
 });
 
 app.get("*", (_req: Request, res: Response) =>
-	res.status(404).render("error.ejs", { error: 404 }),
+	res.status(404).render("error.ejs", { error: 404, env: process.env.NODE_ENV || "development" }),
 );
 
 io.on("connection", socket => {
@@ -525,9 +542,8 @@ io.on("connection", socket => {
 	});
 
 	socket.on("new-room", async (cookieId, name, visibility, nsfw = false) => {
-		const ctx = await authUserRoom(socket, cookieId, "");
-		if (!ctx) return;
-		const { user } = ctx;
+		const user = await authUser(socket, cookieId);
+		if (!user) return;
 		if (!name?.trim()) {
 			emitError(socket, "Please type room name");
 			return;
@@ -637,3 +653,4 @@ io.on("connection", socket => {
 });
 
 server.listen(port);
+console.log(`Server running at http://localhost:${port}`);

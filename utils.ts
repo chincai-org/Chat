@@ -9,6 +9,16 @@ const uri = process.env.uri;
 const client = new MongoClient(uri);
 const colors = ["blue", "green", "purple", "red", "yellow"];
 
+await client.db("db").collection("users").createIndex(
+	{ username: 1 },
+	{ unique: true },
+);
+await client.db("db").collection("users").createIndex({ cookieId: 1 });
+await client.db("db").collection("rooms").createIndex({ name: 1 });
+await client.db("db").collection("rooms").createIndex({ visibility: 1 });
+await client.db("db").collection("rooms").createIndex({ "members.username": 1 });
+await client.db("db").collection("ip").createIndex({ ipAddress: 1 });
+
 export const MSG_PREFIX = "Message failed to send: ";
 export const NO_USER = "User not found";
 export const NO_ROOM = "Topic not found";

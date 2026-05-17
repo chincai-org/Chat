@@ -5,9 +5,10 @@
 	"description": "",
 	"main": "app.ts",
 	"scripts": {
-		"start": "bun app.ts",
 		"test": "bun test",
 		"dev": "bun --watch app.ts",
+		"build": "bun build.ts --prod",
+		"preview": "NODE_ENV=production bun app.ts",
 		"format": "biome check --write"
 	},
 	"repository": {
@@ -22,13 +23,15 @@
 	},
 	"homepage": "https://github.com/ddddddddrrdd3/Chat#readme",
 	"dependencies": {
+		"compression": "^1.8.1",
 		"cookie-parser": "^1.4.7",
 		"dotenv": "^16.6.1",
 		"ejs": "^3.1.10",
 		"express": "^4.22.2",
+		"express-rate-limit": "^8.5.2",
 		"http": "^0.0.1-security",
-		"mongodb": "^5.9.2",
 		"linkifyjs": "^4.3.3",
+		"mongodb": "^5.9.2",
 		"socket.io": "^4.8.3"
 	},
 	"devDependencies": {

@@ -7,16 +7,27 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Panmapor | Chat</title>
 	<link rel="icon" href="/assets/logo.png" type="image/icon type">
+	<% if (env === 'production') { %>
+	<link rel="stylesheet" href="/dist/_reset.css">
+	<link rel="stylesheet" href="/dist/_base.css">
+	<link rel="stylesheet" href="/dist/main.css">
+	<% } else { %>
 	<link rel="stylesheet" href="/css/_reset.css">
 	<link rel="stylesheet" href="/css/_base.css">
 	<link rel="stylesheet" href="/css/main.css">
+	<% } %>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="/js/cookie.js" defer></script>
+	<script src="/socket.io/socket.io.js" defer></script>
+	<% if (env === 'production') { %>
+	<script src="/dist/main.js" defer></script>
+	<script src="/dist/topic.js" defer></script>
+	<script src="/dist/socket.js" defer></script>
+	<% } else { %>
 	<script src="/js/main.js" defer></script>
 	<script src="/js/topic.js" defer></script>
 	<script src="/js/socket.js" defer></script>
+	<% } %>
+	<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 
 <body>
@@ -33,13 +44,16 @@
 				<p class="typing" id="typing"></p>
 			</div>
 		</section>
-		<div class="choices">
-			<h5 class="choice" id="choice-1" title="Public topic">Public</h5>
-			<h5 class="choice" id="choice-2" title="Private topic">Private</h5>
+		<div class="choices" x-data="topicMaker()" x-init="init()">
+			<h5 class="choice" :class="{ 'clicked': visible === 'public' }" @click="switchTo('public')"
+				title="Public topic">Public</h5>
+			<h5 class="choice" :class="{ 'clicked': visible === 'private' }" @click="switchTo('private')"
+				title="Private topic">Private</h5>
 		</div>
 		<div class="topic-maker">
-			<input id="search-bar" name="" placeholder="Search">
-			<i id="create-new" title="Create new topic" class="fa-solid fa-plus"></i>
+			<input id="search-bar" placeholder="Search" oninput="onSearch(this.value)">
+			<i id="create-new" x-data @click="document.getElementById('new-topic').showModal()" title="Create new topic"
+				class="fa-solid fa-plus"></i>
 		</div>
 		<div class="topic" id="rooms"></div>
 		<div class="bottom">
@@ -54,18 +68,19 @@
 			</div>
 		</div>
 	</div>
-	<dialog class="new-topic" id="new-topic">
+	<dialog class="new-topic" id="new-topic" x-data="{ name: '', adult: false }" x-ref="topicDialog">
 		<h2>Start a new discussion!</h2>
-		<form id="new-topic-form">
+		<form id="new-topic-form" x-on:submit.prevent="window.socket.emit('new-room', window.cookieId, name, window._visible, adult); name = ''; adult = false; $refs.topicDialog.close()">
 			<label for="new-topic-input-name" class="p-desc">Topic name:</label>
-			<input type="text" id="new-topic-input-name" placeholder="Enter topic name"></input>
+			<input type="text" id="new-topic-input-name" x-model="name" placeholder="Enter topic name" required>
 			<label for="check18" class="p-desc">Allow 18+ content?</label>
 			<label class="switch">
-				<input type="checkbox" id="check18">
+				<input type="checkbox" id="check18" x-model="adult">
 				<span class="slider round"></span>
 			</label>
 			<button type="submit" class="new-topic-btn" id="new-topic-btn-create">Create</button>
-			<button type="button" class="new-topic-btn" id="new-topic-btn-cancel">Cancel</button>
+			<button type="button" class="new-topic-btn" id="new-topic-btn-cancel"
+				@click="$refs.topicDialog.close()">Cancel</button>
 		</form>
 	</dialog>
 </body>

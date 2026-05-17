@@ -1,4 +1,10 @@
-const socket = io();
+const socket = io({
+	reconnection: true,
+	reconnectionAttempts: 10,
+	reconnectionDelay: 1000,
+	reconnectionDelayMax: 5000,
+});
+window.socket = socket;
 
 function incrementNewMessageCounter() {
 	if (!window._isAtBottomMost) {
@@ -27,7 +33,7 @@ socket.on("msg", async message => {
 
 	const currentRoom = window.currentRoom;
 	if (currentRoom === roomId || roomId === "$") {
-		await createMsg(
+		await window.createMsg(
 			id,
 			authorName,
 			authorUsername,
@@ -56,7 +62,7 @@ socket.on("rooms", (rooms, pins) => {
 		topics.appendChild(textPin);
 
 		for (const pin of pins) {
-			topics.appendChild(_createTopic(pin));
+			topics.appendChild(window._createTopic(pin));
 			pinList.push(pin.name);
 		}
 
@@ -67,12 +73,12 @@ socket.on("rooms", (rooms, pins) => {
 
 	for (const room of rooms) {
 		if (!pinList.includes(room.name))
-			topics.appendChild(_createTopic(room));
+			topics.appendChild(window._createTopic(room));
 	}
 });
 
 socket.on("room", room => {
-	document.getElementById("rooms").appendChild(_createTopic(room));
+	document.getElementById("rooms").appendChild(window._createTopic(room));
 });
 
 socket.on("delete", msgId => {
@@ -97,7 +103,7 @@ socket.on("typing", (username, roomId, timeStart) => {
 		Date.now() - timeStart <= window.timeoutPreference
 	) {
 		window.usersTyping[username] = timeStart;
-		updateTypingUsers();
+		window.updateTypingUsers();
 	}
 });
 
@@ -105,12 +111,12 @@ socket.on("typings", _usersTyping => {
 	const usersTyping = window.usersTyping;
 	for (const username in usersTyping) delete usersTyping[username];
 	Object.assign(usersTyping, _usersTyping);
-	updateTypingUsers();
+	window.updateTypingUsers();
 });
 
 socket.on("typing-kill", username => {
 	delete window.usersTyping[username];
-	updateTypingUsers();
+	window.updateTypingUsers();
 });
 
 socket.on("ban", () => {

@@ -1,7 +1,14 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
 	"files": {
-		"includes": ["**", "!.env", "!**/*.ejs", "!_reset.css", "!_base.css"]
+		"includes": [
+			"**",
+			"!.env",
+			"!**/*.ejs",
+			"!_reset.css",
+			"!_base.css",
+			"!dist"
+		]
 	},
 	"formatter": {
 		"indentWidth": 4

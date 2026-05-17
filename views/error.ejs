@@ -9,8 +9,13 @@
 		<%= error %>
 	</title>
 
+	<% if (env === 'production') { %>
+	<link rel="stylesheet" href="/dist/error.css">
+	<link rel="stylesheet" href="/dist/_base.css">
+	<% } else { %>
 	<link rel="stylesheet" href="/css/error.css">
 	<link rel="stylesheet" href="/css/_base.css">
+	<% } %>
 </head>
 
 <body>
